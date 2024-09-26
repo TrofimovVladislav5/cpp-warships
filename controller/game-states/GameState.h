@@ -1,5 +1,5 @@
 #pragma once
-#include "GameView.h"
+#include "view/GameView.h"
 
 class GameState{
 protected:

@@ -1,11 +1,16 @@
 #pragma once
 #include "GameState.h"
-class MenuGameState : public GameState{
+#include "OngoingGameState.h"
+
+class OngoingGameState : public GameState{
 private:
     std::string latestCommand;
 public:
+
     void openState() override;
     void closeState() override;
+
     void updateState() override;
-    GameState* transitToState() override ;
+
+    GameState* transitToState() override;
 };

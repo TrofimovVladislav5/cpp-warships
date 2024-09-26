@@ -1,7 +1,8 @@
 #include <iostream>
 #include "GameState.h"
 #include "OngoingGameState.h"
-#include "GameView.h"
+
+#include "MenuGameState.h"
 
 void OngoingGameState::openState() {
     view->displayMessage("Ongoing game");

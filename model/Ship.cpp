@@ -56,6 +56,6 @@ public:
     }
 };
 
-int main(){
-    Ship ship(4,Direction::HORIZONTAL);
-}
+// int main(){
+//     Ship ship(4,Direction::HORIZONTAL);
+// }

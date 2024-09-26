@@ -420,10 +420,10 @@ private:
     }
 };
 
-int main() {
-    Ship sh(2, Direction::HORIZONTAL);
-    GameField field(10, 20);
-    field.placeShip(sh, 5, 5);   // Установка первого корабля
-    field.placeShip(sh, 0, 0); // Установка второго корабля
-    field.printGameField();      // Вывод игрового поля
-}
+// int main() {
+//     Ship sh(2, Direction::HORIZONTAL);
+//     GameField field(10, 20);
+//     field.placeShip(sh, 5, 5);   // Установка первого корабля
+//     field.placeShip(sh, 0, 0); // Установка второго корабля
+//     field.printGameField();      // Вывод игрового поля
+// }
