@@ -1,26 +1,41 @@
 #include "MenuGameState.h"
 
 #include <iostream>
+
 #include "GameState.h"
 #include "OngoingGameState.h"
+#include "ShutdownGameState.h"
+#include "view/ViewHelper.h"
+
+MenuGameState::MenuGameState(StateContext& context) : GameState(context) {
+    this->menuView = new GameMenuView();
+}
+
+MenuGameState::~MenuGameState() {
+    delete this->menuView;
+}
 
 void MenuGameState::openState() {
-    view->displayMessage("Game Menu");
-    view->displayMessage("Start\t Save\t Exit\t");
+    ViewHelper::consoleOut("Game Menu");
+    ViewHelper::consoleOut("Start\t Save\t Exit\t");
 }
 
 void MenuGameState::closeState() {
-    view->displayMessage("Quit the menu");
+    ViewHelper::consoleOut("Quit the menu");
 }
 
 void MenuGameState::updateState() {
+    menuView->drawAvailableCommands(context.currentMatch);
     std::getline(std::cin,latestCommand);
 }
 
 GameState* MenuGameState::transitToState() {
-    if (latestCommand == "start"){
-        return new OngoingGameState();
+    if (latestCommand == "new"){
+        return new OngoingGameState(context);
+    } else if (latestCommand == "exit") {
+        return new ShutdownGameState(context);
     }
+
     return nullptr;
 
     // else if (latestCommand == "exit"){

@@ -3,24 +3,44 @@
 #include "OngoingGameState.h"
 
 #include "MenuGameState.h"
+#include "view/ViewHelper.h"
+
+OngoingGameState::OngoingGameState(StateContext &context) : GameState(context) {
+}
 
 void OngoingGameState::openState() {
-    view->displayMessage("Ongoing game");
-}
-void OngoingGameState::closeState() {
-    view->displayMessage("Quit the game");
+    //TODO: Implement printing out the 'hello' letter (game rules, etc.)
+    ViewHelper::consoleOut("Ongoing game");
 }
 
 void OngoingGameState::updateState() {
-    std::getline(std::cin, latestCommand);
+    //TODO: Same logic as in GameController
+
+    // currentState = new MenuGameState(stateContext);
+    //
+    // while (typeid(*currentState).name() != typeid(ShutdownGameState).name()) {
+    //     GameState *newState = currentState->transitToState();
+    //
+    //     if (newState) {
+    //         currentState->closeState();
+    //         currentState = newState;
+    //         currentState->openState();
+    //     }
+    //
+    //     currentState->updateState();
+    // }
+}
+
+void OngoingGameState::closeState() {
+    ViewHelper::consoleOut("Quit the game");
 }
 
 GameState* OngoingGameState::transitToState() {
     if (latestCommand == "start"){
-        return new OngoingGameState();
+        return new OngoingGameState(context);
     }
     else if (latestCommand == "menu"){
-        return new MenuGameState();
+        return new MenuGameState(context);
     }
     return nullptr;
 }
