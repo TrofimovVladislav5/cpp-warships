@@ -5,6 +5,8 @@
 #include "view/GameView.h"
 #include "view/ViewHelper.h"
 
+#include <typeinfo>
+
 GameController::GameController() {
     stateContext = StateContext();
     currentState = nullptr;
