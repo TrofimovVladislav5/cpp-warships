@@ -1,9 +1,8 @@
-#include "GameField.h"
-
 #include <iostream>
-
-#include "Ship.h"
 #include <vector>
+#include "GameField.h"
+#include "Ship.h"
+#include "Structures.h"
 
 GameField::GameField(int width, int height){
     this->height = height;

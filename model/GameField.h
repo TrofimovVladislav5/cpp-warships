@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-
 #include "Ship.h"
+#include "Structures.h"
 
 class GameField {
 private:

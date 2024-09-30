@@ -34,4 +34,7 @@
 # Code editors
 .vscode
 .idea
+
+# Build
+build
 cmake-build-debug

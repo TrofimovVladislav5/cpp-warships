@@ -1,24 +1,25 @@
+#include <iostream>
 #include "PauseOngoingGameSubstate.h"
-
-#include "game-states/MenuGameState.h"
+#include "ongoing-game-substates/BattleOngoingGameSubstate.h"
 #include "game-states/OngoingGameState.h"
 #include "view/ViewHelper.h"
 
-void PauseOngoingGameSubstate::openState(){
-    ViewHelper::consoleOut("Game on pause.\nChoose Resume Menu");
+void PauseOngoingGameSubstate::openSubstate() {
+    ViewHelper::consoleOut("Battle on paused");
 }
-void PauseOngoingGameSubstate::closeState() {
-    ViewHelper::consoleOut("Quit the Pause");
+
+void PauseOngoingGameSubstate::closeSubstate() {
+    ViewHelper::consoleOut("Match resume");
 }
-void PauseOngoingGameSubstate::updateState() {
-    std::getline(std::cin, lastCommand);
+
+void PauseOngoingGameSubstate::updateSubstate() {
+    ViewHelper::consoleOut("For return to battle use command resume");
+    std::getline(std::cin, latestCommand);
 }
-GameState* PauseOngoingGameSubstate::transitToState() {
-    if (lastCommand == "resume") {
-        return new OngoingGameState(context);
-    }
-    else if (lastCommand == "menu") {
-        return new MenuGameState(context);
+
+OngoingGameState* PauseOngoingGameSubstate::transitToSubstate() {
+    if (latestCommand == "resume") {
+        return new BattleOngoingGameSubstate(context);
     }
     return nullptr;
 }

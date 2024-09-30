@@ -1,7 +1,6 @@
-#include "Ship.h"
-
 #include <iostream>
 #include <vector>
+#include "Ship.h"
 
 Ship::Ship(int length, Direction direction){
     this->length = length;
@@ -19,6 +18,10 @@ int Ship::getLength() const {
 
 Direction Ship::getDirection() const {
     return direction;
+}
+
+std::vector<SegmentState> Ship::getSegments() const {
+    return segments;
 }
 
 bool Ship::getDestroyed() const {

@@ -1,14 +1,11 @@
 #pragma once
-
-#include <iostream>
+#include "game-states/OngoingGameState.h"
 #include "game-states/GameState.h"
 
-class PauseOngoingGameSubstate : public GameState {
-private:
-    std::string lastCommand;
+class PauseOngoingGameSubstate : public OngoingGameState {
 public:
-    void openState() override;
-    void closeState() override;
-    void updateState() override;
-    GameState* transitToState() override;
+    void openSubstate() override;
+    void closeSubstate() override;
+    void updateSubstate() override;
+    OngoingGameState* transitToSubstate() override;
 };

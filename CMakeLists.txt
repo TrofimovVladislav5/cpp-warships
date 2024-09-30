@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.22.1)
 project(cpp_warships)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -21,7 +21,6 @@ add_executable(cpp_warships
         controller/game-states/OngoingGameState.cpp
         controller/game-states/OngoingGameState.h
         main.cpp
-        __temp__/WarShips.cpp
         controller/ongoing-game-substates/PauseOngoingGameSubstate.h
         controller/ongoing-game-substates/PauseOngoingGameSubstate.cpp
         controller/ongoing-game-substates/BattleOngoingGameSubstate.cpp

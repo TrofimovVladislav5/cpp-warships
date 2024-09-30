@@ -15,6 +15,7 @@ public:
     ~Ship();
 
     int getLength() const;
+    std::vector<SegmentState> getSegments() const;
     Direction getDirection() const;
     bool getDestroyed() const;
     void takeDamage(int number);

@@ -22,7 +22,7 @@ GameController::~GameController() {
 
 void GameController::run() {
     currentState = new MenuGameState(stateContext);
-
+    currentState->openState();
     while (typeid(*currentState).name() != typeid(ShutdownGameState).name()) {
         GameState *newState = currentState->transitToState();
 

@@ -1,15 +1,24 @@
 #pragma once
+#include <string>
 #include "GameState.h"
-#include "OngoingGameState.h"
+#include "view/OngoingGameView.h"
+#include "model/StateContext.h"
 
 class OngoingGameState : public GameState{
-private:
+protected:
     std::string latestCommand;
+    OngoingGameState* currentSubstate;
+    OngoingGameView* ongoingGameView;
 public:
-    OngoingGameState(StateContext& context);
-
+    OngoingGameState(StateContext &context);
+    ~OngoingGameState();
     void openState() override;
-    void closeState() override;
     void updateState() override;
+    void closeState() override;
     GameState* transitToState() override;
+
+    virtual void openSubstate();
+    virtual void closeSubstate();
+    virtual void updateSubstate();
+    virtual OngoingGameState* transitToSubstate();
 };

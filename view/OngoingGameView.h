@@ -3,4 +3,5 @@
 class OngoingGameView {
 public:
     void printGameCommands();
+    void printGameRules();
 };
