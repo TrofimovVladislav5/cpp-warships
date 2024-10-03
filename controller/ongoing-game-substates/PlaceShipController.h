@@ -4,10 +4,11 @@
 class PlaceShipController {
 private:
     int minimalCountShips;
-    int minimalFieldSize;
+    StateContext& context;
 public:
+    int currentCountShips;
     PlaceShipController(StateContext& context);
     ~PlaceShipController();
-    void placementShips();
+    void addShip();
     void deleteShip();
 };

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "GameView.h"
-
-void GameView::displayGameField(){
-
+#include "model/GameField.h"
+void GameView::displayGameField(GameField* field){
+    field->printGameField();
 }

@@ -14,5 +14,8 @@ enum class SegmentState{
 enum class CellField {
     UNKNOWN,
     EMPTY,
-    SHIP
+    SHIP,
+    SHIP_INT,
+    SHIP_DAMAGED,
+    SHIP_DESTROYED
 };

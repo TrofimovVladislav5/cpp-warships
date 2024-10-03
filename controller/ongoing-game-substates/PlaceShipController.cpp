@@ -1,34 +1,61 @@
 #include <string>
-#include "GameState.h"
+#include <regex>
+#include <iostream>
+#include "model/Ship.h"
+#include "model/StateContext.h"
 #include "model/Structures.h"
 #include "model/GameStateDTO.h"
 #include "view/ViewHelper.h"
+#include "model/MatchSettings.h"
 #include "PlaceShipController.h"
+#include "parser/Parser.h"
+#include "view/GameView.h"
 
-PlaceShipController::PlaceShipController() : GameState(context) {
-    this->minimalCountShips = 10;
-    this->minimalFieldSize = 10;
-};
+PlaceShipController::PlaceShipController(StateContext& context) 
+    : context(context)
+    , minimalCountShips(10)
+{}
 
-PlaceShipController::placementShip(){
-    ViewHelper::consoleOut("Enter a value for the field size, 
-        if you do not enter it, the standard field will be 10 x 10");
-    std::string potentialSize;
-    if (!isdigit(std::stoi(potentialSize))){
-        //TODO: Class Exceptions
+PlaceShipController::~PlaceShipController(){
+
+}
+
+void PlaceShipController::addShip(){
+    MatchSettings* settings;
+    Parser* parser = new Parser();
+    if (context.currentMatch == nullptr){
+        settings = new MatchSettings();
+        context.currentMatch = new GameStateDTO(settings);
     }
-    int size = std::stoi(potentialSize);
-    ViewHelper::consoleOut("Enter a direction placeShip: horizontal, vertical");
-    Direction direction;
-    std::string potentialDirection;
-    std::getline(std::cin, potentialDirection);
-    if (potentialDirection == "horizontal"){
-        direction = Direction::HORIZONTAL;
+    else{
+        settings = context.currentMatch->getSettings();
     }
-    else if (potentialDirection == "vertical"){
-        direction = Direction::VERTICAL;
+    int length = parser->parseLengthShip();
+    Direction direction = parser->parseDirectionShip();
+    std::pair<int, int> coordinate = parser->parseCoordinateCell();
+    Ship* ship = new Ship(length, direction);
+    ShipManager* playerManager = settings->getPlayerManager();
+    GameField* gameField = settings->getPlayerField();
+    if (gameField->placeShip(ship, coordinate.first, coordinate.second)){
+        playerManager->addShip(ship);
+        playerManager->printStateShips();
     }
-    ViewHelper::consoleOut("Enter a length of ship 1-4");
-    int length;
-    std::cin >> length;
+    gameField->printGameField();
+    delete parser;
+}
+
+void PlaceShipController::deleteShip(){
+    MatchSettings* settings;
+    Parser* parser = new Parser();
+    if (context.currentMatch == nullptr){
+        settings = new MatchSettings();
+        context.currentMatch = new GameStateDTO(settings);
+    }
+    else{
+        settings = context.currentMatch->getSettings();
+    }
+    std::pair<int, int> coordinate = parser->parseCoordinateCell();
+    GameField* gameField = settings->getPlayerField();
+    gameField->removeShip(coordinate.first, coordinate.second);
+    gameField->printGameField();
 }

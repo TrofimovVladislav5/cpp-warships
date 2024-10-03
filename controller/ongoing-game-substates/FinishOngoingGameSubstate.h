@@ -1,5 +1,5 @@
 #pragma once
-
-class FinishOngoingGameSubstate {
+#include "game-states/OngoingGameState.h"
+class FinishOngoingGameSubstate : public OngoingGameState{
 
 };

@@ -4,10 +4,11 @@
 #include "model/StateContext.h"
 #include "game-states/OngoingGameState.h"
 #include "InitiateOngoingGameSubstate.h"
+#include "PlaceShipController.h"
 #include "BattleOngoingGameSubstate.h"
 
 InitiateOngoingGameSubstate::InitiateOngoingGameSubstate(StateContext& context) : OngoingGameState(context){
-    this->placeShipController = new PlaceShipController();
+    this->placeShipController = new PlaceShipController(context);
 };   
 
 InitiateOngoingGameSubstate::~InitiateOngoingGameSubstate(){
@@ -20,13 +21,13 @@ void InitiateOngoingGameSubstate::openSubstate() {
 }
 
 void InitiateOngoingGameSubstate::updateSubstate() {
-    ViewHelper::consoleOut("add, delete ships");
-    std:::getline(std::cin, latestCommand);
+    ViewHelper::consoleOut("You can in this stage add and delete ships on game field");
+    std::getline(std::cin, latestCommand);
     if (latestCommand == "add") {
-        placeShipController->add();
+        placeShipController->addShip();
     }
     else if (latestCommand == "delete") {
-        placeShipController->delete();
+        placeShipController->deleteShip();
     }
 }
 

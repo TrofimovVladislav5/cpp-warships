@@ -1,12 +1,13 @@
 #pragma once
-#include "GameField.h"
-#include "ShipManager.h"
-#include "StateContext.h"
-#include "Ship.h"
+#include "MatchSettings.h"
 
 class GameStateDTO {
+private:
+    MatchSettings* settings;
 public:
     GameStateDTO();
-    GameStateDTO(GameSettings settings);
+    GameStateDTO(MatchSettings* settings);
+    MatchSettings* getSettings();
+    void setSettings(MatchSettings* newSettings);
     int roundNumber;
 };

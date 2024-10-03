@@ -25,9 +25,9 @@ void ShipManager::printStateShips() {
                     segmenInfo += "DESTROYED ";
                     break;
             }
-            ViewHelper::consoleOut("Ship " + std::to_string(i + 1) + 
-                               " length " + std::to_string(ships[i].getLength()) + 
-                               ": " + segmenInfo); 
         }
+        ViewHelper::consoleOut("Ship " + std::to_string(i + 1) + 
+                               " length " + std::to_string(ships[i].getLength()) + 
+                               ": " + segmenInfo);
     }
 }

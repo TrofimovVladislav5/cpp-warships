@@ -47,7 +47,6 @@ void Ship::takeDamage(const int number) {
             break;
         }
         default:
-            std::cout << "C" << std::endl;
             break;
     }
 }

@@ -29,6 +29,7 @@ add_executable(cpp_warships
         controller/ongoing-game-substates/FinishOngoingGameSubstate.h
         controller/ongoing-game-substates/InitiateOngoingGameSubstate.cpp
         controller/ongoing-game-substates/InitiateOngoingGameSubstate.h
+        controller/ongoing-game-substates/PlaceShipController.cpp
         model/GameField.h
         model/Ship.cpp
         model/Ship.h
@@ -38,6 +39,7 @@ add_executable(cpp_warships
         model/GameStateDTO.h
         model/StateContext.cpp
         model/StateContext.h
+        model/MatchSettings.cpp
         view/GameMenuView.cpp
         view/GameMenuView.h
         view/ViewHelper.cpp
@@ -46,4 +48,5 @@ add_executable(cpp_warships
         controller/game-states/ShutdownGameState.h
         view/OngoingGameView.cpp
         view/OngoingGameView.h
+        parser/Parser.cpp
 )
