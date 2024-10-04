@@ -1,7 +1,8 @@
 #pragma once
 #include <regex>
 
-template<typename T> class ParserParameter {
+// template<typename T>
+class ParserParameter {
 private:
     std::regex validator;
     std::string description;

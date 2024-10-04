@@ -2,10 +2,10 @@
 
 #include <map>
 
-template<typename T>
-ParserCommandInfoConfig<T>::ParserCommandInfoConfig(
+// template<typename T>
+ParserCommandInfoConfig::ParserCommandInfoConfig(
     std::string description,
-    std::vector<ParserParameter<std::string> > parameters,
+    std::vector<ParserParameter> parameters,
     std::function<void(std::map<std::string, std::string>)> function
 )
     : description(std::move(description))
@@ -14,22 +14,22 @@ ParserCommandInfoConfig<T>::ParserCommandInfoConfig(
 {}
 
 
-template<typename T>
-ParserCommandInfo<T>::ParserCommandInfo(ParserCommandInfoConfig<std::string> config)
+// template<typename T>
+ParserCommandInfo::ParserCommandInfo(ParserCommandInfoConfig config)
     : config(config)
 {}
 
-template<typename T>
-std::string ParserCommandInfo<T>::getDescription() {
-    return this->config.getDescription();
+// template<typename T>
+std::string ParserCommandInfo::getDescription() {
+    return this->config.description;
 }
 
-template<typename T>
-std::function<void(std::map<std::string, std::string>)> ParserCommandInfo<T>::getExecutable(std::map<std::string, std::string>) {
-    return this->config.getExecutable();
+// template<typename T>
+std::function<void(std::map<std::string, std::string>)> ParserCommandInfo::getExecutable(std::map<std::string, std::string>) {
+    return this->config.executable;
 }
 
-template<typename T>
-std::vector<ParserParameter<std::string> > ParserCommandInfo<T>::getParams() {
-    return this->config.getParams();
+// template<typename T>
+std::vector<ParserParameter> ParserCommandInfo::getParams() {
+    return this->config.parameters;
 }

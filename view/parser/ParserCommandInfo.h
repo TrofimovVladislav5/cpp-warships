@@ -12,24 +12,26 @@
 //TODO: add aliases (?)
 //TODO: Replace 'string' with list of types in template
 
-template<typename T> struct ParserCommandInfoConfig {
+// template<typename T>
+struct ParserCommandInfoConfig {
     ParserCommandInfoConfig(
         std::string description,
-        std::vector<ParserParameter<std::string>> parameters,
+        std::vector<ParserParameter> parameters,
         std::function<void(std::map<std::string, std::string>)> function
     );
 
     std::string description;
-    std::vector<ParserParameter<std::string>> parameters;
+    std::vector<ParserParameter> parameters;
     std::function<void(std::map<std::string, std::string>)> executable;
 };
 
-template<typename T> class ParserCommandInfo {
+// template<typename T>
+class ParserCommandInfo {
 private:
-    ParserCommandInfoConfig<T> config;
+    ParserCommandInfoConfig config;
 public:
-    ParserCommandInfo(ParserCommandInfoConfig<std::string> config);
-    std::vector<ParserParameter<std::string>> getParams();
+    ParserCommandInfo(ParserCommandInfoConfig config);
+    std::vector<ParserParameter> getParams();
     std::string getDescription();
     std::function<void(std::map<std::string, std::string>)> getExecutable(std::map<std::string, std::string>);
 };

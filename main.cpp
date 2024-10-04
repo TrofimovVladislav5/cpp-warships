@@ -3,39 +3,42 @@
 #include "view/parser/Parser.h"
 
 void sayHello(std::map<std::string, std::string> args) {
-    printf("Hello, world!\n");
+    std::cout << "Hello, world!\n";
+    std::cout << "Age: " << args["--age"] << "\n";
+    std::cout << "Name: " << args["--name"] << "\n";
 }
 
-std::string sayGoodbye(std::map<std::string, std::string> args) {
-    printf("Goodbye!\n");
+void sayGoodbye(std::map<std::string, std::string> args) {
+    std::cout << "Goodbye!\n";
 }
 
 int main(){
     // GameController controller;
     // controller.run();
 
-    std::map<std::string, ParserCommandInfo<void>> schemeMap = {
-        {"start", ParserCommandInfo<void>(ParserCommandInfoConfig<std::string>(
+    std::map<std::string, ParserCommandInfo> schemeMap = {
+        {"start", ParserCommandInfo(ParserCommandInfoConfig(
             "The purpose of this function is to start an app",
             {
-                ParserParameter<std::string>({"--age"}, std::regex("(-?\\d+)")),
-                ParserParameter<std::string>({"--name"}, std::regex("^[A-Z][a-z]+\\s[A-Z][a-z]+$")),
+                ParserParameter({"--age"}, std::regex("^0$|^[1-9][0-9]*$")),
+                ParserParameter({"--name"}, std::regex("^[A-Z][a-z]+\\s[A-Z][a-z]+$")),
             },
             sayHello
             ))},
-        {"end", ParserCommandInfo<void>(ParserCommandInfoConfig<std::string>(
+        {"end", ParserCommandInfo(ParserCommandInfoConfig(
             "The purpose of this function is to end an app",
             {
-                ParserParameter<std::string>({"--hello"}, std::regex("(-?\\d+)"))
+                ParserParameter({"--hello"}, std::regex("(-?\\d+)"))
             },
             sayGoodbye
             ))}
     };
 
-    Parser<void> parser(schemeMap);
+    Parser parser(schemeMap);
     std::string input;
     std::getline(std::cin, input);
-    parser.parse(input);
+    auto result = parser.parse(input);
+    result.first(result.second);
 
     return 0;
 }
