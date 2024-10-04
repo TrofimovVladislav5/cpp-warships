@@ -1,11 +1,9 @@
 #include "Parser.h"
 
-#include <iostream>
-
 #include "view/ViewHelper.h"
 
 // template<typename T>
-Parser::Parser(std::map<std::string, ParserCommandInfo> scheme)
+Parser::Parser(SchemeMap scheme)
     : scheme(std::move(scheme))
 {}
 
@@ -30,29 +28,33 @@ std::vector<std::string> Parser::split(const std::string &initial, char delim) {
 }
 
 // template<typename T>
-ParserParameter* Parser::findOption(const std::string &flag, ParserCommandInfo& command) {
+bool Parser::findOption(const std::string &flag, const ParserCommandInfo& command, ParserParameter& result) {
     for (int i = 0; i < command.getParams().size(); i++) {
         ParserParameter param = command.getParams()[i];
-        if (param.getIsFlagPresent(flag)) return &command.getParams()[i];
+        if (param.getIsFlagPresent(flag)) {
+            result = param;
+            return true;
+        }
     }
 
-    return nullptr;
+    return false;
 }
 
 // template<typename T>
-std::pair<bool, std::map<std::string, std::string>> Parser::validateParams(std::vector<std::string> &inputChunks, ParserCommandInfo& command) {
+std::pair<bool, ParsedOptions> Parser::validateParams(const std::vector<std::string> &inputChunks, ParserCommandInfo& command) {
     bool isValid = true;
-    std::map<std::string, std::string> validParamValues;
+    ParsedOptions validParamValues;
 
     for (int i = 0; i < inputChunks.size(); i++) {
-        std::string chunk = inputChunks[i];
+        const std::string& chunk = inputChunks[i];
         if (chunk.substr(0, 2) == "--") {
-            std::cout << chunk << std::endl;
-            ParserParameter* option = findOption(chunk, command);
-            std::string optionValue = i == inputChunks.size() - 1 ? "" : inputChunks[i + 1];
-            std::pair<bool, std::string> validationResult = option->validate(optionValue);
-            isValid = isValid && validationResult.first;
-            if (isValid) validParamValues.emplace(chunk.substr(2), validationResult.second);
+            ParserParameter option;
+            if (Parser::findOption(chunk, command, option)) {
+                std::string optionValue = i == inputChunks.size() - 1 ? "" : inputChunks[i + 1];
+                std::pair<bool, std::string> validationResult = option.validate(optionValue);
+                isValid = isValid && validationResult.first;
+                if (isValid) validParamValues.emplace(chunk.substr(2), validationResult.second);
+            }
         }
     }
 
@@ -60,22 +62,27 @@ std::pair<bool, std::map<std::string, std::string>> Parser::validateParams(std::
 }
 
 // template<typename T>
-void displayError(std::map<std::string, std::string> args) {
+void displayError(ParsedOptions args) {
     ViewHelper::consoleOut("Error: one or more arguments is invalid. Please try again.");
+    auto begin = args.begin();
+    for (int i = 0; i < args.size(); i++) {
+        ViewHelper::consoleOut(begin->first + ": " + begin->second);
+        std::advance(begin, 1);
+    }
 }
 
 // template<typename T>
-std::pair<std::function<void(std::map<std::string, std::string>)>, std::map<std::string, std::string>> Parser::parse(std::string input) {
-    std::vector<std::string> splitInput = this->split(input, ' ');
+std::pair<ParseCallback, ParsedOptions> Parser::parse(const std::string &input) const {
+    std::vector<std::string> splitInput = Parser::split(input, ' ');
     if (splitInput.empty()) throw std::invalid_argument("Invalid input");
 
     ParserCommandInfo relatedCommand = this->scheme.at(splitInput[0]);
-    std::pair<bool, std::map<std::string, std::string>> validationResult = this->validateParams(splitInput, relatedCommand);
-    std::map<std::string, std::string> parsedArguments = validationResult.second;
+    const std::pair<bool, ParsedOptions> validationResult = Parser::validateParams(splitInput, relatedCommand);
+    ParsedOptions parsedArguments = validationResult.second;
 
     if (!validationResult.first) {
         return std::make_pair(displayError, parsedArguments);
     }
 
-    return std::make_pair(relatedCommand.getExecutable(parsedArguments), parsedArguments);
+    return std::make_pair(relatedCommand.getExecutable(), parsedArguments);
 }

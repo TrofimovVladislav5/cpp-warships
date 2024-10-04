@@ -1,16 +1,18 @@
 #pragma once
 #include <regex>
+#include <vector>
+#include <string>
 
-// template<typename T>
 class ParserParameter {
 private:
     std::regex validator;
     std::string description;
     std::vector<std::string> flags;
 public:
+    ParserParameter();
     ParserParameter(std::vector<std::string> flags, std::regex validator);
     ParserParameter(std::vector<std::string> flags, std::regex validator, std::string description);
     std::string getDescription();
-    bool getIsFlagPresent(std::string flag);
-    std::pair<bool, std::string> validate(std::string input);
+    bool getIsFlagPresent(const std::string &flag) const;
+    std::pair<bool, std::string> validate(const std::string& input) const;
 };

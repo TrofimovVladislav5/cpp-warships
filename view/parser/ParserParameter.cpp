@@ -1,10 +1,19 @@
 #include "ParserParameter.h"
 
-#include <iostream>
+
+// template<typename T>
+ParserParameter::ParserParameter() = default;
 
 // template<typename T>
 ParserParameter::ParserParameter(std::vector<std::string> flags, std::regex validator)
-    : validator(validator)
+    : validator(std::move(validator))
+    , flags(std::move(flags))
+{}
+
+// template<typename T>
+ParserParameter::ParserParameter(std::vector<std::string> flags, std::regex validator, std::string description)
+    : validator(std::move(validator))
+    , description(std::move(description))
     , flags(std::move(flags))
 {}
 
@@ -14,14 +23,7 @@ std::string ParserParameter::getDescription() {
 }
 
 // template<typename T>
-ParserParameter::ParserParameter(std::vector<std::string> flags, std::regex validator, std::string description)
-    : validator(validator)
-    , description(std::move(description))
-    , flags(std::move(flags))
-{}
-
-// template<typename T>
-bool ParserParameter::getIsFlagPresent(std::string flag) {
+bool ParserParameter::getIsFlagPresent(const std::string &flag) const {
     for (int i = 0; i < this->flags.size(); i++) {
         if (this->flags[i] == flag) {
             return true;
@@ -32,7 +34,8 @@ bool ParserParameter::getIsFlagPresent(std::string flag) {
 }
 
 // template<typename T>
-std::pair<bool, std::string> ParserParameter::validate(std::string input) {
+std::pair<bool, std::string> ParserParameter::validate(const std::string& input) const {
     bool isValid = std::regex_match(input, this->validator);
+
     return std::make_pair(isValid, input);
 }

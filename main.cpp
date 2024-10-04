@@ -1,37 +1,43 @@
 #include <iostream>
+#include <regex>
 
 #include "view/parser/Parser.h"
 
-void sayHello(std::map<std::string, std::string> args) {
-    std::cout << "Hello, world!\n";
-    std::cout << "Age: " << args["--age"] << "\n";
-    std::cout << "Name: " << args["--name"] << "\n";
+void sayHello(ParsedOptions args) {
+    const std::string name = args["name"].empty() ? "stranger" : args["name"];
+
+    std::cout << "Hello, " << name << "!\n";
+    if (!args["age"].empty()) std::cout << "Age: " << args["age"] << "\n";
 }
 
-void sayGoodbye(std::map<std::string, std::string> args) {
+void sayGoodbye(ParsedOptions args) {
     std::cout << "Goodbye!\n";
 }
+
+
+//TODO: add aliases (?)
+//TODO: add dynamic types with templates (*)
 
 int main(){
     // GameController controller;
     // controller.run();
 
-    std::map<std::string, ParserCommandInfo> schemeMap = {
-        {"start", ParserCommandInfo(ParserCommandInfoConfig(
+    SchemeMap schemeMap = {
+        {"start", ParserCommandInfo({
             "The purpose of this function is to start an app",
             {
-                ParserParameter({"--age"}, std::regex("^0$|^[1-9][0-9]*$")),
-                ParserParameter({"--name"}, std::regex("^[A-Z][a-z]+\\s[A-Z][a-z]+$")),
+                ParserParameter({"--age"}, std::regex("^[1-9][0-9]*?$")),
+                ParserParameter({"--name"}, std::regex("^[A-Z][a-z]+(\\s[A-Z][a-z]+)?$"))
             },
             sayHello
-            ))},
-        {"end", ParserCommandInfo(ParserCommandInfoConfig(
+        })},
+        {"end", ParserCommandInfo({
             "The purpose of this function is to end an app",
             {
-                ParserParameter({"--hello"}, std::regex("(-?\\d+)"))
+                ParserParameter({"--hello"}, std::regex("^[1-9][0-9]*?$"))
             },
             sayGoodbye
-            ))}
+        })},
     };
 
     Parser parser(schemeMap);

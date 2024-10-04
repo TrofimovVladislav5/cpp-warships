@@ -4,25 +4,23 @@
 
 #include "ParserParameter.h"
 
-//FIXME: Remove
-// start --size 10 --time-limit 300 --verbose
-// insert(4 qwe)
+// template <typename T>
+typedef std::map<std::string, std::string> ParsedOptions;
 
-
-//TODO: add aliases (?)
-//TODO: Replace 'string' with list of types in template
+// template <typename T>
+typedef std::function<void(ParsedOptions)> ParseCallback;
 
 // template<typename T>
 struct ParserCommandInfoConfig {
     ParserCommandInfoConfig(
         std::string description,
         std::vector<ParserParameter> parameters,
-        std::function<void(std::map<std::string, std::string>)> function
+        ParseCallback function
     );
 
     std::string description;
     std::vector<ParserParameter> parameters;
-    std::function<void(std::map<std::string, std::string>)> executable;
+    ParseCallback executable;
 };
 
 // template<typename T>
@@ -30,8 +28,8 @@ class ParserCommandInfo {
 private:
     ParserCommandInfoConfig config;
 public:
-    ParserCommandInfo(ParserCommandInfoConfig config);
-    std::vector<ParserParameter> getParams();
-    std::string getDescription();
-    std::function<void(std::map<std::string, std::string>)> getExecutable(std::map<std::string, std::string>);
+    explicit ParserCommandInfo(ParserCommandInfoConfig config);
+    std::vector<ParserParameter> getParams() const;
+    std::string getDescription() const;
+    ParseCallback getExecutable() const;
 };

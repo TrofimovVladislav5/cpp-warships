@@ -48,10 +48,10 @@ add_executable(cpp_warships
         main.cpp
         view/ViewHelper.cpp
         view/ViewHelper.h
-        view/parser/Parser.cpp
-        view/parser/Parser.h
-        view/parser/ParserCommandInfo.cpp
-        view/parser/ParserCommandInfo.h
         view/parser/ParserParameter.cpp
         view/parser/ParserParameter.h
+        view/parser/ParserCommandInfo.cpp
+        view/parser/ParserCommandInfo.h
+        view/parser/Parser.cpp
+        view/parser/Parser.h
 )
