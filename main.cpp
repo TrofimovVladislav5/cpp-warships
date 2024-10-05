@@ -4,13 +4,6 @@
 #include "library/TypesHelper.h"
 #include "view/parser/Parser.h"
 
-void sayHello(ParsedOptions args) {
-    const std::string name = args["name"].empty() ? "stranger" : args["name"];
-
-    std::cout << "Hello, " << name << "!\n";
-    if (!args["age"].empty()) std::cout << "Age: " << args["age"] << "\n";
-}
-
 void sayGoodbye(ParsedOptions args) {
     std::cout << "Goodbye!\n";
 }
@@ -26,8 +19,14 @@ public:
 };
 
 
-//TODO: add aliases (?)
-//TODO: add dynamic types with templates (*)
+//TODO: add fallback function (if something went wrong)
+
+//TODO: add help command
+
+//TODO: (?) add aliases
+
+//TODO: (*) implement builder pattern for building ParserParameter
+// https://refactoring.guru/ru/design-patterns/builder
 
 int main(){
     // GameController controller;
@@ -39,7 +38,7 @@ int main(){
         {"start", ParserCommandInfo({
             "The purpose of this function is to start an app",
             {
-                ParserParameter({"--age"}, std::regex("^[1-9][0-9]*?$")),
+                ParserParameter({"--age"}, std::regex("^[1-9][0-9]*?$"), "", true),
                 ParserParameter({"--name"}, std::regex("^[A-Z][a-z]+(\\s[A-Z][a-z]+)?$"))
             },
             TypesHelper::methodToFunction(&TestClass::sayHello, &test)

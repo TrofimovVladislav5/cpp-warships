@@ -18,9 +18,27 @@ ParserParameter::ParserParameter(std::vector<std::string> flags, std::regex vali
 {}
 
 // template<typename T>
+ParserParameter::ParserParameter(
+    std::vector<std::string> flags,
+    std::regex validator,
+    std::string description,
+    const bool necessary
+)
+    : validator(std::move(validator))
+    , description(std::move(description))
+    , flags(std::move(flags))
+    , necessary(necessary)
+{}
+
+// template<typename T>
 std::string ParserParameter::getDescription() {
     return this->description;
 }
+
+bool ParserParameter::getNecessary() const {
+    return this->necessary;
+}
+
 
 // template<typename T>
 bool ParserParameter::getIsFlagPresent(const std::string &flag) const {
@@ -31,6 +49,10 @@ bool ParserParameter::getIsFlagPresent(const std::string &flag) const {
     }
 
     return false;
+}
+
+std::vector<std::string> ParserParameter::getFlags() const {
+    return this->flags;
 }
 
 // template<typename T>

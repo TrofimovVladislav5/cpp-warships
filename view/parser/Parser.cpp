@@ -7,6 +7,16 @@
 bool findOption(const std::string &flag, const ParserCommandInfo& command, ParserParameter& result);
 
 // template<typename T>
+void displayError(ParsedOptions args);
+
+// template<typename T>
+bool necessaryFlagsPresent(const std::vector<std::string> &input, const ParserCommandInfo &scheme);
+
+// template<typename T>
+bool commandInScheme(std::string &command, const SchemeMap &scheme);
+
+
+// template<typename T>
 Parser::Parser(SchemeMap scheme)
     : scheme(std::move(scheme))
 {}
@@ -33,19 +43,13 @@ std::pair<bool, ParsedOptions> Parser::validateParams(const std::vector<std::str
 }
 
 // template<typename T>
-void displayError(ParsedOptions args) {
-    ViewHelper::consoleOut("Error: one or more arguments is invalid. Please try again.");
-    auto begin = args.begin();
-    for (int i = 0; i < args.size(); i++) {
-        ViewHelper::consoleOut(begin->first + ": " + begin->second);
-        std::advance(begin, 1);
-    }
-}
-
-// template<typename T>
 std::pair<ParseCallback, ParsedOptions> Parser::parse(const std::string &input) {
     std::vector<std::string> splitInput = StringHelper::split(input, ' ');
-    if (splitInput.empty() || this->scheme.find(splitInput[0]) == this->scheme.end()) {
+    if (
+        splitInput.empty() ||
+        !commandInScheme(splitInput[0], this->scheme) ||
+        !necessaryFlagsPresent(splitInput, this->scheme.at(splitInput[0]))
+    ) {
         throw std::invalid_argument("Invalid input");
     }
 
@@ -82,4 +86,64 @@ bool findOption(const std::string &flag, const ParserCommandInfo& command, Parse
     }
 
     return false;
+}
+
+// template<typename T>
+void displayError(ParsedOptions args) {
+    ViewHelper::consoleOut("Error: one or more arguments is invalid. Please try again.");
+    auto begin = args.begin();
+    for (int i = 0; i < args.size(); i++) {
+        ViewHelper::consoleOut(begin->first + ": " + begin->second);
+        std::advance(begin, 1);
+    }
+}
+
+bool commandInScheme(std::string &command, const SchemeMap &scheme) {
+    return scheme.find(command) != scheme.end();
+}
+
+void increaseAmountOnHashMap(std::string &key, std::unordered_map<std::string, int> &map) {
+    if (map.find(key) == map.end()) {
+        map[key] = 1;
+    } else {
+        map[key]++;
+    }
+}
+
+void decreaseAmountOnHashMap(std::string &key, std::unordered_map<std::string, int> &map) {
+    if (map.find(key) != map.end()) {
+        map[key]--;
+    }
+}
+
+bool necessaryFlagsPresent(const std::vector<std::string> &input, const ParserCommandInfo &scheme) {
+    auto params = scheme.getParams();
+
+    std::unordered_map<std::string, int> necessaryFlags;
+    std::unordered_map<std::string, int> allFlags;
+
+    for (const auto& param : params) {
+        std::vector<std::string> flags = param.getFlags();
+        bool isNecessary = param.getNecessary();
+
+        for (int j = 0; j < flags.size(); j++) {
+            increaseAmountOnHashMap(flags[j], allFlags);
+            if (isNecessary) increaseAmountOnHashMap(flags[j], necessaryFlags);
+        }
+    }
+
+    for (auto currentChunk : input) {
+        decreaseAmountOnHashMap(currentChunk, necessaryFlags);
+        decreaseAmountOnHashMap(currentChunk, allFlags);
+    }
+
+    for (auto & necessaryFlag : necessaryFlags) {
+        if (necessaryFlag.second > 0) return false;
+    }
+
+    for (auto & allFlag : allFlags) {
+        if (allFlag.second < 0) return false;
+    }
+
+    return true;
 }
