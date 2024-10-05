@@ -56,4 +56,6 @@ add_executable(cpp_warships
         view/parser/Parser.h
         library/StringHelper.cpp
         library/StringHelper.h
+        library/TypesHelper.cpp
+        library/TypesHelper.h
 )

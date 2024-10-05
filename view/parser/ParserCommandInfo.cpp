@@ -1,6 +1,7 @@
 #include "ParserCommandInfo.h"
 
 #include "Parser.h"
+#include "library/TypesHelper.h"
 
 // template<typename T>
 ParserCommandInfoConfig::ParserCommandInfoConfig(
@@ -12,7 +13,6 @@ ParserCommandInfoConfig::ParserCommandInfoConfig(
     , parameters(std::move(parameters))
     , executable(std::move(function))
 {}
-
 
 // template<typename T>
 ParserCommandInfo::ParserCommandInfo(ParserCommandInfoConfig config)

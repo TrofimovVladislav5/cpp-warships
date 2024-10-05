@@ -1,6 +1,7 @@
 #include <iostream>
 #include <regex>
 
+#include "library/TypesHelper.h"
 #include "view/parser/Parser.h"
 
 void sayHello(ParsedOptions args) {
@@ -14,10 +15,6 @@ void sayGoodbye(ParsedOptions args) {
     std::cout << "Goodbye!\n";
 }
 
-
-//TODO: add aliases (?)
-//TODO: add dynamic types with templates (*)
-
 class TestClass {
 public:
     void sayHello(ParsedOptions args) {
@@ -28,9 +25,15 @@ public:
     }
 };
 
+
+//TODO: add aliases (?)
+//TODO: add dynamic types with templates (*)
+
 int main(){
     // GameController controller;
     // controller.run();
+
+    TestClass test;
 
     SchemeMap schemeMap = {
         {"start", ParserCommandInfo({
@@ -39,7 +42,7 @@ int main(){
                 ParserParameter({"--age"}, std::regex("^[1-9][0-9]*?$")),
                 ParserParameter({"--name"}, std::regex("^[A-Z][a-z]+(\\s[A-Z][a-z]+)?$"))
             },
-            sayHello
+            TypesHelper::methodToFunction(&TestClass::sayHello, &test)
         })},
         {"end", ParserCommandInfo({
             "The purpose of this function is to end an app",

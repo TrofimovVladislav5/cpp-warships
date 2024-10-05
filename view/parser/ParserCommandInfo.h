@@ -1,8 +1,10 @@
 #pragma once
+#include <iostream>
 #include <map>
 #include <string>
 
 #include "ParserParameter.h"
+
 
 // template <typename T>
 typedef std::map<std::string, std::string> ParsedOptions;
@@ -13,7 +15,6 @@ typedef std::function<void(ParsedOptions)> ParseCallback;
 //template <typename T>
 typedef std::__bind<ParseCallback&, ParsedOptions&> BindedParseCallback;
 
-// template<typename T>
 struct ParserCommandInfoConfig {
     ParserCommandInfoConfig(
         std::string description,
