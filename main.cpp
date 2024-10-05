@@ -18,6 +18,16 @@ void sayGoodbye(ParsedOptions args) {
 //TODO: add aliases (?)
 //TODO: add dynamic types with templates (*)
 
+class TestClass {
+public:
+    void sayHello(ParsedOptions args) {
+        const std::string name = args["name"].empty() ? "stranger" : args["name"];
+
+        std::cout << "Hello, " << name << "!\n";
+        if (!args["age"].empty()) std::cout << "Age: " << args["age"] << "\n";
+    }
+};
+
 int main(){
     // GameController controller;
     // controller.run();
@@ -43,8 +53,7 @@ int main(){
     Parser parser(schemeMap);
     std::string input;
     std::getline(std::cin, input);
-    auto result = parser.parse(input);
-    result.first(result.second);
+    parser.executedParse(input);
 
     return 0;
 }

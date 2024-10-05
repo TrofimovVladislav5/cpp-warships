@@ -13,11 +13,10 @@ typedef std::map<std::string, ParserCommandInfo> SchemeMap;
 class Parser {
 private:
     SchemeMap scheme;
-
-    static std::vector<std::string> split(const std::string &initial, char delim);
-    static bool findOption(const std::string &flag, const ParserCommandInfo &command, ParserParameter &result);
-    static std::pair<bool, ParsedOptions> validateParams(const std::vector<std::string> &inputChunks, ParserCommandInfo &command);
+    std::pair<bool, ParsedOptions> validateParams(const std::vector<std::string> &inputChunks, ParserCommandInfo &command);
 public:
     explicit Parser(SchemeMap scheme);
-    std::pair<ParseCallback, ParsedOptions> parse(const std::string &input) const;
+    std::pair<ParseCallback, ParsedOptions> parse(const std::string &input);
+    BindedParseCallback bindedParse(const std::string &input);
+    void executedParse(const std::string &input);
 };

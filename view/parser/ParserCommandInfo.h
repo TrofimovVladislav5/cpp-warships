@@ -10,6 +10,9 @@ typedef std::map<std::string, std::string> ParsedOptions;
 // template <typename T>
 typedef std::function<void(ParsedOptions)> ParseCallback;
 
+//template <typename T>
+typedef std::__bind<ParseCallback&, ParsedOptions&> BindedParseCallback;
+
 // template<typename T>
 struct ParserCommandInfoConfig {
     ParserCommandInfoConfig(
