@@ -3,5 +3,5 @@
 
 class GameView{
 public:
-    void displayGameField(GameField* field);
+    void displayGameField();
 };

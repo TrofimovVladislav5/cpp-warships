@@ -1,9 +1,13 @@
 #pragma once
 #include "Ship.h"
-class ShipManager{
+class ShipManager {
 private:
-    std::vector<Ship> ships;
+    std::vector<Ship*> ships;
 public:
-    void addShip(Ship* ship);
-    void printStateShips();
+    ShipManager(const std::vector<int>& shipsSize);
+    ~ShipManager();
+    Ship* operator[](int index);
+    void addShip(int size);
+    void removeShipNumber(int indexRemoving);
+    void showShipsInfo();
 };

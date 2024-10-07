@@ -1,21 +1,25 @@
 #pragma once
+#include <utility>
+#include <cstddef>
+enum class SegmentState{
+    intact,
+    damaged,
+    destroyed
+};
 
 enum class Direction{
-    HORIZONTAL,
-    VERTICAL
+    horizontal,
+    vertical
 };
 
-enum class SegmentState{
-    INT,
-    DAMAGED,
-    DESTROYED
+enum class Cell{
+    empty,
+    unknown,
+    ship_int,
+    ship_damaged,
+    ship_destroyed
 };
 
-enum class CellField {
-    UNKNOWN,
-    EMPTY,
-    SHIP,
-    SHIP_INT,
-    SHIP_DAMAGED,
-    SHIP_DESTROYED
+struct hashFunc {
+    size_t operator()(std::pair<int, int> coordinate) const;
 };

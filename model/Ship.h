@@ -1,22 +1,17 @@
 #pragma once
-
+#include "Segment.h"
 #include <vector>
-
-#include "Ship.h"
-#include "Structures.h"
 
 class Ship {
 private:
-    Direction direction;
-    int length;
-    std::vector<SegmentState> segments;
+    int maxSegmentHealth;
+    std::vector<Segment> segments;
 public:
-    Ship(int length, Direction direction);
-    ~Ship();
-
-    int getLength() const;
-    std::vector<SegmentState> getSegments() const;
-    Direction getDirection() const;
-    bool getDestroyed() const;
-    void takeDamage(int number);
+    Ship(int length, int maxSegmentHealth = 2);
+    ~Ship() = default;
+    int getLength();
+    SegmentState getSegment(int index);
+    bool takeDamage(int indexSegment, int damageCount);
+    bool isDestroyed();
+    void status();
 };

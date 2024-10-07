@@ -1,52 +1,54 @@
-#include <iostream>
-#include <vector>
 #include "Ship.h"
+#include <iostream>
 
-Ship::Ship(int length, Direction direction){
-    this->length = length;
-    this->direction = direction;
-    segments = std::vector<SegmentState>(length, SegmentState::INT);
+Ship::Ship(int length, int maxSegmentHealth = 2) 
+    : maxSegmentHealth(maxSegmentHealth)
+    , segments(std::vector<Segment>(length, maxSegmentHealth))
+{}
+
+Ship::~Ship() = default;
+
+int Ship::getLength() {return segments.size();}
+
+SegmentState Ship::getSegment(int index){
+    if (index < 0 || index >= segments.size()) {
+        throw std::out_of_range("Invalid index error segment");
+    }
+    return segments[index].getState();
 }
 
-Ship::~Ship(){
-    segments.clear();
+bool Ship::takeDamage(int indexSegment, int damageCount) {
+    if (indexSegment < 0 || indexSegment >= segments.size()) {
+        throw std::out_of_range("Invalid index error");
+    }
+
+    segments[indexSegment].takeDamage(damageCount);
+    return true;
 }
 
-int Ship::getLength() const {
-    return length;
-}
-
-Direction Ship::getDirection() const {
-    return direction;
-}
-
-std::vector<SegmentState> Ship::getSegments() const {
-    return segments;
-}
-
-bool Ship::getDestroyed() const {
-    for (int i = 0;i < length;i++){
-        if (segments[i] != SegmentState::DESTROYED){
+bool Ship::isDestroyed() {
+    for (auto& segment : segments) {
+        if (!segment.isDestroyed()){
             return false;
         }
     }
     return true;
 }
 
-void Ship::takeDamage(const int number) {
-    if (number <  0 || number >= length){
-        throw std::out_of_range("Invalid length ship");
-    }
-    switch(segments[number]){
-        case SegmentState::INT:{
-            segments[number] = SegmentState::DAMAGED;
-            break;
+void Ship::status(){
+    std::string shipInfo;
+    for (int i = segments.size() - 1;i >= 0;i--) {
+        switch (segments[i].getState()){
+            case SegmentState::intact:
+                shipInfo += " int ";
+                break;
+            case SegmentState::damaged:
+                shipInfo += " damaged ";
+                break;
+            case SegmentState::destroyed:
+                shipInfo += " destroyed ";
+                break;
+            }
         }
-        case SegmentState::DAMAGED:{
-            segments[number] = SegmentState::DESTROYED;
-            break;
-        }
-        default:
-            break;
-    }
+    std::cout << "Segments info: " << shipInfo << std::endl;
 }
