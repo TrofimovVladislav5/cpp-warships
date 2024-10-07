@@ -19,12 +19,20 @@ struct ParserCommandInfoConfig {
     ParserCommandInfoConfig(
         std::string description,
         std::vector<ParserParameter> parameters,
+        ParseCallback function,
+        ParseCallback displayError
+    );
+
+    ParserCommandInfoConfig(
+        std::string description,
+        std::vector<ParserParameter> parameters,
         ParseCallback function
     );
 
     std::string description;
     std::vector<ParserParameter> parameters;
     ParseCallback executable;
+    ParseCallback displayError;
 };
 
 // template<typename T>
@@ -35,5 +43,6 @@ public:
     explicit ParserCommandInfo(ParserCommandInfoConfig config);
     std::vector<ParserParameter> getParams() const;
     std::string getDescription() const;
+    ParseCallback getErrorDisplay() const;
     ParseCallback getExecutable() const;
 };

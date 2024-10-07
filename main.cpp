@@ -16,6 +16,14 @@ public:
         std::cout << "Hello, " << name << "!\n";
         if (!args["age"].empty()) std::cout << "Age: " << args["age"] << "\n";
     }
+
+    void sayError(ParsedOptions args) {
+        std::cout << "Error!\n";
+    }
+
+    void sayNotFound(ParsedOptions args) {
+        std::cout << "Command not found!\n";
+    }
 };
 
 
@@ -41,7 +49,8 @@ int main(){
                 ParserParameter({"--age"}, std::regex("^[1-9][0-9]*?$"), "", true),
                 ParserParameter({"--name"}, std::regex("^[A-Z][a-z]+(\\s[A-Z][a-z]+)?$"))
             },
-            TypesHelper::methodToFunction(&TestClass::sayHello, &test)
+            TypesHelper::methodToFunction(&TestClass::sayHello, &test),
+            TypesHelper::methodToFunction(&TestClass::sayError, &test)
         })},
         {"end", ParserCommandInfo({
             "The purpose of this function is to end an app",
@@ -52,7 +61,7 @@ int main(){
         })},
     };
 
-    Parser parser(schemeMap);
+    Parser parser(schemeMap, TypesHelper::methodToFunction(&TestClass::sayNotFound, &test));
     std::string input;
     std::getline(std::cin, input);
     parser.executedParse(input);

@@ -1,5 +1,7 @@
 #include "Parser.h"
 
+#include <utility>
+
 #include "library/StringHelper.h"
 #include "view/ViewHelper.h"
 
@@ -15,10 +17,15 @@ bool necessaryFlagsPresent(const std::vector<std::string> &input, const ParserCo
 // template<typename T>
 bool commandInScheme(std::string &command, const SchemeMap &scheme);
 
-
 // template<typename T>
 Parser::Parser(SchemeMap scheme)
     : scheme(std::move(scheme))
+{}
+
+// template<typename T>
+Parser::Parser(SchemeMap scheme, ParseCallback displayError)
+    : scheme(std::move(scheme))
+    , displayError(std::move(displayError))
 {}
 
 // template<typename T>
@@ -50,7 +57,10 @@ std::pair<ParseCallback, ParsedOptions> Parser::parse(const std::string &input) 
         !commandInScheme(splitInput[0], this->scheme) ||
         !necessaryFlagsPresent(splitInput, this->scheme.at(splitInput[0]))
     ) {
-        throw std::invalid_argument("Invalid input");
+        ParseCallback commandNotFound = this->displayError
+            ? this->displayError
+            : throw std::invalid_argument("Command not found. You can get better error message by providing displayError callback");
+        return std::make_pair(commandNotFound, ParsedOptions());
     }
 
     ParserCommandInfo relatedCommand = this->scheme.at(splitInput[0]);
@@ -58,7 +68,10 @@ std::pair<ParseCallback, ParsedOptions> Parser::parse(const std::string &input) 
     ParsedOptions parsedArguments = validationResult.second;
 
     if (!validationResult.first) {
-        return std::make_pair(displayError, parsedArguments);
+        ParseCallback protectedDisplayError = relatedCommand.getErrorDisplay()
+            ? relatedCommand.getErrorDisplay()
+            : throw std::invalid_argument("Arguments validation failed. You can get better error message by providing displayError callback");
+        return std::make_pair(protectedDisplayError, parsedArguments);
     }
 
     return std::make_pair(relatedCommand.getExecutable(), parsedArguments);
