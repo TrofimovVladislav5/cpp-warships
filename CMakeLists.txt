@@ -48,14 +48,24 @@ add_executable(cpp_warships
         main.cpp
         view/ViewHelper.cpp
         view/ViewHelper.h
-        view/parser/ParserParameter.cpp
-        view/parser/ParserParameter.h
-        view/parser/ParserCommandInfo.cpp
-        view/parser/ParserCommandInfo.h
-        view/parser/Parser.cpp
-        view/parser/Parser.h
+        library/parser/ParserParameter.cpp
+        library/parser/ParserParameter.h
+        library/parser/ParserCommandInfo.cpp
+        library/parser/ParserCommandInfo.h
+        library/parser/Parser.cpp
+        library/parser/Parser.h
         library/StringHelper.cpp
         library/StringHelper.h
         library/TypesHelper.cpp
         library/TypesHelper.h
+        library/parser-builder/ParserCommandBuilder.cpp
+        library/parser-builder/ParserCommandBuilder.h
+        library/parser-builder/ConfigCommandBuilder.cpp
+        library/parser-builder/ConfigCommandBuilder.h
+        library/parser-builder/ParserBuilderDirector.cpp
+        library/parser-builder/ParserBuilderDirector.h
+        library/parser-builder/ParserParameterBuilder.cpp
+        library/parser-builder/ParserParameterBuilder.h
+        library/parser-builder/DefaultParameterBuilder.cpp
+        library/parser-builder/DefaultParameterBuilder.h
 )

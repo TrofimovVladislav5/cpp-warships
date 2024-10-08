@@ -2,7 +2,10 @@
 #include <regex>
 
 #include "library/TypesHelper.h"
-#include "view/parser/Parser.h"
+#include "library/parser-builder/ConfigCommandBuilder.h"
+#include "library/parser-builder/DefaultParameterBuilder.h"
+#include "library/parser/Parser.h"
+#include "library/parser/ParserCommandInfo.h"
 
 void sayGoodbye(ParsedOptions args) {
     std::cout << "Goodbye!\n";
@@ -22,7 +25,7 @@ public:
     }
 
     void sayNotFound(ParsedOptions args) {
-        std::cout << "Command not found!\n";
+        std::cout << "Command not found or necessary flags are not provided!\n";
     }
 };
 
@@ -42,23 +45,44 @@ int main(){
 
     TestClass test;
 
+    ConfigCommandBuilder commandBuilder;
+    DefaultParameterBuilder parameterBuilder;
+
     SchemeMap schemeMap = {
-        {"start", ParserCommandInfo({
-            "The purpose of this function is to start an app",
-            {
-                ParserParameter({"--age"}, std::regex("^[1-9][0-9]*?$"), "", true),
-                ParserParameter({"--name"}, std::regex("^[A-Z][a-z]+(\\s[A-Z][a-z]+)?$"))
-            },
-            TypesHelper::methodToFunction(&TestClass::sayHello, &test),
-            TypesHelper::methodToFunction(&TestClass::sayError, &test)
-        })},
-        {"end", ParserCommandInfo({
-            "The purpose of this function is to end an app",
-            {
-                ParserParameter({"--hello"}, std::regex("^[1-9][0-9]*?$"))
-            },
-            sayGoodbye
-        })},
+        {"start", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&TestClass::sayHello, &test))
+                .setDescription("The purpose of this function is to start an app")
+                .setDisplayError(TypesHelper::methodToFunction(&TestClass::sayError, &test))
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--age")
+                        .setValidator(std::regex("^[1-9][0-9]*?$"))
+                        .setNecessary(true)
+                        .buildAndReset()
+                )
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--name")
+                        .setValidator(std::regex("^[A-Z][a-z]+(\\s[A-Z][a-z]+)?$"))
+                        .buildAndReset()
+                )
+                .buildAndReset()
+            )
+        },
+        {"end", ParserCommandInfo(
+            commandBuilder
+                .setCallback(sayGoodbye)
+                .setDescription("The purpose of this function is to end an app")
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--hello")
+                        .setValidator(std::regex("^[1-9][0-9]*?$"))
+                        .buildAndReset()
+                )
+                .buildAndReset()
+            )
+        },
     };
 
     Parser parser(schemeMap, TypesHelper::methodToFunction(&TestClass::sayNotFound, &test));

@@ -2,22 +2,6 @@
 
 
 // template<typename T>
-ParserParameter::ParserParameter() = default;
-
-// template<typename T>
-ParserParameter::ParserParameter(std::vector<std::string> flags, std::regex validator)
-    : validator(std::move(validator))
-    , flags(std::move(flags))
-{}
-
-// template<typename T>
-ParserParameter::ParserParameter(std::vector<std::string> flags, std::regex validator, std::string description)
-    : validator(std::move(validator))
-    , description(std::move(description))
-    , flags(std::move(flags))
-{}
-
-// template<typename T>
 ParserParameter::ParserParameter(
     std::vector<std::string> flags,
     std::regex validator,

@@ -10,9 +10,7 @@ private:
     std::vector<std::string> flags;
     bool necessary = false;
 public:
-    ParserParameter();
-    ParserParameter(std::vector<std::string> flags, std::regex validator);
-    ParserParameter(std::vector<std::string> flags, std::regex validator, std::string description);
+    ParserParameter() = default;
     ParserParameter(std::vector<std::string> flags, std::regex validator, std::string description, bool necessary);
 
     std::string getDescription();
