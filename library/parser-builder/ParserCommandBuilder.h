@@ -1,5 +1,4 @@
 #pragma once
-
 #include "library/parser/ParserCommandInfo.h"
 
 class ParserCommandBuilder {

@@ -68,4 +68,10 @@ add_executable(cpp_warships
         library/parser-builder/ParserParameterBuilder.h
         library/parser-builder/DefaultParameterBuilder.cpp
         library/parser-builder/DefaultParameterBuilder.h
+        library/parser-builder/CommandBuildDirector.cpp
+        library/parser-builder/CommandBuildDirector.h
+        library/parser-builder/ParameterBuildDirector.cpp
+        library/parser-builder/ParameterBuildDirector.h
+        library/parser/__showcase__/parserShowcase.h
+        library/parser/__showcase__/parserShowcaseInline.h
 )

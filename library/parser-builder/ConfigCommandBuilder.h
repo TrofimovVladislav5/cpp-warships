@@ -1,3 +1,4 @@
+#pragma once
 #include "ParserCommandBuilder.h"
 
 class ConfigCommandBuilder: public ParserCommandBuilder {
