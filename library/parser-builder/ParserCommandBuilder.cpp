@@ -5,4 +5,5 @@ void ParserCommandBuilder::reset() {
     parameters.clear();
     executable = nullptr;
     displayError = nullptr;
+    setResolveAllFlags(false);
 }

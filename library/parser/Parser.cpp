@@ -3,13 +3,10 @@
 #include <utility>
 
 #include "library/StringHelper.h"
-#include "view/ViewHelper.h"
+#include "../ViewHelper.h"
 
 // template<typename T>
 bool findOption(const std::string &flag, const ParserCommandInfo& command, ParserParameter& result);
-
-// template<typename T>
-void displayError(ParsedOptions args);
 
 // template<typename T>
 bool necessaryFlagsPresent(const std::vector<std::string> &input, const ParserCommandInfo &scheme);
@@ -42,6 +39,8 @@ std::pair<bool, ParsedOptions> Parser::validateParams(const std::vector<std::str
                 std::pair<bool, std::string> validationResult = option.validate(optionValue);
                 isValid = isValid && validationResult.first;
                 if (isValid) validParamValues.emplace(chunk.substr(2), validationResult.second);
+            } else if (command.getResolveAllFlags()) {
+                isValid = false;
             }
         }
     }
@@ -99,16 +98,6 @@ bool findOption(const std::string &flag, const ParserCommandInfo& command, Parse
     }
 
     return false;
-}
-
-// template<typename T>
-void displayError(ParsedOptions args) {
-    ViewHelper::consoleOut("Error: one or more arguments is invalid. Please try again.");
-    auto begin = args.begin();
-    for (int i = 0; i < args.size(); i++) {
-        ViewHelper::consoleOut(begin->first + ": " + begin->second);
-        std::advance(begin, 1);
-    }
 }
 
 bool commandInScheme(std::string &command, const SchemeMap &scheme) {

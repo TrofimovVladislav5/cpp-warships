@@ -19,10 +19,10 @@ std::string ParserParameter::getDescription() {
     return this->description;
 }
 
+// template<typename T>
 bool ParserParameter::getNecessary() const {
     return this->necessary;
 }
-
 
 // template<typename T>
 bool ParserParameter::getIsFlagPresent(const std::string &flag) const {
@@ -35,6 +35,7 @@ bool ParserParameter::getIsFlagPresent(const std::string &flag) const {
     return false;
 }
 
+// template<typename T>
 std::vector<std::string> ParserParameter::getFlags() const {
     return this->flags;
 }
