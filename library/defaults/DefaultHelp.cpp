@@ -4,26 +4,35 @@
 #include "library/parser/ParserCommandInfo.h"
 
 void DefaultHelp::PrintParam(const ParserParameter &param) {
-    std::string necessary = param.getNecessary() ? "true" : "false";
-    ViewHelper::consoleOut("is necessary: " + necessary, 3);
-    ViewHelper::consoleOut("description: " + param.getDescription(), 3);
     std::string flagsOutput;
     for (const auto& flag : param.getFlags()) {
         flagsOutput += flag + " ";
     }
+    ViewHelper::consoleOut("├── flags: [ " + flagsOutput + "]", 2);
 
-    ViewHelper::consoleOut("flags: [ " + flagsOutput + "]", 3);
+    std::string description = param.getDescription().empty() ? "none" : param.getDescription();
+    ViewHelper::consoleOut("├── description: " + description, 2);
+    std::string necessary = param.getNecessary() ? "true" : "false";
+    ViewHelper::consoleOut("└── is necessary: " + necessary, 2);
 }
 
-void DefaultHelp::PrintCommand(const std::pair<std::string, ParserCommandInfo> &command,
-    const std::function<void(ParserParameter)> &printParam) {
+void DefaultHelp::PrintCommand(
+    const std::pair<std::string, ParserCommandInfo> &command,
+    const std::function<void(ParserParameter)> &printParam
+) {
     ParserCommandInfo currentCommand = command.second;
-    ViewHelper::consoleOut(command.first + ": ", 1);
-    ViewHelper::consoleOut("description: " + currentCommand.getDescription(), 2);
-    std::string params = currentCommand.getParams().empty() ? "empty" : "";
-    ViewHelper::consoleOut("params: " + params, 2);
+    ViewHelper::consoleOut("print '" + command.first + "': ", 1);
+    ViewHelper::consoleOut("├── description: " + currentCommand.getDescription(), 1);
 
-    for (const auto& param : currentCommand.getParams()) {
-        printParam(param);
+    std::vector<ParserParameter> params = currentCommand.getParams();
+    if (params.empty()) {
+        ViewHelper::consoleOut("└── params: empty", 1);
+    } else {
+        ViewHelper::consoleOut("└── params:", 1);
+    }
+
+    for (int i = 0; i < params.size(); i++) {
+        ViewHelper::consoleOut("Param (" + std::to_string(i + 1) + ")", 2);
+        printParam(params[i]);
     }
 }

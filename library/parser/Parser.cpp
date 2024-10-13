@@ -30,6 +30,7 @@ void Parser::printCommandsHelp(ParsedOptions options) {
             commandPrint(options);
         } else {
             DefaultHelp::PrintCommand(command, DefaultHelp::PrintParam);
+            ViewHelper::consoleOut("");
         }
     }
 }
