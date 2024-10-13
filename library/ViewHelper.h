@@ -2,5 +2,5 @@
 
 class ViewHelper {
 public:
-    static void consoleOut(const std::string &output);
+    static void consoleOut(const std::string &output, int level = 0);
 };

@@ -15,7 +15,7 @@ ParserParameter::ParserParameter(
 {}
 
 // template<typename T>
-std::string ParserParameter::getDescription() {
+std::string ParserParameter::getDescription() const {
     return this->description;
 }
 

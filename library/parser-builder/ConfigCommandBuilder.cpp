@@ -22,10 +22,16 @@ ConfigCommandBuilder& ConfigCommandBuilder::setCallback(ParseCallback function) 
     return *this;
 }
 
-ConfigCommandBuilder & ConfigCommandBuilder::setResolveAllFlags(bool resolveAll) {
+ConfigCommandBuilder& ConfigCommandBuilder::setResolveAllFlags(bool resolveAll) {
     this->resolveAllFlags = resolveAll;
     return *this;
 }
+
+ConfigCommandBuilder& ConfigCommandBuilder::setPrintHelp(ParseCallback help) {
+    this->printHelp = help;
+    return *this;
+}
+
 
 ParserCommandInfoConfig ConfigCommandBuilder::build() {
     return ParserCommandInfoConfig({
@@ -33,7 +39,8 @@ ParserCommandInfoConfig ConfigCommandBuilder::build() {
         parameters,
         executable ? executable : nullptr,
         displayError ? displayError : nullptr,
-        resolveAllFlags ? resolveAllFlags : false
+        resolveAllFlags ? resolveAllFlags : false,
+        printHelp ? printHelp : nullptr
     });
 }
 

@@ -21,7 +21,8 @@ struct ParserCommandInfoConfig {
         std::vector<ParserParameter> parameters,
         ParseCallback function,
         ParseCallback displayError,
-        bool requireAllFlags
+        bool requireAllFlags,
+        ParseCallback printHelp
     );
 
     ParserCommandInfoConfig(
@@ -35,6 +36,7 @@ struct ParserCommandInfoConfig {
     std::vector<ParserParameter> parameters;
     ParseCallback executable;
     ParseCallback displayError;
+    ParseCallback printHelp;
 };
 
 // template<typename T>
@@ -48,4 +50,5 @@ public:
     bool getResolveAllFlags() const;
     ParseCallback getErrorDisplay() const;
     ParseCallback getExecutable() const;
+    ParseCallback getPrintHelp() const;
 };

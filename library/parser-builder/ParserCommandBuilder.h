@@ -7,6 +7,7 @@ protected:
     std::vector<ParserParameter> parameters;
     ParseCallback executable;
     ParseCallback displayError;
+    ParseCallback printHelp;
     bool resolveAllFlags = false;
 public:
     virtual ~ParserCommandBuilder() = default;
@@ -15,6 +16,7 @@ public:
     virtual ParserCommandBuilder& addParameter(ParserParameter parameter) = 0;
     virtual ParserCommandBuilder& setDisplayError(ParseCallback displayError) = 0;
     virtual ParserCommandBuilder& setCallback(ParseCallback function) = 0;
+    virtual ParserCommandBuilder& setPrintHelp(ParseCallback help) = 0;
     virtual ParserCommandBuilder& setResolveAllFlags(bool resolveAll) = 0;
     void reset();
 };

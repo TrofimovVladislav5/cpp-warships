@@ -9,13 +9,15 @@ ParserCommandInfoConfig::ParserCommandInfoConfig(
     std::vector<ParserParameter> parameters,
     ParseCallback function,
     ParseCallback displayError,
-    bool resolveAllFlags
+    bool resolveAllFlags,
+    ParseCallback printHelp
 )
     : description(std::move(description))
     , parameters(std::move(parameters))
     , executable(std::move(function))
     , displayError(std::move(displayError))
     , resolveAllFlags(resolveAllFlags)
+    , printHelp(std::move(printHelp))
 {}
 
 // template<typename T>
@@ -57,4 +59,9 @@ ParseCallback ParserCommandInfo::getExecutable() const {
 // template<typename T>
 std::vector<ParserParameter> ParserCommandInfo::getParams() const {
     return this->config.parameters;
+}
+
+// template<typename T>
+ParseCallback ParserCommandInfo::getPrintHelp() const {
+    return this->config.printHelp;
 }

@@ -74,4 +74,7 @@ add_executable(cpp_warships
         library/parser-builder/ParameterBuildDirector.h
         library/parser/__showcase__/parserShowcase.h
         library/parser/__showcase__/parserShowcaseInline.h
+        library/defaults/DefaultHelp.cpp
+        library/defaults/DefaultHelp.h
+        library/defaults/DefaultParserError.cpp
 )
