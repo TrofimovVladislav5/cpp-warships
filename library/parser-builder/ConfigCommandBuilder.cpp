@@ -1,0 +1,38 @@
+#include "ConfigCommandBuilder.h"
+
+#include "ParserCommandBuilder.h"
+
+ConfigCommandBuilder& ConfigCommandBuilder::setDescription(std::string description) {
+    this->description = std::move(description);
+    return *this;
+}
+
+ConfigCommandBuilder& ConfigCommandBuilder::addParameter(ParserParameter parameter) {
+    this->parameters.push_back(std::move(parameter));
+    return *this;
+}
+
+ConfigCommandBuilder& ConfigCommandBuilder::setDisplayError(ParseCallback displayError) {
+    this->displayError = std::move(displayError);
+    return *this;
+}
+
+ConfigCommandBuilder& ConfigCommandBuilder::setCallback(ParseCallback function) {
+    this->executable = std::move(function);
+    return *this;
+}
+
+ParserCommandInfoConfig ConfigCommandBuilder::build() {
+    return ParserCommandInfoConfig({
+        description,
+        parameters,
+        executable ? executable : nullptr,
+        displayError ? displayError : nullptr
+    });
+}
+
+ParserCommandInfoConfig ConfigCommandBuilder::buildAndReset() {
+    ParserCommandInfoConfig config = build();
+    this->reset();
+    return config;
+}
