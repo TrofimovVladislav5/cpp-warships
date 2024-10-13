@@ -29,6 +29,8 @@ public:
     }
 };
 
+//TODO: add help command
+//TODO: (?) add aliases
 
 inline void runParser(){
     TestClass test;
