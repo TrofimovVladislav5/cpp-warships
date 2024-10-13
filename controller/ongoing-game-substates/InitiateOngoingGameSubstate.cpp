@@ -1,6 +1,6 @@
 #include <iostream>
 #include "game-states/GameState.h"
-#include "view/ViewHelper.h"
+#include "../../library/ViewHelper.h"
 #include "model/StateContext.h"
 #include "game-states/OngoingGameState.h"
 #include "InitiateOngoingGameSubstate.h"

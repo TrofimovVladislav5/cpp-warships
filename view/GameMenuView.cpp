@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "ViewHelper.h"
+#include "../library/ViewHelper.h"
 
 void GameMenuView::drawAvailableCommands(const GameStateDTO* currentMatch) {
     std::vector<std::string> availableCommands;
@@ -19,7 +19,7 @@ void GameMenuView::drawAvailableCommands(const GameStateDTO* currentMatch) {
         availableCommands.emplace_back("exit - leave the game");
     }
 
-    ViewHelper::consoleOut("Available commands: \n");
+    ViewHelper::consoleOut("Available commands:");
     for (int i = 0; i < availableCommands.size(); ++i) {
         ViewHelper::consoleOut(std::to_string(i + 1) + ')' + ' ' + availableCommands[i] );
     }

@@ -4,7 +4,7 @@
 #include "view/OngoingGameView.h"
 #include "model/StateContext.h"
 
-class OngoingGameState : public GameState{
+class OngoingGameState : public GameState {
 protected:
     std::string latestCommand;
     OngoingGameState* currentSubstate;

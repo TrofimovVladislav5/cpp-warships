@@ -9,6 +9,8 @@ private:
     GameView *view;
     GameStateDTO *currentMatch;
     StateContext stateContext;
+    void finishGame(StateContext& context);
+    bool isFinished = false;
 
 public:
     GameController();

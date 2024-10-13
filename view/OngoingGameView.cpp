@@ -1,5 +1,5 @@
 #include "OngoingGameView.h"
-#include "ViewHelper.h"
+#include "../library/ViewHelper.h"
 #include <vector>
 
 

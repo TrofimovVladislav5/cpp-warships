@@ -2,4 +2,5 @@
 
 StateContext::StateContext() {
     currentMatch = nullptr;
+    finishCallback = nullptr;
 }

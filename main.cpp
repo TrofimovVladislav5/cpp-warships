@@ -1,10 +1,8 @@
-#include "library/parser/__showcase__/parserShowcase.h"
+#include <GameController.h>
 
 int main(){
-    // GameController controller;
-    // controller.run();
-
-    runParser();
+    GameController controller;
+    controller.run();
 
     return 0;
 }

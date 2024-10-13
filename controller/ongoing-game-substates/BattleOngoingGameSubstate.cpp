@@ -3,7 +3,7 @@
 #include "model/StateContext.h"
 #include "BattleOngoingGameSubstate.h"
 #include "FinishOngoingGameSubstate.h"
-#include "view/ViewHelper.h"
+#include "../../library/ViewHelper.h"
 
 BattleOngoingGameSubstate::BattleOngoingGameSubstate(StateContext& context) : OngoingGameState(context) {};
 

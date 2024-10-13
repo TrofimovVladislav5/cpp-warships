@@ -2,14 +2,12 @@
 #include "GameState.h"
 #include "OngoingGameState.h"
 #include "ongoing-game-substates/InitiateOngoingGameSubstate.h"
-#include "ongoing-game-substates/BattleOngoingGameSubstate.h"
-#include "ongoing-game-substates/PauseOngoingGameSubstate.h"
 #include "ongoing-game-substates/FinishOngoingGameSubstate.h"
-#include "view/ViewHelper.h"
+#include "../../library/ViewHelper.h"
 
-OngoingGameState::OngoingGameState(StateContext& context) : GameState(context){
-
-}
+OngoingGameState::OngoingGameState(StateContext& context)
+    : GameState(context)
+{}
 
 OngoingGameState::~OngoingGameState(){
     delete this->ongoingGameView;
@@ -25,9 +23,10 @@ void OngoingGameState::updateState() {
     //TODO: Same logic as in GameController
     currentSubstate = new InitiateOngoingGameSubstate(context);
     currentSubstate->openSubstate();
-    while (typeid(*currentSubstate).name() != typeid(FinishOngoingGameSubstate).name()){
+
+    while (typeid(*currentSubstate).name() != typeid(FinishOngoingGameSubstate).name()) {
         OngoingGameState* newSubstate = currentSubstate->transitToSubstate();
-        if (newSubstate){
+        if (newSubstate) {
             currentSubstate->closeSubstate();
             currentSubstate = newSubstate;
             currentSubstate->openSubstate();

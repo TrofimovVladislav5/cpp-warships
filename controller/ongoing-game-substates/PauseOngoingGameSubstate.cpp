@@ -2,7 +2,7 @@
 #include "PauseOngoingGameSubstate.h"
 #include "ongoing-game-substates/BattleOngoingGameSubstate.h"
 #include "game-states/OngoingGameState.h"
-#include "view/ViewHelper.h"
+#include "../../library/ViewHelper.h"
 
 void PauseOngoingGameSubstate::openSubstate() {
     ViewHelper::consoleOut("Battle on paused");
