@@ -44,6 +44,8 @@ add_executable(cpp_warships
         library/parser-builder/ParameterBuildDirector.h
         library/parser/__showcase__/parserShowcase.h
         library/parser/__showcase__/parserShowcaseInline.h
+        library/defaults/DefaultHelp.cpp
+        library/defaults/DefaultHelp.h
         library/defaults/DefaultParserError.cpp
         library/defaults/DefaultParserError.h
         controller/game-states/MenuGameState.cpp
@@ -109,4 +111,5 @@ add_executable(cpp_warships
         view/model/GameFieldView.cpp
         view/model/GameFieldView.h
         controller/OngoingGameController.cpp
+        library/defaults/Initials.h
 )

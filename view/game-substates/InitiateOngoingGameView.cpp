@@ -9,8 +9,6 @@ void InitiateOngoingGameView::displayAvailableCommands(const GameStateDTO* curre
             "   Usage: remove --cell <x,y>"},
         {"Confirm\n"
             "   Usage: confirm"},
-        {"Help\n"
-            "   Usage: help"}
     };
     ViewHelper::consoleOut("Available commands\n");
     for (int i = 0; i < availableCommands.size();i++) {
