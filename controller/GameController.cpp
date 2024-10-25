@@ -1,7 +1,7 @@
 #include "GameController.h"
 
 #include "game-states/MenuGameState.h"
-#include "view/GameView.h"
+#include "view/game-states/GameView.h"
 #include "../library/ViewHelper.h"
 
 #include "library/TypesHelper.h"
@@ -9,13 +9,11 @@
 GameController::GameController() {
     stateContext = StateContext();
     currentState = nullptr;
-    view = new GameView();
     currentMatch = nullptr;
 }
 
 GameController::~GameController() {
     delete currentState;
-    delete view;
     delete currentMatch;
 }
 

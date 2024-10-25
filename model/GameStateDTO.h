@@ -10,4 +10,5 @@ public:
     MatchSettings* getSettings();
     void setSettings(MatchSettings* newSettings);
     int roundNumber;
+    int currentShips;
 };

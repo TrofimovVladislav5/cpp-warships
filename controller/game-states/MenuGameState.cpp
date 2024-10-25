@@ -8,7 +8,7 @@
 #include "library/TypesHelper.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/defaults/DefaultParserError.h"
-#include "../../library/ViewHelper.h"
+#include "library/ViewHelper.h"
 
 void MenuGameState::handleStart(ParsedOptions options) {
     this->latestCommand = "start";
@@ -18,8 +18,10 @@ void MenuGameState::handleExit(ParsedOptions options) {
     this->latestCommand = "exit";
 }
 
-MenuGameState::MenuGameState(StateContext& context) : GameState(context) {
-    this->menuView = new GameMenuView();
+MenuGameState::MenuGameState(StateContext& context) 
+    : GameState(context) 
+{
+    view = new GameMenuView();
 
     ConfigCommandBuilder commandBuilder;
 
@@ -43,21 +45,16 @@ MenuGameState::MenuGameState(StateContext& context) : GameState(context) {
     };
 }
 
-MenuGameState::~MenuGameState() {
-    delete this->menuView;
-}
-
 void MenuGameState::openState() {
-    ViewHelper::consoleOut("Game Menu");
-    ViewHelper::consoleOut("Start\t Save\t Exit\t\n");
+    view->displayOpenState();
 }
 
 void MenuGameState::closeState() {
-    ViewHelper::consoleOut("Quit the menu");
+    view->displayCloseState();
 }
 
 void MenuGameState::updateState() {
-    menuView->drawAvailableCommands(context.currentMatch);
+    view->displayAvailableCommands(context.currentMatch);
     std::string input;
     std::getline(std::cin, input);
     Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);

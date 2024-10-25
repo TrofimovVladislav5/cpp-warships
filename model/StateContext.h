@@ -8,4 +8,5 @@ public:
     StateContext();
     GameStateDTO* currentMatch;
     std::function<void(StateContext&)> finishCallback;
+    std::function<void(StateContext&)> finishMatchCallback;
 };

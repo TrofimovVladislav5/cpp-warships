@@ -1,6 +1,6 @@
-#pragma once
-#include "Segment.h"
+#pragma once 
 #include <vector>
+#include "Segment.h"
 
 class Ship {
 private:
@@ -9,8 +9,9 @@ private:
 public:
     Ship(int length, int maxSegmentHealth = 2);
     ~Ship() = default;
-    int getLength();
-    SegmentState getSegment(int index);
+    int getLength() const;
+    int getSegmentHitPoints(int index);
+    int getMaxSegmentHealth();
     bool takeDamage(int indexSegment, int damageCount);
     bool isDestroyed();
     void status();

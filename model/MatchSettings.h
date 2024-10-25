@@ -15,7 +15,8 @@ public:
     GameField* getPlayerField();
     GameField* getOpponentField();
     ShipManager* getPlayerManager();
-    ShipManager* getOpponentShipManager();
+    ShipManager* getOpponentManager();
+    void setPlayerManager(const  std::vector<int>& shipsLengths);
     void setFieldSize(int size);
-    int getFieldSize();
+    void setShipsSize(std::vector<int>& sizes);
 };

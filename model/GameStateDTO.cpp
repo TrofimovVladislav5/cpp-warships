@@ -6,7 +6,8 @@ GameStateDTO::GameStateDTO() {
 
 GameStateDTO::GameStateDTO(MatchSettings* settings) {
     this->settings = settings;
-    this->roundNumber = 1; 
+    this->roundNumber = 1;
+    this->currentShips = 0;
 }
 
 void GameStateDTO::setSettings(MatchSettings* newSettings){

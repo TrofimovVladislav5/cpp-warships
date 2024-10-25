@@ -6,37 +6,102 @@
 #include "InitiateOngoingGameSubstate.h"
 #include "PlaceShipController.h"
 #include "BattleOngoingGameSubstate.h"
+#include "library/parser-builder/ConfigCommandBuilder.h"
+#include "library/parser/ParserCommandInfo.h"
+#include "library/defaults/DefaultParserError.h"
+#include "library/TypesHelper.h"
+#include "library/parser-builder/DefaultParameterBuilder.h"
+#include "view/game-substates/InitiateOngoingGameView.h"
 
-InitiateOngoingGameSubstate::InitiateOngoingGameSubstate(StateContext& context) : OngoingGameState(context){
+InitiateOngoingGameSubstate::InitiateOngoingGameSubstate(StateContext& context)
+    : OngoingGameState(context)
+{   
     this->placeShipController = new PlaceShipController(context);
-};   
+    this->ongoingGameView = new InitiateOngoingGameView();
+    ConfigCommandBuilder commandBuilder;
+    DefaultParameterBuilder parameterBuilder;
+    this->inputScheme = {
+        {"add", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&PlaceShipController::addShip, placeShipController))
+                .setDescription("Adds a ship to the game field")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--length")
+                        .setValidator(std::regex("^[1-4]$"))
+                        .setNecessary(true)
+                        .buildAndReset()
+                )
+
+                .addParameter (
+                    parameterBuilder
+                        .addFlag("--direction")
+                        .setValidator(std::regex("^(horizontal|vertical)$"))
+                        .setNecessary(true)
+                        .buildAndReset()
+                )
+
+                .addParameter (
+                    parameterBuilder
+                        .addFlag("--cell")
+                        .setValidator(std::regex("^(\\d+)\\,(\\d+)$"))
+                        .setNecessary(true)
+                        .buildAndReset()
+                )
+                .buildAndReset()
+        )},
+        {"remove", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&PlaceShipController::removeShip, placeShipController))
+                .setDescription("Removes ship on field")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--cell")
+                        .setValidator(std::regex("^(\\d+),(\\d+)$"))
+                        .setNecessary(true)
+                        .buildAndReset()
+                )
+                .buildAndReset()
+        )},
+        {"confirm", ParserCommandInfo(
+                commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&InitiateOngoingGameSubstate::handleConfirm, this))
+                .setDescription("Confirmation of the placement of ships")
+                .setDisplayError(DefaultParserError::CommandNotFoundError)
+                .buildAndReset()
+        )},
+    };
+}
+
+void InitiateOngoingGameSubstate::handleConfirm(ParsedOptions options) {
+    this->latestCommand = "confirm";
+}
 
 InitiateOngoingGameSubstate::~InitiateOngoingGameSubstate(){
     delete placeShipController;
 }
 
 void InitiateOngoingGameSubstate::openSubstate() {
-    ViewHelper::consoleOut("Welcome to placement ships");
-    ViewHelper::consoleOut("Rules of placeShip length, direction, no crossing, about some maximal(fieldsize, countShips)");
+    ongoingGameView->displayOpenState();
 }
 
 void InitiateOngoingGameSubstate::updateSubstate() {
-    ViewHelper::consoleOut("You can in this stage add and delete ships on game field");
-    std::getline(std::cin, latestCommand);
-    if (latestCommand == "add") {
-        placeShipController->addShip();
-    }
-    else if (latestCommand == "delete") {
-        placeShipController->deleteShip();
-    }
+    ongoingGameView->displayAvailableCommands(context.currentMatch);
+    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+    std::string input;
+    std::getline(std::cin, input);
+    latestCommand = input;
+    parser.executedParse(input);
 }
 
 void InitiateOngoingGameSubstate::closeSubstate() {
-    ViewHelper::consoleOut("The placement of ships is completed");
+    ongoingGameView->displayCloseState();
 }
 
 OngoingGameState* InitiateOngoingGameSubstate::transitToSubstate() {
-    if (latestCommand == "attack") {
+    if (latestCommand == "confirm" && placeShipController->allShipsPlaced()) {
         return new BattleOngoingGameSubstate(context);
     }
     return nullptr;

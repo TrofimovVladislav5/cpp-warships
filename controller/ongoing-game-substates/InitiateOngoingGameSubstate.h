@@ -5,10 +5,12 @@
 
 class InitiateOngoingGameSubstate : public OngoingGameState {
 private:
+    SchemeMap inputScheme;
     PlaceShipController* placeShipController;
+    void handleConfirm(ParsedOptions options);
 public:
     InitiateOngoingGameSubstate(StateContext& context);
-    ~InitiateOngoingGameSubstate();
+    ~InitiateOngoingGameSubstate() override;
     void openSubstate() override;
     void updateSubstate() override;
     void closeSubstate() override;

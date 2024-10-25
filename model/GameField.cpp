@@ -1,14 +1,71 @@
-#include <iostream>
-#include <vector>
 #include "GameField.h"
-#include "Ship.h"
+
+#include <iostream>
+
 #include "Structures.h"
+#include <unordered_map>
+#include <unordered_set>
+
+bool GameField::validateCoordinates(std::pair<int, int> coordToCheck) {
+    return coordToCheck.first > 0 && coordToCheck.first < width && coordToCheck.second > 0 && coordToCheck.second < height;
+}
 
 GameField::GameField(int width, int height)
     : width(width)
     , height(height)
-    , field(std::vector<std::vector<Cell>>(height, std::vector<Cell>(width, Cell::empty)))
 {}
+
+GameField::GameField(const GameField& other)
+    : width(other.getWidth())
+    , height(other.getHeight())
+    , shipsCoordinateMap(other.getShipsCoordinateMap())
+    , attackCoordinateMap(other.getAttackCoordinateMap())
+{}
+
+GameField::GameField(GameField&& other)
+    : width(other.getWidth())
+    , height(other.getHeight())
+    , shipsCoordinateMap(std::move(other.getShipsCoordinateMap()))
+    , attackCoordinateMap(std::move(other.getAttackCoordinateMap()))
+{}
+
+GameField& GameField::operator=(const GameField& other) {
+    if (this != &other) {
+        this->width = other.getWidth();
+        this->height = other.getHeight();
+        this->shipsCoordinateMap = other.getShipsCoordinateMap();
+        this->attackCoordinateMap = other.getAttackCoordinateMap();
+    }
+
+    return *this;
+}
+
+GameField& GameField::operator=(GameField&& other) {
+    if (this != &other) {
+        this->width = other.getWidth();
+        this->height = other.getHeight();
+        this->shipsCoordinateMap = other.getShipsCoordinateMap();
+        this->attackCoordinateMap = other.getAttackCoordinateMap();
+    }
+
+    return *this;
+}
+
+int GameField::getHeight() const {
+    return height;
+}
+
+int GameField::getWidth() const {
+    return width;
+}
+
+const std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>,hashFunc>>& GameField::getShipsCoordinateMap() const {
+    return this->shipsCoordinateMap;
+}
+
+const std::unordered_set<std::pair<int, int>, hashFunc>& GameField::getAttackCoordinateMap() const {
+    return this->attackCoordinateMap;
+}
 
 bool GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction) {
     int length = ship->getLength();
@@ -19,13 +76,10 @@ bool GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Dir
 
     for (int i = 0; i < length;i++) {
         std::pair<int, int> newCoordinate = initialCoordinate;
-        if (direction == Direction::horizontal) {
-            newCoordinate.first += i;
-        }
-        else {
-            newCoordinate.second += i;
-        }
-        shipsCoordinateMap[ship].insert(newCoordinate);
+        if (direction == Direction::horizontal) newCoordinate.first += i;
+        else newCoordinate.second += i;
+
+        this->shipsCoordinateMap[ship].insert(newCoordinate);
     }
 
     return true;
@@ -35,9 +89,8 @@ bool GameField::shipCoordinatesInField(std::pair<int, int> coords, int length, D
     if (direction == Direction::horizontal) {
         return coords.first + length <= width;
     }
-    else {
-        return coords.second + length <= height;
-    }
+
+    return coords.second + length <= height;
 }
 
 bool GameField::shipsAreContacting(std::pair<int, int> coords) const {
@@ -50,11 +103,11 @@ bool GameField::shipsAreContacting(std::pair<int, int> coords) const {
                 for (const auto& [ship, coordinates] : shipsCoordinateMap){
                     if (coordinates.find(neighborCoords) != coordinates.end()){
                         return true;
+                        }
                     }
                 }
             }
         }
-    }
     return false;
 }
 
@@ -63,152 +116,47 @@ bool GameField::intersectionShips(std::pair<int , int> coordinates, int length, 
         std::pair<int, int> tempCoordinates = coordinates;
         if (direction == Direction::horizontal) {
             tempCoordinates.first += i;
-        }
+            }
         else if (direction == Direction::vertical){
             tempCoordinates.second += i;
-        }
+            }
 
         for (const auto& [ship, coords] : shipsCoordinateMap) {
             if (coords.find(tempCoordinates) != coords.end()) {
                 return true;
+                }
             }
-        }
 
         if (shipsAreContacting(tempCoordinates)) return true;
-    }
+        }
     return false;
-}
-
-void GameField::showField() {
-    for (int y = 0; y < height;y++) {
-        for (int x = 0; x < width;x++) {
-            field[y][x] = Cell::unknown;
-        }
-    }
-
-    for (const auto& [ship, coordinates] : shipsCoordinateMap) {
-        int index = 0;
-        for (const auto& coord : coordinates) {
-            SegmentState segmentState = ship->getSegment(index);
-            if (segmentState == SegmentState::intact) {
-                field[coord.second][coord.first] = Cell::ship_int;
-            } else if (segmentState == SegmentState::damaged) {
-                field[coord.second][coord.first] = Cell::ship_damaged;
-            } else if (segmentState == SegmentState::destroyed) {
-                field[coord.second][coord.first] = Cell::ship_destroyed;
-            }
-            index++;
-        }
-    }
-
-    scanCellsNextToDestroyedShip(field, shipsCoordinateMap);
-
-    std::string result;
-    std::string upperBar = "№ ";
-    for (int x = 0; x < width; x++) {
-        upperBar += std::to_string(x) + " ";
-    }
-    std::cout << upperBar << std::endl;
-    for (int y = 0; y < height;y++) {
-        result.clear();
-        result += std::to_string(y) + " ";
-        for (int x = 0; x < width;x++) {
-            switch (field[y][x]){
-                case Cell::empty:
-                    result += "+ ";
-                    break;
-                case Cell::ship_int:
-                    result += "2 ";
-                    break;
-                case Cell::ship_damaged:
-                    result += "1 ";
-                    break;
-                case Cell::ship_destroyed:
-                    result += "0 ";
-                    break;
-                case Cell::unknown:
-                    result += "* ";
-                    break;
-            }
-        }
-        std::cout << result << std::endl;
-    }
 }
 
 
 bool GameField::attack(std::pair<int, int> initialCoordinate, int damageCount) {
-    if (initialCoordinate.first < 0 || initialCoordinate.first >= width 
+    if (initialCoordinate.first < 0 || initialCoordinate.first >= width
     ||  initialCoordinate.second < 0 || initialCoordinate.second >= height) throw std::out_of_range("Invalid coordinates to attack");
 
 
-    for (const auto& [ship, coordinate] : shipsCoordinateMap) {
-        int index = 0;
-        for (auto& coord : coordinate) {
-            if (coord == initialCoordinate) {
-                SegmentState currentState = ship->getSegment(index);
-                ship->takeDamage(index, damageCount);
-                attackCoordinateMap.insert(coord);
-                return true;
-            }
-            index++;
+    for (const auto& [ship, coordinates] : shipsCoordinateMap) {
+        if (auto it = coordinates.find(initialCoordinate); it != coordinates.end()) {
+            int index = std::distance(coordinates.begin(),it);
+            ship->takeDamage(index, damageCount);
+            attackCoordinateMap.insert(*it);
+            return true;
         }
     }
     return false;
 }
 
-bool GameField::validateCoordinates(std::pair<int, int> coordToCheck) {
-    return coordToCheck.first > 0 && coordToCheck.first < width 
-        && coordToCheck.second > 0 && coordToCheck.second < height;
-}
-
-void GameField::scanCellsNextToDestroyedShip(std::vector<std::vector<Cell>>& field, std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>,hashFunc>>& shipsCoordinateMap) {
-    for (const auto& [ship, coordinate] : shipsCoordinateMap) {
-        if (ship->isDestroyed()) {
-            std::pair<int, int> minCoord = *coordinate.begin();
-            std::pair<int, int> maxCoord = *coordinate.begin();
-            for (const auto& coord : coordinate) {
-                if (coord.first < minCoord.first || (coord.first == minCoord.first && coord.second < minCoord.second)) {
-                    minCoord = coord;
-                }
-
-                if (coord.first > maxCoord.first || (coord.first == maxCoord.first && coord.second > maxCoord.second)) {
-                    maxCoord = coord;
-                }
-            }
-            std::pair<int, int> shiftMinCoord = std::make_pair(minCoord.first - 1, minCoord.second - 1);
-            std::pair<int, int> shiftMaxCoord = std::make_pair(maxCoord.first + 1, maxCoord.second + 1);
-            if (validateCoordinates(shiftMaxCoord) && validateCoordinates(shiftMinCoord)) {
-                for (int y = shiftMinCoord.second;y <= shiftMaxCoord.second;y++) {
-                    for (int x = shiftMinCoord.first;x <= shiftMaxCoord.first;x++) {
-                        if (minCoord.first <= x && x <= maxCoord.first && minCoord.second <= y && y <= maxCoord.second) {
-                                continue;
-                            }
-                            field[y][x] = Cell::empty;
-                        }
-                    }
-                }
-
-            else if (validateCoordinates(shiftMaxCoord) && !validateCoordinates(shiftMinCoord)) {
-                for (int y = minCoord.second;y <= shiftMaxCoord.second;y++) {
-                    for (int x = minCoord.first;x <= shiftMaxCoord.first;x++) {
-                        if (minCoord.first <= x && x <= maxCoord.first && minCoord.second <= y && y <= maxCoord.second) {
-                            continue;
-                        }
-                        field[y][x] = Cell::empty;
-                    }
-                }
-            }
-
-            else if (!validateCoordinates(shiftMaxCoord) && validateCoordinates(shiftMinCoord)) {
-                for (int y = shiftMinCoord.second;y <= maxCoord.second;y++) {
-                    for (int x = shiftMinCoord.first;x <= maxCoord.first;x++) {
-                        if (minCoord.first <= x && x <= maxCoord.first && minCoord.second <= y && y <= maxCoord.second) {
-                            continue;
-                        }
-                        field[y][x] = Cell::empty;
-                    }
-                }
-            }
+int GameField::removeShip(const std::pair<int, int> &coordinate) {
+    int index = 0;
+    for (const auto& [ship, coordinates] : shipsCoordinateMap) {
+        if (coordinates.find(coordinate) != coordinates.end()) {
+            shipsCoordinateMap.erase(ship);
+            return index;
         }
+        index++;
     }
+    return -1;
 }

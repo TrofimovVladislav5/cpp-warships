@@ -1,6 +1,6 @@
 #pragma once
 #include "model/StateContext.h"
-#include "view/GameView.h"
+#include "view/game-states/GameView.h"
 
 class GameState{
 protected:
@@ -8,10 +8,9 @@ protected:
     StateContext& context;
 public:
     GameState(StateContext& context);
-    ~GameState();
-
-    virtual void openState();
-    virtual void updateState();
-    virtual void closeState();
-    virtual GameState* transitToState();
+    virtual ~GameState();
+    virtual void openState() = 0;
+    virtual void updateState() = 0;
+    virtual void closeState() = 0;
+    virtual GameState* transitToState() = 0;
 };

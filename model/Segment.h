@@ -1,5 +1,5 @@
 #pragma once
-#include "Structures.h"
+
 class Segment {
 private:
     int maxSegmentHealth;
@@ -7,6 +7,6 @@ private:
 public:
     Segment(int maxSegmentHealth);
     void takeDamage(int damageCount);
-    SegmentState getState() const;
+    int getHitPoints() const;
     bool isDestroyed();
 };

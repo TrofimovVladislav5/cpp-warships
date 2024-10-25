@@ -4,24 +4,28 @@
 #include "ongoing-game-substates/InitiateOngoingGameSubstate.h"
 #include "ongoing-game-substates/FinishOngoingGameSubstate.h"
 #include "../../library/ViewHelper.h"
-
+#include "../view/game-states/OngoingGameView.h"
+#include "view/game-substates/InitiateOngoingGameView.h"
+#include "library/parser-builder/ConfigCommandBuilder.h"
+#include "ongoing-game-substates/CommonGameSettingsSubstate.h"
+#include "view/game-substates/CommonGameSettingsView.h"
 OngoingGameState::OngoingGameState(StateContext& context)
     : GameState(context)
-{}
+    , ongoingGameView(nullptr)
+{
+    view = new OngoingGameView();
+}
 
 OngoingGameState::~OngoingGameState(){
     delete this->ongoingGameView;
 }
 
 void OngoingGameState::openState() {
-    //TODO: Implement printing out the 'hello' letter (game rules, etc.)
-    ViewHelper::consoleOut("Welcome to Ongoing game");
-    ongoingGameView->printGameCommands();
+    view->displayOpenState();
 }
 
 void OngoingGameState::updateState() {
-    //TODO: Same logic as in GameController
-    currentSubstate = new InitiateOngoingGameSubstate(context);
+    currentSubstate = new CommonGameSettingsSubstate(context);
     currentSubstate->openSubstate();
 
     while (typeid(*currentSubstate).name() != typeid(FinishOngoingGameSubstate).name()) {

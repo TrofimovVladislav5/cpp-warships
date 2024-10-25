@@ -1,13 +1,16 @@
 #pragma once
 #include "Ship.h"
+#include <vector>
+#include <iostream>
+
 class ShipManager {
 private:
     std::vector<Ship*> ships;
 public:
-    ShipManager(const std::vector<int>& shipsSize);
+    explicit ShipManager(const std::vector<int>& shipsSize);
     ~ShipManager();
+    std::vector<Ship*>& getShips();
     Ship* operator[](int index);
     void addShip(int size);
     void removeShipNumber(int indexRemoving);
-    void showShipsInfo();
 };

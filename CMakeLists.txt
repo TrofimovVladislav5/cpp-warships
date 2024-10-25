@@ -1,10 +1,18 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(cpp_warships)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 include_directories(.)
 include_directories(controller)
+include_directories(library)
+include_directories(library/parser)
+include_directories(library/parser-builder)
+include_directories(library/defaults)
+include_directories(model)
+include_directories(view)
+include_directories(view/game-states)
+include_directories(view/model)
 
 add_executable(cpp_warships
         main.cpp
@@ -36,31 +44,69 @@ add_executable(cpp_warships
         library/parser-builder/ParameterBuildDirector.h
         library/parser/__showcase__/parserShowcase.h
         library/parser/__showcase__/parserShowcaseInline.h
+        library/defaults/DefaultParserError.cpp
+        library/defaults/DefaultParserError.h
         controller/game-states/MenuGameState.cpp
+        controller/game-states/MenuGameState.h
         controller/game-states/GameState.cpp
+        controller/game-states/GameState.h
         controller/game-states/OngoingGameState.cpp
+        controller/game-states/OngoingGameState.h
         controller/game-states/ShutdownGameState.cpp
+        controller/game-states/ShutdownGameState.h
         controller/ongoing-game-substates/BattleController.cpp
+        controller/ongoing-game-substates/BattleController.h
         controller/ongoing-game-substates/BattleOngoingGameSubstate.cpp
+        controller/ongoing-game-substates/BattleOngoingGameSubstate.h
         controller/ongoing-game-substates/FinishOngoingGameSubstate.cpp
+        controller/ongoing-game-substates/FinishOngoingGameSubstate.h
         controller/ongoing-game-substates/InitiateOngoingGameSubstate.cpp
+        controller/ongoing-game-substates/InitiateOngoingGameSubstate.h
+        controller/ongoing-game-substates/CommonGameSettingsSubstate.cpp
+        controller/ongoing-game-substates/CommonGameSettingsSubstate.h
         controller/ongoing-game-substates/PauseOngoingGameSubstate.cpp
+        controller/ongoing-game-substates/PauseOngoingGameSubstate.h
         controller/ongoing-game-substates/PlaceShipController.cpp
+        controller/ongoing-game-substates/PlaceShipController.h
+        controller/ongoing-game-substates/CommonGameSettingsController.cpp
+        controller/ongoing-game-substates/CommonGameSettingsController.h
         controller/GameController.cpp
+        controller/GameController.h
         model/GameField.cpp
+        model/GameField.h
         model/GameStateDTO.cpp
+        model/GameStateDTO.h
         model/MatchSettings.cpp
+        model/MatchSettings.h
         model/Player.cpp
+        model/Player.h
+        model/Segment.cpp
+        model/Segment.h
         model/Ship.cpp
+        model/Ship.h
         model/ShipManager.cpp
+        model/ShipManager.h
         model/StateContext.cpp
+        model/StateContext.h
         model/Structures.cpp
-        view/GameMenuView.cpp
-        view/GameView.cpp
-        view/OngoingGameView.cpp
-        library/defaults/DefaultParserError.cpp
-        library/defaults/DefaultParserError.h
-        library/defaults/DefaultParserError.cpp
-        library/defaults/DefaultParserError.h
-        library/defaults/DefaultParserError.h
+        model/Structures.h
+        view/game-states/GameMenuView.cpp
+        view/game-states/GameMenuView.h
+        view/game-states/GameView.cpp
+        view/game-states/GameView.h
+        view/game-states/OngoingGameView.cpp
+        view/game-states/OngoingGameView.h
+        view/game-states/ShutdownGameView.cpp
+        view/game-states/ShutdownGameView.h
+        view/game-substates/InitiateOngoingGameView.cpp
+        view/game-substates/InitiateOngoingGameView.h
+        view/game-substates/CommonGameSettingsView.cpp
+        view/game-substates/CommonGameSettingsView.h
+        # view/game-substates/BattleOngoingGameSubstate.cpp
+        # view/game-substates/BattleOngoingGameSubstate.h
+        # view/game-substates/FinishOngoingGameSubstate.cpp
+        # view/game-substates/FinishOngoingGameSubstate.h
+        view/model/GameFieldView.cpp
+        view/model/GameFieldView.h
+        controller/OngoingGameController.cpp
 )

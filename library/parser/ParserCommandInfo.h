@@ -13,7 +13,7 @@ typedef std::map<std::string, std::string> ParsedOptions;
 typedef std::function<void(ParsedOptions)> ParseCallback;
 
 //template <typename T>
-typedef std::__bind<ParseCallback&, ParsedOptions&> BindedParseCallback;
+typedef std::function<void()> BindedParseCallback;
 
 struct ParserCommandInfoConfig {
     ParserCommandInfoConfig(
