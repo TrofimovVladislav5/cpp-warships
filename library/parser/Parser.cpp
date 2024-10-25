@@ -1,15 +1,13 @@
 #include "Parser.h"
 
-#include <utility>
-
 #include "library/StringHelper.h"
-#include "view/ViewHelper.h"
+#include "../ViewHelper.h"
+#include "library/TypesHelper.h"
+#include "library/defaults/DefaultHelp.h"
+#include "library/parser-builder/ConfigCommandBuilder.h"
 
 // template<typename T>
 bool findOption(const std::string &flag, const ParserCommandInfo& command, ParserParameter& result);
-
-// template<typename T>
-void displayError(ParsedOptions args);
 
 // template<typename T>
 bool necessaryFlagsPresent(const std::vector<std::string> &input, const ParserCommandInfo &scheme);
@@ -23,10 +21,49 @@ Parser::Parser(SchemeMap scheme)
 {}
 
 // template<typename T>
-Parser::Parser(SchemeMap scheme, ParseCallback displayError)
+void Parser::printCommandsHelp(ParsedOptions options) {
+    ViewHelper::consoleOut("This is the list of supported commands:");
+
+    for (const auto& command : scheme) {
+        auto commandPrint = command.second.getPrintHelp();
+        if (commandPrint) {
+            commandPrint(options);
+        } else {
+            DefaultHelp::PrintCommand(command, DefaultHelp::PrintParam);
+            ViewHelper::consoleOut("");
+        }
+    }
+}
+
+// template<typename T>
+Parser::Parser(SchemeMap scheme, ParseCallback displayError, const SchemeHelpCallback& printHelp)
     : scheme(std::move(scheme))
     , displayError(std::move(displayError))
-{}
+{
+    if (scheme.find("help") == scheme.end()) {
+        ConfigCommandBuilder commandBuilder;
+        ParserCommandInfo* helpInfo;
+
+        if (printHelp) {
+            helpInfo = new ParserCommandInfo({
+                commandBuilder
+                    .setDescription("Command to display this message")
+                    .setCallback(std::bind(printHelp, scheme))
+                    .buildAndReset()
+            });
+        } else {
+            helpInfo = new ParserCommandInfo({
+                commandBuilder
+                    .setDescription("Command to display this message")
+                    .setCallback(TypesHelper::methodToFunction(&Parser::printCommandsHelp, this))
+                    .buildAndReset()
+            });
+        }
+
+        this->scheme.insert({"help", *helpInfo});
+        delete helpInfo;
+    }
+}
 
 // template<typename T>
 std::pair<bool, ParsedOptions> Parser::validateParams(const std::vector<std::string> &inputChunks, ParserCommandInfo& command) {
@@ -42,6 +79,8 @@ std::pair<bool, ParsedOptions> Parser::validateParams(const std::vector<std::str
                 std::pair<bool, std::string> validationResult = option.validate(optionValue);
                 isValid = isValid && validationResult.first;
                 if (isValid) validParamValues.emplace(chunk.substr(2), validationResult.second);
+            } else if (command.getResolveAllFlags()) {
+                isValid = false;
             }
         }
     }
@@ -99,16 +138,6 @@ bool findOption(const std::string &flag, const ParserCommandInfo& command, Parse
     }
 
     return false;
-}
-
-// template<typename T>
-void displayError(ParsedOptions args) {
-    ViewHelper::consoleOut("Error: one or more arguments is invalid. Please try again.");
-    auto begin = args.begin();
-    for (int i = 0; i < args.size(); i++) {
-        ViewHelper::consoleOut(begin->first + ": " + begin->second);
-        std::advance(begin, 1);
-    }
 }
 
 bool commandInScheme(std::string &command, const SchemeMap &scheme) {

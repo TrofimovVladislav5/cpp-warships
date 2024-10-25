@@ -2,6 +2,7 @@
 #include <regex>
 
 #include "library/TypesHelper.h"
+#include "library/ViewHelper.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/parser-builder/DefaultParameterBuilder.h"
 #include "library/parser/Parser.h"
@@ -31,6 +32,10 @@ public:
 
 //TODO: add help command
 //TODO: (?) add aliases
+
+void printHelpTest(ParsedOptions options) {
+    ViewHelper::consoleOut("Hello, world!");
+}
 
 inline void runParser(){
     TestClass test;

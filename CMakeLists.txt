@@ -46,8 +46,8 @@ add_executable(cpp_warships
 #        view/OngoingGameView.cpp
 #        view/OngoingGameView.h
         main.cpp
-        view/ViewHelper.cpp
-        view/ViewHelper.h
+        library/ViewHelper.cpp
+        library/ViewHelper.h
         library/parser/ParserParameter.cpp
         library/parser/ParserParameter.h
         library/parser/ParserCommandInfo.cpp
@@ -74,4 +74,7 @@ add_executable(cpp_warships
         library/parser-builder/ParameterBuildDirector.h
         library/parser/__showcase__/parserShowcase.h
         library/parser/__showcase__/parserShowcaseInline.h
+        library/defaults/DefaultHelp.cpp
+        library/defaults/DefaultHelp.h
+        library/defaults/DefaultParserError.cpp
 )
