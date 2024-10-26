@@ -7,7 +7,10 @@ private:
     MatchSettings* settings;
     ShipManager* playerManager;
     ShipManager* currentPlayerManager;
+    ShipManager* computerManager;
+    ShipManager* currentComputerManager;
     GameField* gameFieldPlayer;
+    GameField* gameFieldComputer;
     GameFieldView* gameFieldView;
     StateContext context;
 
@@ -18,4 +21,5 @@ public:
     void addShip(ParsedOptions options);
     void removeShip(ParsedOptions options);
     void displayLessShips() const;
+    void placeShipComputer();
 };

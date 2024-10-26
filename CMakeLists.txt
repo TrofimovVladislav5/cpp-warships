@@ -112,4 +112,15 @@ add_executable(cpp_warships
         view/model/GameFieldView.h
         controller/OngoingGameController.cpp
         library/defaults/Initials.h
+        model/DoubleDamageSkill.h
+        model/DoubleDamageSkill.cpp
+        model/Scanner.cpp
+        model/ShootingRandomlySkill.cpp
+        model/SkillManager.h
+        model/SkillManager.cpp
+        model/SkillFactory.h
+        model/SkillFactory.cpp
+        model/Skill.h
+#        model/Scanner.h
+#        model/Scanner.cpp
 )

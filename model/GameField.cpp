@@ -19,14 +19,14 @@ GameField::GameField(const GameField& other)
     : width(other.getWidth())
     , height(other.getHeight())
     , shipsCoordinateMap(other.getShipsCoordinateMap())
-    , attackCoordinateMap(other.getAttackCoordinateMap())
+    , attacksOnField(other.getAttacksOnField())
 {}
 
 GameField::GameField(GameField&& other)
     : width(other.getWidth())
     , height(other.getHeight())
     , shipsCoordinateMap(std::move(other.getShipsCoordinateMap()))
-    , attackCoordinateMap(std::move(other.getAttackCoordinateMap()))
+    , attacksOnField(std::move(other.getAttacksOnField()))
 {}
 
 GameField& GameField::operator=(const GameField& other) {
@@ -34,7 +34,7 @@ GameField& GameField::operator=(const GameField& other) {
         this->width = other.getWidth();
         this->height = other.getHeight();
         this->shipsCoordinateMap = other.getShipsCoordinateMap();
-        this->attackCoordinateMap = other.getAttackCoordinateMap();
+        this->attacksOnField = other.getAttacksOnField();
     }
 
     return *this;
@@ -45,7 +45,7 @@ GameField& GameField::operator=(GameField&& other) {
         this->width = other.getWidth();
         this->height = other.getHeight();
         this->shipsCoordinateMap = other.getShipsCoordinateMap();
-        this->attackCoordinateMap = other.getAttackCoordinateMap();
+        this->attacksOnField = other.getAttacksOnField();
     }
 
     return *this;
@@ -63,8 +63,8 @@ const std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>,hashFunc>
     return this->shipsCoordinateMap;
 }
 
-const std::unordered_set<std::pair<int, int>, hashFunc>& GameField::getAttackCoordinateMap() const {
-    return this->attackCoordinateMap;
+const std::unordered_set<std::pair<int, int>, hashFunc>& GameField::getAttacksOnField() const {
+    return this->attacksOnField;
 }
 
 bool GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction) {
@@ -142,7 +142,7 @@ bool GameField::attack(std::pair<int, int> initialCoordinate, int damageCount) {
         if (auto it = coordinates.find(initialCoordinate); it != coordinates.end()) {
             int index = std::distance(coordinates.begin(),it);
             ship->takeDamage(index, damageCount);
-            attackCoordinateMap.insert(*it);
+            attacksOnField.insert(*it);
             return true;
         }
     }

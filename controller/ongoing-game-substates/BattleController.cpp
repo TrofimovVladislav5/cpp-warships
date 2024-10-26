@@ -17,3 +17,7 @@ BattleController::BattleController(StateContext& context)
 //     GameField* gameField = settings->getPlayerField();
 //
 // }
+
+void BattleController::attackByComputer() {
+
+}

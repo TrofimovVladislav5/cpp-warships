@@ -11,7 +11,7 @@ private:
     int height;
     bool validateCoordinates(std::pair<int, int> coordToCheck);
     std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>,hashFunc>> shipsCoordinateMap;
-    std::unordered_set<std::pair<int, int>, hashFunc> attackCoordinateMap;
+    std::unordered_set<std::pair<int, int>, hashFunc> attacksOnField;
     bool shipCoordinatesInField(std::pair<int, int> coords, int length, Direction direction) const;
     bool shipsAreContacting(std::pair<int, int> coords) const;
     bool intersectionShips(std::pair<int , int> coordinates, int length, Direction direction) const;
@@ -24,7 +24,7 @@ public:
     int getHeight() const;
     int getWidth() const;
     const std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>, hashFunc>>& getShipsCoordinateMap() const;
-    const std::unordered_set<std::pair<int, int>, hashFunc>& getAttackCoordinateMap () const;
+    const std::unordered_set<std::pair<int, int>, hashFunc>& getAttacksOnField () const;
     bool placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction);
     bool attack(std::pair<int, int> initialCoordinate, int damageCount);
     int removeShip(const std::pair<int, int>& coordinate);

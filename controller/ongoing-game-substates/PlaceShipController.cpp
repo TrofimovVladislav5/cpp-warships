@@ -6,20 +6,22 @@
 #include "model/GameStateDTO.h"
 #include "model/MatchSettings.h"
 #include "PlaceShipController.h"
-
-#include <set>
-
-#include "view/game-states/GameView.h"
 #include "./library/parser/Parser.h"
 #include "view/model/GameFieldView.h"
+#include <ctime>
+
+#include "SkillManager.h"
 
 PlaceShipController::PlaceShipController(StateContext& context)
     : context(context)
 {
     settings = context.currentMatch->getSettings();
     playerManager = settings->getPlayerManager();
+    computerManager = settings->getOpponentManager();
     currentPlayerManager = new ShipManager({});
+    currentComputerManager = new ShipManager({});
     gameFieldPlayer = settings->getPlayerField();
+    gameFieldComputer = settings->getOpponentField();
     gameFieldView = new GameFieldView(gameFieldPlayer); // TODO: Fix GameFieldView;
 }
 
@@ -27,7 +29,7 @@ PlaceShipController::~PlaceShipController() {
     delete settings;
 }
 
-std::pair<int, int> cell(std::string coord) {
+std::pair<int, int> cell(const std::string& coord) {
     std::smatch groups;
     std::regex_match(coord, groups, std::regex("^(\\d+),(\\d+)$"));
     return {std::stoi(groups[1].str()) , std::stoi(groups[2].str())};
@@ -44,11 +46,11 @@ bool isShipLengthAvailable(ShipManager& manager, ShipManager& current) {
         if (ship->getLength() == length) countCurrent++;
     }
     return countManager >= countCurrent;
-
 }
 
 bool PlaceShipController::allShipsPlaced() const {
-    return playerManager->getShips().size() == currentPlayerManager->getShips().size();
+    return playerManager->getShips().size() == currentPlayerManager->getShips().size()
+        && computerManager->getShips().size() == currentComputerManager->getShips().size();
 }
 
 void PlaceShipController::displayLessShips() const {
@@ -84,9 +86,10 @@ void PlaceShipController::addShip(ParsedOptions options) {
     else {
         currentPlayerManager->removeShipNumber(currentPlayerManager->getShips().size() - 1);
     }
-    std::cout << currentPlayerManager->getShips().size() << std::endl;
-    gameFieldView->displayField();
+    gameFieldView->displayField(false);
     displayLessShips();
+    SkillManager* manager = new SkillManager(settings);
+    manager->applySkills();
 }
 
 void PlaceShipController::removeShip(ParsedOptions options) {
@@ -95,7 +98,16 @@ void PlaceShipController::removeShip(ParsedOptions options) {
     if (index != - 1) {
         currentPlayerManager->removeShipNumber(index);
     }
-    gameFieldView->displayField();
-    //TODO gameFieldView->displayField();
+    gameFieldView->displayField(false);
+    displayLessShips();
+}
+
+void PlaceShipController::placeShipComputer() {
+    std::vector<int> availableLength;
+    while (computerManager->getShips().size() > currentComputerManager->getShips().size()) {
+        std::pair<int, int> coordinate = std::make_pair(std::rand() % gameFieldComputer->getWidth(), std::rand() % gameFieldComputer->getHeight());
+        Direction direct = (std::rand() % 2 == 0) ? Direction::horizontal : Direction::vertical;
+        //TODO : Random optimal placement computer ship
+    }
 }
 
