@@ -1,6 +1,5 @@
 #pragma once
 #include "Skill.h"
-#include <tuple>
 
 class SkillFactory {
 public:
@@ -9,11 +8,13 @@ public:
 };
 
 template <typename SkillType, typename... Args>
-class ConcreteSkillFactory : public SkillFactory {
+class ConcreteSkillFactory final : public SkillFactory {
 private:
     std::tuple<Args...> args;
 public:
-    explicit ConcreteSkillFactory(Args... b) : args(std::make_tuple(b...)) {}
+    explicit ConcreteSkillFactory(Args... args)
+        : args(std::make_tuple(args...))
+    {}
 
     ISkill* createSkill() override {
         return std::apply([](Args... args){return new SkillType(args...);}, args);

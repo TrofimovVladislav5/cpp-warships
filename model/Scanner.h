@@ -7,8 +7,7 @@ class Scanner : public ISkill {
 private:
     MatchSettings* settings;
     std::pair<int, int> leftUpper;
-    std::pair<int, int> rightLower;
 public:
-    Scanner(std::pair<int,int>& leftUpper, MatchSettings* settings);
+    Scanner(const std::pair<int,int>& leftUpper, MatchSettings* settings);
     void apply() override;
 };

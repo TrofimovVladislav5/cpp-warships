@@ -119,8 +119,8 @@ add_executable(cpp_warships
         model/SkillManager.h
         model/SkillManager.cpp
         model/SkillFactory.h
-        model/SkillFactory.cpp
         model/Skill.h
-#        model/Scanner.h
+        model/Skill.cpp
+        #        model/Scanner.h
 #        model/Scanner.cpp
 )

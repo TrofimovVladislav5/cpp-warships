@@ -4,18 +4,34 @@ ShootingRandomlySkill::ShootingRandomlySkill(ShipManager* opponentManager)
     : opponentShipManager(opponentManager)
 {}
 
-void ShootingRandomlySkill::apply() {
-    std::cout << "ShootingRandomlySkill" << std::endl;
-    int flag = 0;
-    while (flag != 1) {
-        int indexShip = std::rand() % opponentShipManager->getShips().size();
-        int indexSegment = std::rand() % (*opponentShipManager)[indexShip]->getLength();
-        if ((*opponentShipManager)[indexShip]->getSegmentHitPoints(indexSegment) != 0) {
-            (*opponentShipManager)[indexShip]->takeDamage(indexSegment, 1);
-            flag = 1;
+bool isAllDestroyed(ShipManager& manager) {
+    for (Ship* ship : manager.getShips()) {
+        if (!ship->isDestroyed()) {
+            return false;
         }
-        else {
-            flag = 0;
+    }
+    return true;
+}
+
+void ShootingRandomlySkill::apply() {
+
+    if (isAllDestroyed(*opponentShipManager)){
+        std::cout << "EXCEPTION SKILLS SHIPS DESTROYED" << std::endl;
+        return;
+    }
+
+    bool success = false;
+    while (!success) {
+        int indexShip = std::rand() % (opponentShipManager->getShips().size() - 1);
+        Ship* selectedShip = (*opponentShipManager)[indexShip];
+        if (selectedShip->isDestroyed()) {
+            continue;
+        }
+
+        int indexSegment = std::rand() % (selectedShip->getLength() - 1);
+        if (selectedShip->getSegmentHitPoints(indexSegment) != 0) {
+            selectedShip->takeDamage(indexSegment, 1);
+            success = true;
         }
     }
 }

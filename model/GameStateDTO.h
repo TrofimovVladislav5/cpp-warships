@@ -6,7 +6,7 @@ private:
     MatchSettings* settings;
 public:
     GameStateDTO();
-    GameStateDTO(MatchSettings* settings);
+    explicit GameStateDTO(MatchSettings* settings);
     MatchSettings* getSettings();
     void setSettings(MatchSettings* newSettings);
     int roundNumber;

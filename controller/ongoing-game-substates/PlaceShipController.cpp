@@ -8,9 +8,6 @@
 #include "PlaceShipController.h"
 #include "./library/parser/Parser.h"
 #include "view/model/GameFieldView.h"
-#include <ctime>
-
-#include "SkillManager.h"
 
 PlaceShipController::PlaceShipController(StateContext& context)
     : context(context)
@@ -26,6 +23,9 @@ PlaceShipController::PlaceShipController(StateContext& context)
 }
 
 PlaceShipController::~PlaceShipController() {
+    for (int i = 0; i < currentPlayerManager->getShips().size();i++) {
+        delete (*currentPlayerManager)[i];
+    }
     delete settings;
 }
 
@@ -88,8 +88,6 @@ void PlaceShipController::addShip(ParsedOptions options) {
     }
     gameFieldView->displayField(false);
     displayLessShips();
-    SkillManager* manager = new SkillManager(settings);
-    manager->applySkills();
 }
 
 void PlaceShipController::removeShip(ParsedOptions options) {

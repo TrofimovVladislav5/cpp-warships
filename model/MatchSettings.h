@@ -10,7 +10,7 @@ private:
     ShipManager* opponentShipManager;
     int fieldSize;
 public:
-    MatchSettings(int fieldSize = 10);
+    explicit MatchSettings(int fieldSize = 10);
     ~MatchSettings();
     GameField* getPlayerField();
     GameField* getOpponentField();
