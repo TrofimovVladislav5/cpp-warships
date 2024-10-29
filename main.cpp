@@ -5,6 +5,5 @@ int main(){
     Initials::consoleOutInitials();
     GameController controller;
     controller.run();
-
     return 0;
 }

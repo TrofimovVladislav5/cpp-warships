@@ -6,6 +6,7 @@
 #include "InitiateOngoingGameSubstate.h"
 #include "PlaceShipController.h"
 #include "BattleOngoingGameSubstate.h"
+#include "ShipPlacementException.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/parser/ParserCommandInfo.h"
 #include "library/defaults/DefaultParserError.h"
@@ -23,6 +24,7 @@ InitiateOngoingGameSubstate::InitiateOngoingGameSubstate(StateContext& context)
     this->inputScheme = {
         {"add", ParserCommandInfo(
             commandBuilder
+
                 .setCallback(TypesHelper::methodToFunction(&PlaceShipController::addShip, placeShipController))
                 .setDescription("Adds a ship to the game field")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
@@ -93,7 +95,12 @@ void InitiateOngoingGameSubstate::updateSubstate() {
     std::string input;
     std::getline(std::cin, input);
     latestCommand = input;
-    parser.executedParse(input);
+    try {
+        parser.executedParse(input);
+    }
+    catch (const ShipPlacementException& exception) {
+        exception.displayError();
+    }
 }
 
 void InitiateOngoingGameSubstate::closeSubstate() {

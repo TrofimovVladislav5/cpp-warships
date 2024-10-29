@@ -121,6 +121,8 @@ add_executable(cpp_warships
         model/SkillFactory.h
         model/Skill.h
         model/Skill.cpp
+        library/defaults/ShipPlacementException.h
+        library/defaults/ShipPlacementException.cpp
         #        model/Scanner.h
 #        model/Scanner.cpp
 )

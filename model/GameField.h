@@ -25,7 +25,8 @@ public:
     int getWidth() const;
     const std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>, hashFunc>>& getShipsCoordinateMap() const;
     const std::unordered_set<std::pair<int, int>, hashFunc>& getAttacksOnField () const;
-    bool placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction);
+    bool canPlaceShip(std::pair<int, int> initialCoordinate, Direction direction, int length);
+    void placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction);
     bool attack(std::pair<int, int> initialCoordinate, int damageCount);
     int removeShip(const std::pair<int, int>& coordinate);
 };

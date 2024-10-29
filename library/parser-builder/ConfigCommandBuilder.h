@@ -1,4 +1,5 @@
 #pragma once
+#include "ShipPlacementException.h"
 #include "ParserCommandBuilder.h"
 
 class ConfigCommandBuilder: public ParserCommandBuilder {

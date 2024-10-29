@@ -26,9 +26,11 @@ bool isShipNear(std::unordered_map<std::pair<int, int>, int,hashFunc>& shipCoord
 }
 
 void GameFieldView::printUpperBar(std::pair<int, int> boundaries) {
-    std::string upperBar = "№ ";
+    std::string upperBar = (std::max(boundaries.first, boundaries.second) > 10) ? " № " : "№ ";
+    const std::string abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (int x = std::min(boundaries.first, boundaries.second); x < std::max(boundaries.first, boundaries.second); x++) {
-        upperBar += std::to_string(x) + " ";
+        std::string charToString(1, abc[x]);
+        upperBar += charToString + " ";
     }
     std::cout << upperBar << std::endl;
 }
@@ -50,12 +52,11 @@ void GameFieldView::displayField(bool isOpponentView = false) {
     }
 
     this->printUpperBar(std::make_pair(0, gameField->getHeight()));
+    bool isLevelingNeed = (gameField->getHeight() > 10) ? true : false;
     for (int y = 0; y < gameField->getHeight(); y++) {
-        std::string result;
-        result += std::to_string(y) + " ";
+        std::string result = (isLevelingNeed) ? (y < 10 ? " " : "") + std::to_string(y) + " " : std::to_string(y) + " ";
         for (int x = 0; x < gameField->getWidth(); x++) {
             std::pair<int, int> coord = std::make_pair(x, y);
-
             if (isPresent(shipCoordinates, coord)) {
                 if (isOpponentView && attacksOnField.find(coord) == attacksOnField.end() && shipCoordinates.at(coord) != 0) {
                     result += "* ";
@@ -71,7 +72,6 @@ void GameFieldView::displayField(bool isOpponentView = false) {
         std::cout << result << std::endl;
     }
 }
-
 
 void GameFieldView::displayScan(std::pair<int, int> leftUpper) {
     this->printUpperBar(std::make_pair(leftUpper.first, leftUpper.first + 2));

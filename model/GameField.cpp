@@ -1,14 +1,10 @@
 #include "GameField.h"
 
 #include <iostream>
-
+#include "defaults/ShipPlacementException.h"
 #include "Structures.h"
 #include <unordered_map>
 #include <unordered_set>
-
-bool GameField::validateCoordinates(std::pair<int, int> coordToCheck) {
-    return coordToCheck.first > 0 && coordToCheck.first < width && coordToCheck.second > 0 && coordToCheck.second < height;
-}
 
 GameField::GameField(int width, int height)
     : width(width)
@@ -67,13 +63,15 @@ const std::unordered_set<std::pair<int, int>, hashFunc>& GameField::getAttacksOn
     return this->attacksOnField;
 }
 
-bool GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction) {
-    int length = ship->getLength();
+bool GameField::canPlaceShip(std::pair<int, int> initialCoordinate, Direction direction, int length) {
     if (!shipCoordinatesInField(initialCoordinate, length, direction) || intersectionShips(initialCoordinate, length, direction)) {
-        std::cout << "Can't place ship" << std::endl;
         return false;
     }
+    return true;
+}
 
+void GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction) {
+    int length = ship->getLength();
     for (int i = 0; i < length;i++) {
         std::pair<int, int> newCoordinate = initialCoordinate;
         if (direction == Direction::horizontal) newCoordinate.first += i;
@@ -81,15 +79,12 @@ bool GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Dir
 
         this->shipsCoordinateMap[ship].insert(newCoordinate);
     }
-
-    return true;
 }
 
 bool GameField::shipCoordinatesInField(std::pair<int, int> coords, int length, Direction direction) const {
     if (direction == Direction::horizontal) {
         return coords.first + length <= width;
     }
-
     return coords.second + length <= height;
 }
 

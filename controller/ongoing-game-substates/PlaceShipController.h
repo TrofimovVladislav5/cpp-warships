@@ -12,10 +12,11 @@ private:
     GameField* gameFieldPlayer;
     GameField* gameFieldComputer;
     GameFieldView* gameFieldView;
+    std::map<int, int> availableLengthShips;
     StateContext context;
-
+    bool isShipLengthAvailable(int length);
 public:
-    bool allShipsPlaced() const;
+    bool allShipsPlaced();
     PlaceShipController(StateContext& context);
     ~PlaceShipController();
     void addShip(ParsedOptions options);
