@@ -1,11 +1,14 @@
 #include "Scanner.h"
+
+#include <set>
+
 #include "GameFieldView.h"
-Scanner::Scanner(const std::pair<int,int>& leftUpper, MatchSettings* settings)
+Scanner::Scanner(MatchSettings* settings)
     : settings(settings)
-    , leftUpper(leftUpper)
-{}
+{
+    scannerView = new GameFieldView(settings->getOpponentField());
+}
 
 void Scanner::apply() {
-    GameFieldView view(settings->getOpponentField());
-    view.displayScan(leftUpper);
+    scannerView->displayScan(settings->coordinateToScan());
 }

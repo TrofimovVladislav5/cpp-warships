@@ -38,6 +38,18 @@ ShipManager* MatchSettings::getOpponentManager() {
     return opponentShipManager;
 }
 
+int MatchSettings::getDamage() const {
+    return damageCount;
+}
+
+bool MatchSettings::getIsActiveDoubleDamage() const {
+    return isActiveDoubleDamage;
+}
+
+void MatchSettings::setActiveDoubleDamage(bool isActive) {
+    isActiveDoubleDamage = isActive;
+}
+
 void MatchSettings::setPlayerManager(const std::vector<int>& shipsLengths) {
     if (playerShipManager) {
         delete playerShipManager;
@@ -61,4 +73,16 @@ void MatchSettings::setFieldSize(int size) {
 
     playerField = new GameField(fieldSize, fieldSize);
     opponentField = new GameField(fieldSize, fieldSize);
+}
+
+void MatchSettings::setDamageCount(int damage) {
+    damageCount = damage;
+}
+
+void MatchSettings::setScanCoordinates(const std::pair<int, int> &scanCoordinate) {
+    this->scanCoordinate = scanCoordinate;
+}
+
+const std::pair<int, int> &MatchSettings::coordinateToScan() {
+    return scanCoordinate;
 }

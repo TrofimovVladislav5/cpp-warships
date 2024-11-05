@@ -5,10 +5,12 @@
 
 class BattleOngoingGameSubstate : public OngoingGameState {
 private:
+    SchemeMap inputScheme;
+    StateContext context;
     BattleController* battleController;
 public:
-    BattleOngoingGameSubstate(StateContext& context);
-    ~BattleOngoingGameSubstate();
+    explicit BattleOngoingGameSubstate(StateContext& context);
+    ~BattleOngoingGameSubstate() override;
     void openSubstate() override;
     void closeSubstate() override;
     void updateSubstate() override;

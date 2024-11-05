@@ -9,7 +9,7 @@ private:
     void handleConfirm(ParsedOptions options);
 public:
     CommonGameSettingsSubstate(StateContext& context);
-    ~CommonGameSettingsSubstate();
+    ~CommonGameSettingsSubstate() override;
     void openSubstate() override;
     void closeSubstate() override;
     void updateSubstate() override;

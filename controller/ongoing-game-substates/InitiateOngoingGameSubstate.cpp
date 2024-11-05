@@ -47,7 +47,7 @@ InitiateOngoingGameSubstate::InitiateOngoingGameSubstate(StateContext& context)
                 .addParameter (
                     parameterBuilder
                         .addFlag("--cell")
-                        .setValidator(std::regex("^(\\d+)\\,(\\d+)$"))
+                        .setValidator(std::regex("^(\\d+),(\\d+)$"))
                         .setNecessary(true)
                         .buildAndReset()
                 )
@@ -109,6 +109,7 @@ void InitiateOngoingGameSubstate::closeSubstate() {
 
 OngoingGameState* InitiateOngoingGameSubstate::transitToSubstate() {
     if (latestCommand == "confirm" && placeShipController->allShipsPlaced()) {
+        placeShipController->placeShipComputer();
         return new BattleOngoingGameSubstate(context);
     }
     return nullptr;

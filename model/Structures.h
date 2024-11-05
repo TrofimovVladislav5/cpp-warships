@@ -7,6 +7,12 @@ enum class Direction{
     vertical
 };
 
+enum class AttackResult{
+    miss,
+    damaged,
+    destroyed
+};
+
 struct hashFunc {
     size_t operator()(std::pair<int, int> coordinate) const;
 };

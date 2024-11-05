@@ -1,46 +1,77 @@
+#include <random>
+#include <algorithm>
 #include "SkillManager.h"
-#include "DoubleDamageSkill.h"
+#include "DoubleDamage.h"
 #include "ShootingRandomlySkill.h"
 #include "Scanner.h"
+#include "SkillException.h"
 #include "SkillFactory.h"
-#include <cstdlib>
-#include <ctime>
-#include <set>
+#include "ViewHelper.h"
 
-SkillManager::SkillManager(MatchSettings* settings) {
-    std::srand(static_cast<unsigned int>(std::time(0)));
+SkillManager::SkillManager(MatchSettings *settings)
+    : settings(settings)
+    , currentSkill(nullptr)
+{
+    availableSkills = {
+        {"Scanner"},
+        {"DoubleDamage"},
+        {"Shooting"}
+    };
 
-    ConcreteSkillFactory<Scanner, std::pair<int, int>, MatchSettings*> scannerFactory({0,0}, settings);
+    factory["Scanner"] = new ConcreteSkillFactory<Scanner, MatchSettings*>(settings);
+    factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
+    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, MatchSettings*>(settings);
 
-    ConcreteSkillFactory<DoubleDamageSkill, std::pair<int, int>, GameField*> doubleDamageFactory(
-        {2, 3}, settings->getPlayerField());
-
-    ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*> shootingRandomlyFactory(settings->getPlayerManager());
-
-    int skillType = std::rand() % 3;
-    if (skillType == 0) {
-        skills.push(scannerFactory.createSkill());
-    } else if (skillType == 1){
-        skills.push(doubleDamageFactory.createSkill());
-    }
-    else {
-        skills.push(shootingRandomlyFactory.createSkill());
-    }
-}
-
-void SkillManager::applySkills() {
-    if (!skills.empty()) {
-        skills.front()->apply();
-        delete skills.front();
-        skills.pop();
-    } else {
-        std::cout << "EXCEPTION" << std::endl; //TODO Exception
+    std::shuffle(availableSkills.begin(), availableSkills.end(), std::random_device());
+    for (const auto& skillName : availableSkills) {
+        skills.emplace_back(skillName);
     }
 }
 
 SkillManager::~SkillManager() {
-    while (!skills.empty()) {
-        delete skills.front();
-        skills.pop();
+    for (auto& pair : factory) {
+        delete pair.second;
     }
+    delete currentSkill;
 }
+
+void SkillManager::randomSkill() {
+    std::random_device seed;
+    std::mt19937 mersenneEngine{seed()};
+    std::uniform_int_distribution<> dist{0,2};
+    skills.emplace_back(availableSkills[dist(mersenneEngine)]);
+}
+
+const std::vector<std::string>& SkillManager::nameSkills() {
+    return availableSkills;
+}
+const std::string& SkillManager::canUseSkill() {
+    return skills.front();
+}
+
+ISkill *SkillManager::createSkill(const std::string &skillName) {
+    if (factory.find(skillName) == factory.end()) {
+        throw SkillException("(where create skill) no factory for skill " + skillName + " not found");
+    }
+    return factory[skillName]->createSkill();
+}
+
+void SkillManager::applySkill() {
+    if (skills.empty()) {
+        throw SkillException("(where apply skill) no available skills");
+    }
+    currentSkill = createSkill(skills.front());
+    currentSkill->apply();
+    skills.pop_front();
+}
+
+void SkillManager::addSkill() {
+    randomSkill();
+}
+
+void SkillManager::status() const {
+    ViewHelper::consoleOut((skills.empty()) ? "No available skill"
+                    :"Available skill to apply" + skills.front());
+}
+
+

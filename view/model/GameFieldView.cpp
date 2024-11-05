@@ -2,13 +2,14 @@
 #include "../model/Ship.h"
 #include "model/GameFieldView.h"
 #include <iostream>
+#include <algorithm>
 
 GameFieldView::GameFieldView(GameField* gameField)
     : gameField(gameField)
 {}
 
 GameFieldView::~GameFieldView() {
-    delete gameField;
+
 }
 bool isPresent(const std::unordered_map<std::pair<int, int>, int, hashFunc>& shipCoordinates, const std::pair<int, int>& scanCell) {
     return shipCoordinates.find(scanCell) != shipCoordinates.end();
@@ -52,7 +53,7 @@ void GameFieldView::displayField(bool isOpponentView = false) {
     }
 
     this->printUpperBar(std::make_pair(0, gameField->getHeight()));
-    bool isLevelingNeed = (gameField->getHeight() > 10) ? true : false;
+    bool isLevelingNeed = gameField->getHeight() > 10;
     for (int y = 0; y < gameField->getHeight(); y++) {
         std::string result = (isLevelingNeed) ? (y < 10 ? " " : "") + std::to_string(y) + " " : std::to_string(y) + " ";
         for (int x = 0; x < gameField->getWidth(); x++) {
@@ -74,9 +75,9 @@ void GameFieldView::displayField(bool isOpponentView = false) {
 }
 
 void GameFieldView::displayScan(std::pair<int, int> leftUpper) {
-    this->printUpperBar(std::make_pair(leftUpper.first, leftUpper.first + 2));
-    std::unordered_map<std::pair<int, int>, std::string, hashFunc> shipCoordinates;
+    this->printUpperBar(std::make_pair(std::min(leftUpper.first, gameField->getWidth()), std::min(leftUpper.first + 2, gameField->getWidth())));
 
+    std::unordered_map<std::pair<int, int>, std::string, hashFunc> shipCoordinates;
     for (const auto& [ship, coordinates] : gameField->getShipsCoordinateMap()) {
         int index = 0;
         for (const auto& coordinate : coordinates) {
@@ -85,11 +86,13 @@ void GameFieldView::displayScan(std::pair<int, int> leftUpper) {
         }
     }
 
-    for (int y = leftUpper.second; y < leftUpper.second + 2; y++) {
-        std::string result;
-        result += std::to_string(y) + " ";
-        for (int x = leftUpper.first; x < leftUpper.first + 2; x++) {
-            std::pair<int, int> coord = std::make_pair(x, y);
+    for (int y = leftUpper.second; y < std::min(leftUpper.second + 2, gameField->getHeight()); y++) {
+        std::string result = std::to_string(y) + " ";
+
+        for (int x = leftUpper.first; x < std::min(leftUpper.first + 2, gameField->getWidth()); x++) {
+            int boundedWidth = std::clamp(x, 0, gameField->getWidth() - 1);
+            int boundedHeight = std::clamp(y, 0, gameField->getHeight() - 1);
+            std::pair<int, int> coord = std::make_pair(boundedWidth, boundedHeight);
 
             if (shipCoordinates.find(coord) != shipCoordinates.end()) {
                 result += shipCoordinates.at(coord) + " ";

@@ -5,19 +5,15 @@
 class PlaceShipController {
 private:
     MatchSettings* settings;
-    ShipManager* playerManager;
     ShipManager* currentPlayerManager;
-    ShipManager* computerManager;
     ShipManager* currentComputerManager;
-    GameField* gameFieldPlayer;
-    GameField* gameFieldComputer;
     GameFieldView* gameFieldView;
     std::map<int, int> availableLengthShips;
     StateContext context;
     bool isShipLengthAvailable(int length);
 public:
     bool allShipsPlaced();
-    PlaceShipController(StateContext& context);
+    explicit PlaceShipController(StateContext& context);
     ~PlaceShipController();
     void addShip(ParsedOptions options);
     void removeShip(ParsedOptions options);

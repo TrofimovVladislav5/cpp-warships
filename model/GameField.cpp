@@ -128,7 +128,7 @@ bool GameField::intersectionShips(std::pair<int , int> coordinates, int length, 
 }
 
 
-bool GameField::attack(std::pair<int, int> initialCoordinate, int damageCount) {
+AttackResult GameField::attack(std::pair<int, int> initialCoordinate, int damageCount) {
     if (initialCoordinate.first < 0 || initialCoordinate.first >= width
     ||  initialCoordinate.second < 0 || initialCoordinate.second >= height) throw std::out_of_range("Invalid coordinates to attack");
 
@@ -138,10 +138,10 @@ bool GameField::attack(std::pair<int, int> initialCoordinate, int damageCount) {
             int index = std::distance(coordinates.begin(),it);
             ship->takeDamage(index, damageCount);
             attacksOnField.insert(*it);
-            return true;
+            return (ship->isDestroyed()) ? AttackResult::destroyed : AttackResult::damaged;
         }
     }
-    return false;
+    return AttackResult::miss;
 }
 
 int GameField::removeShip(const std::pair<int, int> &coordinate) {
@@ -154,4 +154,13 @@ int GameField::removeShip(const std::pair<int, int> &coordinate) {
         index++;
     }
     return -1;
+}
+
+bool GameField::allShipsDestroyed() const {
+    for (const auto& [ship, coordinates] : shipsCoordinateMap) {
+        if (!ship->isDestroyed()) {
+            return false;
+        }
+    }
+    return true;
 }

@@ -1,13 +1,14 @@
 #pragma once
 
+#include "GameFieldView.h"
 #include "MatchSettings.h"
 #include "Skill.h"
 
 class Scanner : public ISkill {
 private:
     MatchSettings* settings;
-    std::pair<int, int> leftUpper;
+    GameFieldView* scannerView;
 public:
-    Scanner(const std::pair<int,int>& leftUpper, MatchSettings* settings);
+    explicit Scanner(MatchSettings* settings);
     void apply() override;
 };

@@ -1,11 +1,11 @@
 #pragma once
-#include "ShipManager.h"
+#include "MatchSettings.h"
 #include "Skill.h"
 
 class ShootingRandomlySkill : public ISkill  {
 private:
-     ShipManager* opponentShipManager;
+     MatchSettings* settings;
 public:
-     explicit ShootingRandomlySkill(ShipManager* opponentManager);
+     explicit ShootingRandomlySkill(MatchSettings* settings);
      void apply() override;
 };

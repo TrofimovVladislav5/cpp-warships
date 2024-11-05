@@ -1,34 +1,32 @@
 #include "ShootingRandomlySkill.h"
+#include <random>
 
-ShootingRandomlySkill::ShootingRandomlySkill(ShipManager* opponentManager)
-    : opponentShipManager(opponentManager)
+#include "SkillException.h"
+
+ShootingRandomlySkill::ShootingRandomlySkill(MatchSettings* settings)
+    : settings(settings)
 {}
 
-bool isAllDestroyed(ShipManager& manager) {
-    for (Ship* ship : manager.getShips()) {
-        if (!ship->isDestroyed()) {
-            return false;
-        }
-    }
-    return true;
-}
-
 void ShootingRandomlySkill::apply() {
-
-    if (isAllDestroyed(*opponentShipManager)){
-        std::cout << "EXCEPTION SKILLS SHIPS DESTROYED" << std::endl;
-        return;
-    }
+    std::mt19937 mersenneEngine(std::random_device{}());
 
     bool success = false;
-    while (!success) {
-        int indexShip = std::rand() % (opponentShipManager->getShips().size() - 1);
-        Ship* selectedShip = (*opponentShipManager)[indexShip];
-        if (selectedShip->isDestroyed()) {
-            continue;
-        }
+    auto& ships = settings->getOpponentManager()->getShips();
 
-        int indexSegment = std::rand() % (selectedShip->getLength() - 1);
+    if (ships.empty()) {
+        throw SkillException("Unreachable state");
+    }
+
+    while (!success) {
+        std::uniform_int_distribution<> distShips(0, ships.size() - 1);
+        int indexShip = distShips(mersenneEngine);
+
+        Ship* selectedShip = ships[indexShip];
+        if (selectedShip->isDestroyed()) { continue;}
+
+        std::uniform_int_distribution<> distSegment(0, selectedShip->getLength() - 1);
+        int indexSegment = distSegment(mersenneEngine);
+
         if (selectedShip->getSegmentHitPoints(indexSegment) != 0) {
             selectedShip->takeDamage(indexSegment, 1);
             success = true;

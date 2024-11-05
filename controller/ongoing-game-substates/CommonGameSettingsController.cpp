@@ -17,13 +17,6 @@ CommonGameSettingsController::~CommonGameSettingsController() {
     delete settings;
 }
 
-void CommonGameSettingsController::getVectorFromString(std::string str, std::vector<int>& potentialShipsLength){
-    std::vector<std::string> splitLengths = std::vector<std::string>(StringHelper::split(str,','));
-    for (auto& string : splitLengths) {
-        potentialShipsLength.push_back(std::stoi(string));
-    }
-}
-
 void CommonGameSettingsController::calculateOptimalLengthShips(int fieldSize, std::vector<int>& shipsCounts) {
     shipsCounts.clear();
 
@@ -51,7 +44,6 @@ void CommonGameSettingsController::handleGameFieldSize(ParsedOptions options){
     for (int i = 0; i < shipsCounts.size(); i++) {
         for (int j = 0; j < shipsCounts[i]; j++) {
             temp.push_back(i + 1);
-            std::cout << temp.back() << " ";
         }
     }
     std::cout << std::endl;

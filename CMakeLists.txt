@@ -104,18 +104,20 @@ add_executable(cpp_warships
         view/game-substates/InitiateOngoingGameView.h
         view/game-substates/CommonGameSettingsView.cpp
         view/game-substates/CommonGameSettingsView.h
-        # view/game-substates/BattleOngoingGameSubstate.cpp
-        # view/game-substates/BattleOngoingGameSubstate.h
-        # view/game-substates/FinishOngoingGameSubstate.cpp
-        # view/game-substates/FinishOngoingGameSubstate.h
+#        view/game-substates/BattleOngoingGameSubstate.cpp
+#        view/game-substates/BattleOngoingGameSubstate.h
+#        view/game-substates/FinishOngoingGameSubstate.cpp
+#        view/game-substates/FinishOngoingGameSubstate.h
         view/model/GameFieldView.cpp
         view/model/GameFieldView.h
         controller/OngoingGameController.cpp
         library/defaults/Initials.h
-        model/DoubleDamageSkill.h
-        model/DoubleDamageSkill.cpp
+        model/DoubleDamage.h
+        model/DoubleDamage.cpp
         model/Scanner.cpp
+        model/Scanner.h
         model/ShootingRandomlySkill.cpp
+        model/ShootingRandomlySkill.h
         model/SkillManager.h
         model/SkillManager.cpp
         model/SkillFactory.h
@@ -123,6 +125,12 @@ add_executable(cpp_warships
         model/Skill.cpp
         library/defaults/ShipPlacementException.h
         library/defaults/ShipPlacementException.cpp
-        #        model/Scanner.h
-#        model/Scanner.cpp
+        library/defaults/SkillException.h
+        library/defaults/SkillException.cpp
+        library/defaults/BattleException.h
+        library/defaults/BattleException.cpp
+        model/ComputerPlayer.h
+        model/ComputerPlayer.cpp
+        library/defaults/FieldCoordinateHelper.h
+        library/defaults/FieldCoordinateHelper.cpp
 )
