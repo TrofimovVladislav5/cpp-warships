@@ -1,5 +1,5 @@
 #pragma once
-#include <stdexcept>
+#include <string>
 
 class SkillException : public std::exception{
 private:

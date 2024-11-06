@@ -1,21 +1,20 @@
 #include "game-states/OngoingGameState.h"
-#include "model/StateContext.h"
-#include "BattleOngoingGameSubstate.h"
+#include "BattleOngoingGameSubState.h"
 
 #include "BattleException.h"
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
-#include "FinishOngoingGameSubstate.h"
-#include "ParserCommandBuilder.h"
+#include "FinishOngoingGameSubState.h"
+#include "StateMessages.h"
 #include "StringHelper.h"
 #include "TypesHelper.h"
 #include "../../library/ViewHelper.h"
 #include "parser-builder/ConfigCommandBuilder.h"
 
-BattleOngoingGameSubstate::BattleOngoingGameSubstate(StateContext& context)
-    : OngoingGameState(context)
+BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
+    : OngoingGameSubState(context)
+    , battleController(new BattleController(*context.settings))
 {
-    battleController = new BattleController(context);
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
@@ -58,34 +57,36 @@ BattleOngoingGameSubstate::BattleOngoingGameSubstate(StateContext& context)
     };
 }
 
-BattleOngoingGameSubstate::~BattleOngoingGameSubstate() {
+BattleOngoingGameSubState::~BattleOngoingGameSubState() {
     delete battleController;
 }
 
-void BattleOngoingGameSubstate::openSubstate() {
-    ViewHelper::consoleOut("Welcome to battle. Your target to destroy enemies ships");
+void BattleOngoingGameSubState::openSubState() {
+    StateMessages::displayGreetingMessage("OngoingGame.Battle");
 }
 
-void BattleOngoingGameSubstate::closeSubstate() {
-    ViewHelper::consoleOut("Battle is ended");
+void BattleOngoingGameSubState::closeSubState() {
+    ViewHelper::consoleOut("Battle ended");
+    StateMessages::displayCloseMessage("OngoingGame.Battle");
 }
 
-void BattleOngoingGameSubstate::updateSubstate() {
+void BattleOngoingGameSubState::updateSubState() {
+    StateMessages::awaitCommandMessage();
     Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
-    std::string input;
-    std::getline(std::cin, input);
-    latestCommand = input;
+
     try {
+        std::string input;
+        std::getline(std::cin, input);
         parser.executedParse(input);
-    }
-    catch (const BattleException& exception) {
+    } catch (const BattleException& exception) {
         exception.displayError();
     }
 }
 
-OngoingGameState* BattleOngoingGameSubstate::transitToSubstate() {
+OngoingGameSubState* BattleOngoingGameSubState::transitToSubState() {
     if (battleController->finishBattle()) {
-        return new FinishOngoingGameSubstate(context);
+        return new FinishOngoingGameSubState(context);
     }
+
     return nullptr;
 }

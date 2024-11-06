@@ -13,7 +13,7 @@ private:
     bool isActiveDoubleDamage;
     std::pair<int, int> scanCoordinate;
 public:
-    explicit MatchSettings(int fieldSize = 10);
+    explicit MatchSettings(int fieldSize = -1);
     ~MatchSettings();
     GameField* getPlayerField();
     GameField* getOpponentField();

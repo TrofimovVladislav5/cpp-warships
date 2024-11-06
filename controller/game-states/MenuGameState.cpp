@@ -5,10 +5,10 @@
 #include "GameState.h"
 #include "OngoingGameState.h"
 #include "ShutdownGameState.h"
+#include "StateMessages.h"
 #include "library/TypesHelper.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/defaults/DefaultParserError.h"
-#include "library/ViewHelper.h"
 
 void MenuGameState::handleStart(ParsedOptions options) {
     this->latestCommand = "start";
@@ -21,8 +21,6 @@ void MenuGameState::handleExit(ParsedOptions options) {
 MenuGameState::MenuGameState(StateContext& context) 
     : GameState(context) 
 {
-    view = new GameMenuView();
-
     ConfigCommandBuilder commandBuilder;
 
     this->inputScheme = {
@@ -46,16 +44,16 @@ MenuGameState::MenuGameState(StateContext& context)
 }
 
 void MenuGameState::openState() {
-    view->displayOpenState();
+    StateMessages::displayGreetingMessage("Menu");
 }
 
 void MenuGameState::closeState() {
-    view->displayCloseState();
+    StateMessages::displayCloseMessage("Menu");
 }
 
 void MenuGameState::updateState() {
-    view->displayAvailableCommands(context.currentMatch);
     std::string input;
+    StateMessages::awaitCommandMessage();
     std::getline(std::cin, input);
     Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);

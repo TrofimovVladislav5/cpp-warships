@@ -1,7 +1,6 @@
 #include "GameController.h"
 
 #include "game-states/MenuGameState.h"
-#include "view/game-states/GameView.h"
 #include "../library/ViewHelper.h"
 
 #include "library/TypesHelper.h"
@@ -19,8 +18,7 @@ GameController::~GameController() {
 
 void GameController::finishGame(StateContext& context) {
     this->isFinished = true;
-    int currentRound = context.currentMatch ? context.currentMatch->roundNumber: 0;
-    ViewHelper::consoleOut("finishing game on round: " + std::to_string(currentRound));
+    ViewHelper::consoleOut("Shutting down...");
 }
 
 void GameController::run() {

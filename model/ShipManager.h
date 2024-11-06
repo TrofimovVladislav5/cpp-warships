@@ -9,7 +9,7 @@ private:
 public:
     explicit ShipManager(const std::vector<int>& shipsSize);
     ~ShipManager();
-    std::vector<Ship*>& getShips();
+    std::vector<Ship*> getShips();
     Ship* operator[](int index);
     void addShip(int size);
     void removeShipNumber(int indexRemoving);

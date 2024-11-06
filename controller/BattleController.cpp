@@ -1,19 +1,19 @@
-#include "model/StateContext.h"
 #include "BattleController.h"
-#include "../../library/ViewHelper.h"
-#include "defaults/BattleException.h"
+#include "../library/ViewHelper.h"
+#include "../library/defaults/BattleException.h"
 #include <random>
 
-#include "SkillException.h"
+#include "../library/defaults/SkillException.h"
+#include "game-states/GameState.h"
 
-BattleController::BattleController(StateContext& context) 
-    :   context(context)
-    ,   battleIsFinished(false)
+BattleController::BattleController(MatchSettings& settings)
+    : settings(settings)
+    , battleIsFinished(false)
 {
-    playerView = new GameFieldView(context.currentMatch->getSettings()->getPlayerField());
-    opponentView = new GameFieldView(context.currentMatch->getSettings()->getOpponentField());
-    player = new Player(context.currentMatch->getSettings());
-    computer = new ComputerPlayer(context.currentMatch->getSettings()->getPlayerField());
+    playerView = new GameFieldView(settings.getPlayerField());
+    opponentView = new GameFieldView(settings.getOpponentField());
+    player = new Player(&settings);
+    computer = new ComputerPlayer(settings.getPlayerField());
 }
 
 BattleController::~BattleController() {
@@ -24,18 +24,20 @@ BattleController::~BattleController() {
 }
 
 bool BattleController::battleStatus() {
-    if (context.currentMatch->getSettings()->getPlayerField()->allShipsDestroyed()) {
-        ViewHelper::consoleOut("Player lose game");
+    GameField* playerField = settings.getPlayerField();
+    GameField* opponentField = settings.getOpponentField();
+
+    if (playerField->allShipsDestroyed()) {
+        battleIsFinished = true;
+        return true;
+    } else if (opponentField->allShipsDestroyed()) {
         battleIsFinished = true;
         return true;
     }
-    if (context.currentMatch->getSettings()->getOpponentField()->allShipsDestroyed()) {
-        ViewHelper::consoleOut("Player win game");
-        battleIsFinished = true;
-        return true;
-    }
+
     return false;
 }
+
 bool BattleController::finishBattle() const{
     return battleIsFinished;
 }
@@ -70,6 +72,6 @@ void BattleController::battle(ParsedOptions options) {
             computer->makeAShot();
         }
         playerView->displayField(false);
-        opponentView->displayField(false);
+        opponentView->displayField(true);
     }
 }

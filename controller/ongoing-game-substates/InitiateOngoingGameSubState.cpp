@@ -1,30 +1,26 @@
 #include <iostream>
-#include "game-states/GameState.h"
 #include "../../library/ViewHelper.h"
-#include "model/StateContext.h"
-#include "game-states/OngoingGameState.h"
-#include "InitiateOngoingGameSubstate.h"
-#include "PlaceShipController.h"
-#include "BattleOngoingGameSubstate.h"
+#include "InitiateOngoingGameSubState.h"
+#include "../PlaceShipController.h"
+#include "BattleOngoingGameSubState.h"
 #include "ShipPlacementException.h"
+#include "StateMessages.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/parser/ParserCommandInfo.h"
 #include "library/defaults/DefaultParserError.h"
 #include "library/TypesHelper.h"
 #include "library/parser-builder/DefaultParameterBuilder.h"
-#include "view/game-substates/InitiateOngoingGameView.h"
 
-InitiateOngoingGameSubstate::InitiateOngoingGameSubstate(StateContext& context)
-    : OngoingGameState(context)
-{   
-    this->placeShipController = new PlaceShipController(context);
-    this->ongoingGameView = new InitiateOngoingGameView();
+
+InitiateOngoingGameSubState::InitiateOngoingGameSubState(SubStateContext& context)
+    : OngoingGameSubState(context)
+    , placeShipController(new PlaceShipController(*context.settings))
+{
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"add", ParserCommandInfo(
             commandBuilder
-
                 .setCallback(TypesHelper::methodToFunction(&PlaceShipController::addShip, placeShipController))
                 .setDescription("Adds a ship to the game field")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
@@ -66,51 +62,43 @@ InitiateOngoingGameSubstate::InitiateOngoingGameSubstate(StateContext& context)
                         .buildAndReset()
                 )
                 .buildAndReset()
-        )},
-        {"confirm", ParserCommandInfo(
-                commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&InitiateOngoingGameSubstate::handleConfirm, this))
-                .setDescription("Confirmation of the placement of ships")
-                .setDisplayError(DefaultParserError::CommandNotFoundError)
-                .buildAndReset()
-        )},
+        )}
     };
 }
 
-void InitiateOngoingGameSubstate::handleConfirm(ParsedOptions options) {
-    this->latestCommand = "confirm";
-}
-
-InitiateOngoingGameSubstate::~InitiateOngoingGameSubstate(){
+InitiateOngoingGameSubState::~InitiateOngoingGameSubState(){
     delete placeShipController;
 }
 
-void InitiateOngoingGameSubstate::openSubstate() {
-    ongoingGameView->displayOpenState();
+void InitiateOngoingGameSubState::openSubState() {
+    StateMessages::displayGreetingMessage("OngoingGame.PlaceShips");
 }
 
-void InitiateOngoingGameSubstate::updateSubstate() {
-    ongoingGameView->displayAvailableCommands(context.currentMatch);
+void InitiateOngoingGameSubState::updateSubState() {
+    StateMessages::awaitCommandMessage();
+
     Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
-    std::string input;
-    std::getline(std::cin, input);
-    latestCommand = input;
     try {
+        std::string input;
+        std::getline(std::cin, input);
         parser.executedParse(input);
-    }
-    catch (const ShipPlacementException& exception) {
+    } catch (const ShipPlacementException& exception) {
         exception.displayError();
     }
 }
 
-void InitiateOngoingGameSubstate::closeSubstate() {
-    ongoingGameView->displayCloseState();
+void InitiateOngoingGameSubState::closeSubState() {
+    StateMessages::displayCloseMessage("OngoingGame.Initiate");
 }
 
-OngoingGameState* InitiateOngoingGameSubstate::transitToSubstate() {
-    if (latestCommand == "confirm" && placeShipController->allShipsPlaced()) {
-        placeShipController->placeShipComputer();
-        return new BattleOngoingGameSubstate(context);
+OngoingGameSubState* InitiateOngoingGameSubState::transitToSubState() {
+    if (placeShipController->allShipsPlaced()) {
+        ViewHelper::consoleOut("Do you want to confirm these settings? (yes/no)");
+        if (ViewHelper::confirmAction("yes")) {
+            placeShipController->placeShipComputer();
+            return new BattleOngoingGameSubState(context);
+        }
     }
+
     return nullptr;
 }

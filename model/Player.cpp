@@ -43,6 +43,7 @@ bool Player::makeAShot(ParsedOptions options) {
         settings->setActiveDoubleDamage(false);
         settings->setDamageCount(1);
     }
+
     if (currentAttack != AttackResult::miss) {
         if (currentAttack == AttackResult::destroyed) {
             skillsManager->addSkill();
@@ -51,7 +52,3 @@ bool Player::makeAShot(ParsedOptions options) {
     }
     return false;
 }
-
-
-
-

@@ -56,22 +56,22 @@ add_executable(cpp_warships
         controller/game-states/OngoingGameState.h
         controller/game-states/ShutdownGameState.cpp
         controller/game-states/ShutdownGameState.h
-        controller/ongoing-game-substates/BattleController.cpp
-        controller/ongoing-game-substates/BattleController.h
+        controller/BattleController.cpp
+        controller/BattleController.h
         controller/ongoing-game-substates/BattleOngoingGameSubstate.cpp
         controller/ongoing-game-substates/BattleOngoingGameSubstate.h
         controller/ongoing-game-substates/FinishOngoingGameSubstate.cpp
         controller/ongoing-game-substates/FinishOngoingGameSubstate.h
         controller/ongoing-game-substates/InitiateOngoingGameSubstate.cpp
         controller/ongoing-game-substates/InitiateOngoingGameSubstate.h
-        controller/ongoing-game-substates/CommonGameSettingsSubstate.cpp
-        controller/ongoing-game-substates/CommonGameSettingsSubstate.h
+        controller/ongoing-game-substates/NewMatchSettingsSubState.cpp
+        controller/ongoing-game-substates/NewMatchSettingsSubState.h
         controller/ongoing-game-substates/PauseOngoingGameSubstate.cpp
         controller/ongoing-game-substates/PauseOngoingGameSubstate.h
-        controller/ongoing-game-substates/PlaceShipController.cpp
-        controller/ongoing-game-substates/PlaceShipController.h
-        controller/ongoing-game-substates/CommonGameSettingsController.cpp
-        controller/ongoing-game-substates/CommonGameSettingsController.h
+        controller/PlaceShipController.cpp
+        controller/PlaceShipController.h
+        controller/MatchSettingsController.cpp
+        controller/MatchSettingsController.h
         controller/GameController.cpp
         controller/GameController.h
         model/GameField.cpp
@@ -92,8 +92,6 @@ add_executable(cpp_warships
         model/StateContext.h
         model/Structures.cpp
         model/Structures.h
-        view/game-states/GameMenuView.cpp
-        view/game-states/GameMenuView.h
         view/game-states/GameView.cpp
         view/game-states/GameView.h
         view/game-states/OngoingGameView.cpp
@@ -102,15 +100,12 @@ add_executable(cpp_warships
         view/game-states/ShutdownGameView.h
         view/game-substates/InitiateOngoingGameView.cpp
         view/game-substates/InitiateOngoingGameView.h
-        view/game-substates/CommonGameSettingsView.cpp
-        view/game-substates/CommonGameSettingsView.h
-#        view/game-substates/BattleOngoingGameSubstate.cpp
-#        view/game-substates/BattleOngoingGameSubstate.h
-#        view/game-substates/FinishOngoingGameSubstate.cpp
-#        view/game-substates/FinishOngoingGameSubstate.h
+        #        view/game-substates/BattleOngoingGameSubState.cpp
+#        view/game-substates/BattleOngoingGameSubState.h
+#        view/game-substates/FinishOngoingGameSubState.cpp
+#        view/game-substates/FinishOngoingGameSubState.h
         view/model/GameFieldView.cpp
         view/model/GameFieldView.h
-        controller/OngoingGameController.cpp
         library/defaults/Initials.h
         model/DoubleDamage.h
         model/DoubleDamage.cpp
@@ -133,4 +128,11 @@ add_executable(cpp_warships
         model/ComputerPlayer.cpp
         library/defaults/FieldCoordinateHelper.h
         library/defaults/FieldCoordinateHelper.cpp
+        library/defaults/StateMessages.cpp
+        library/defaults/StateMessages.h
+        controller/ongoing-game-substates/OngoingGameSubState.cpp
+        controller/ongoing-game-substates/OngoingGameSubState.h
+        model/SubStateContext.cpp
+        model/SubStateContext.h
+        controller/ongoing-game-substates/NewMatchSettingsSubState.h
 )

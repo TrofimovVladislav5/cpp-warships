@@ -32,7 +32,6 @@ SkillManager::~SkillManager() {
     for (auto& pair : factory) {
         delete pair.second;
     }
-    delete currentSkill;
 }
 
 void SkillManager::randomSkill() {

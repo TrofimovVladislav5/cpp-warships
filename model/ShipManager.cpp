@@ -32,6 +32,6 @@ void ShipManager::removeShipNumber(int indexRemoving){
     ships.erase(ships.begin() + indexRemoving);
 }
 
-std::vector<Ship*>& ShipManager::getShips() {
+std::vector<Ship*> ShipManager::getShips() {
     return ships;
 }

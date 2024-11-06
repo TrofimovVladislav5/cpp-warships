@@ -5,12 +5,14 @@
 #include "library/parser/Parser.h"
 #include "model/StateContext.h"
 
+class OngoingGameSubState;
+
 class OngoingGameState : public GameState {
 private: 
     SchemeMap inputScheme;
 protected:
     std::string latestCommand;
-    OngoingGameState* currentSubstate;
+    OngoingGameSubState* currentSubState;
     OngoingGameView* ongoingGameView;
 public:
     OngoingGameState(StateContext &context);
@@ -19,9 +21,4 @@ public:
     void updateState() override;
     void closeState() override;
     GameState* transitToState() override;
-
-    virtual void openSubstate();
-    virtual void closeSubstate();
-    virtual void updateSubstate();
-    virtual OngoingGameState* transitToSubstate();
 };

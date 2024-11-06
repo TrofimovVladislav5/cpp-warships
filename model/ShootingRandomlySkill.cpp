@@ -11,7 +11,7 @@ void ShootingRandomlySkill::apply() {
     std::mt19937 mersenneEngine(std::random_device{}());
 
     bool success = false;
-    auto& ships = settings->getOpponentManager()->getShips();
+    auto ships = settings->getOpponentManager()->getShips();
 
     if (ships.empty()) {
         throw SkillException("Unreachable state");

@@ -1,12 +1,12 @@
 #pragma once
-#include "ComputerPlayer.h"
-#include "GameFieldView.h"
-#include "model/StateContext.h"
-#include "model/Player.h"
+#include "../model/ComputerPlayer.h"
+#include "../view/model/GameFieldView.h"
+#include "../model/Player.h"
+
 
 class BattleController {
 private:
-    StateContext context;
+    MatchSettings settings;
     GameFieldView* playerView;
     GameFieldView* opponentView;
     Player* player;
@@ -14,7 +14,7 @@ private:
     bool battleStatus();
     bool battleIsFinished;
 public:
-    explicit BattleController(StateContext& context);
+    explicit BattleController(MatchSettings& settings);
     ~BattleController();
     bool finishBattle() const;
     void applySkill(ParsedOptions options);

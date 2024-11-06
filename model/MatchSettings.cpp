@@ -3,17 +3,13 @@
 #include "GameField.h"
 
 MatchSettings::MatchSettings(int fieldSize)
-    : playerField(nullptr)
-    , opponentField(nullptr)
-    , playerShipManager(nullptr)
-    , opponentShipManager(nullptr)
-    , fieldSize(fieldSize) 
-{
-    playerField = new GameField(fieldSize, fieldSize);
-    opponentField = new GameField(fieldSize, fieldSize);
-    playerShipManager = new ShipManager({});
-    opponentShipManager = new ShipManager({});
-}
+    : playerField(new GameField(fieldSize, fieldSize))
+    , opponentField(new GameField(fieldSize, fieldSize))
+    , playerShipManager(new ShipManager({}))
+    , opponentShipManager(new ShipManager({}))
+    , fieldSize(fieldSize)
+    , damageCount(1)
+{}
 
 MatchSettings::~MatchSettings() {
     delete playerField;
@@ -51,13 +47,10 @@ void MatchSettings::setActiveDoubleDamage(bool isActive) {
 }
 
 void MatchSettings::setPlayerManager(const std::vector<int>& shipsLengths) {
-    if (playerShipManager) {
-        delete playerShipManager;
-    }
+    delete playerShipManager;
     playerShipManager = new ShipManager(shipsLengths);
-    if (opponentShipManager) {
-        delete opponentShipManager;
-    }
+
+    delete opponentShipManager;
     opponentShipManager = new ShipManager(shipsLengths);
 }
 

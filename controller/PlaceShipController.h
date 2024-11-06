@@ -1,19 +1,20 @@
 #pragma once
-#include "model/StateContext.h"
-#include "library/parser/Parser.h"
-#include "view/model/GameFieldView.h"
+#include "../model/StateContext.h"
+#include "../library/parser/Parser.h"
+#include "../view/model/GameFieldView.h"
+
+
 class PlaceShipController {
 private:
-    MatchSettings* settings;
+    MatchSettings& settings;
     ShipManager* currentPlayerManager;
     ShipManager* currentComputerManager;
     GameFieldView* gameFieldView;
     std::map<int, int> availableLengthShips;
-    StateContext context;
     bool isShipLengthAvailable(int length);
 public:
     bool allShipsPlaced();
-    explicit PlaceShipController(StateContext& context);
+    explicit PlaceShipController(MatchSettings& settings);
     ~PlaceShipController();
     void addShip(ParsedOptions options);
     void removeShip(ParsedOptions options);
