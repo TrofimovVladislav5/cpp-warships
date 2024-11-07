@@ -14,5 +14,4 @@ public:
     int getMaxSegmentHealth();
     bool takeDamage(int indexSegment, int damageCount);
     bool isDestroyed();
-    void status();
 };

@@ -1,32 +1,31 @@
 #include "game-states/OngoingGameState.h"
 #include "BattleOngoingGameSubState.h"
 
-#include "BattleException.h"
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
 #include "FinishOngoingGameSubState.h"
 #include "StateMessages.h"
-#include "StringHelper.h"
 #include "TypesHelper.h"
 #include "../../library/ViewHelper.h"
+#include "exceptions/BattleException.h"
 #include "parser-builder/ConfigCommandBuilder.h"
 
 BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
     : OngoingGameSubState(context)
-    , battleController(new BattleController(*context.settings))
+    , battleController(new BattleController(context.matchDTO))
 {
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"attack", ParserCommandInfo(
             commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&BattleController::battle,battleController))
+                .setCallback(TypesHelper::methodToFunction(&BattleController::battle, battleController))
                 .setDescription("Attack the opponent cell field")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
                 .addParameter(
                     parameterBuilder
                         .addFlag("--cell")
-                        .setValidator(std::regex("^(\\d+),(\\d+)$"))
+                        .setValidator(std::regex("^[A-Z][0-9]{1,2}$"))
                         .setNecessary(true)
                         .buildAndReset()
                 )
@@ -47,7 +46,7 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
                 .addParameter(
                     parameterBuilder
                         .addFlag("--cell")
-                        .setValidator(std::regex("^(\\d+),(\\d+)$"))
+                        .setValidator(std::regex("^[A-Z][0-9]{1,2}$"))
                         .setNecessary(false)
                         .setDescription("flag is necessary if you are going to use a scanner")
                         .buildAndReset()

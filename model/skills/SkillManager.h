@@ -1,7 +1,7 @@
 #pragma once
 #include "Skill.h"
 #include <queue>
-#include "MatchSettings.h"
+#include "../game/MatchSettings.h"
 #include "SkillFactory.h"
 
 class SkillManager {

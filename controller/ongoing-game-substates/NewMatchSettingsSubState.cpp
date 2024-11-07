@@ -4,21 +4,14 @@
 #include "library/TypesHelper.h"
 #include "library/defaults/DefaultParserError.h"
 #include "InitiateOngoingGameSubState.h"
+#include "ShipManager.h"
 #include "StateMessages.h"
-#include "StringHelper.h"
 #include "ViewHelper.h"
 
 
 void NewMatchSettingsSubState::handleMatchSettings(ParsedOptions options) {
     int fieldSize = std::stoi(options["size"]);
     currentSettings = controller->createMatchSettings(fieldSize);
-    ShipManager* playerManager = currentSettings->getPlayerManager();
-    std::vector<Ship*> ships = playerManager->getShips();
-
-    ViewHelper::consoleOut("Optimal ship count for field size " + std::to_string(fieldSize) + " is: ");
-    for (const auto& ship : ships) {
-        ViewHelper::consoleOut(std::to_string(ship->getLength()), 1);
-    }
 }
 
 NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext& context)
@@ -51,11 +44,9 @@ NewMatchSettingsSubState::~NewMatchSettingsSubState() {
 }
 
 void NewMatchSettingsSubState::openSubState() {
-    StateMessages::displayGreetingMessage("OngoingGame.NewMatchSettings");
 }
 
 void NewMatchSettingsSubState::closeSubState() {
-    StateMessages::displayCloseMessage("OngoingGame.NewMatchSettings");
 }
 
 void NewMatchSettingsSubState::updateSubState() {
@@ -70,13 +61,17 @@ void NewMatchSettingsSubState::updateSubState() {
 OngoingGameSubState* NewMatchSettingsSubState::transitToSubState() {
     if (!currentSettings) {
         return nullptr;
-    }
+    } else {
+        auto* playerManager = new ShipManager(currentSettings->getShipsCount());
+        std::vector<Ship*> ships = playerManager->getShips();
+        ViewHelper::consoleOut("Optimal set of ships is: ");
+        for (const auto& ship : ships) {
+            ViewHelper::consoleOut(std::to_string(ship->getLength()), 1);
+        }
 
-    GameField* playerField =  currentSettings->getPlayerField();
-    if (playerField->getWidth() > 0 && playerField->getHeight() > 0) {
         ViewHelper::consoleOut("Do you want to confirm these settings? (yes/no)");
         if (ViewHelper::confirmAction("yes")) {
-            this->context.settings = currentSettings;
+            this->context.matchDTO = new GameStateDTO(currentSettings);
             return new InitiateOngoingGameSubState(context);
         }
     }

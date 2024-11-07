@@ -1,7 +1,7 @@
 #pragma once
 #include "game-states/GameState.h"
-#include "model/GameStateDTO.h"
-#include "view/game-states/GameView.h"
+#include "../model/game/GameStateDTO.h"
+
 
 class GameController {
 private:

@@ -1,20 +1,18 @@
 #pragma once
 #include "../model/ComputerPlayer.h"
-#include "../view/model/GameFieldView.h"
+#include "../view/GameFieldView.h"
 #include "../model/Player.h"
 
 
 class BattleController {
 private:
-    MatchSettings settings;
     GameFieldView* playerView;
     GameFieldView* opponentView;
     Player* player;
     ComputerPlayer* computer;
-    bool battleStatus();
     bool battleIsFinished;
 public:
-    explicit BattleController(MatchSettings& settings);
+    explicit BattleController(GameStateDTO* dto);
     ~BattleController();
     bool finishBattle() const;
     void applySkill(ParsedOptions options);

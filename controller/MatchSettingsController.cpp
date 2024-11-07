@@ -6,8 +6,8 @@ MatchSettingsController::MatchSettingsController() {}
 
 MatchSettingsController::~MatchSettingsController() {}
 
-std::vector<int> MatchSettingsController::calculateOptimalLengthShips(int fieldSize) {
-    std::vector<int> shipsCounts;
+std::map<int, int> MatchSettingsController::calculateOptimalLengthShips(int fieldSize) {
+    std::map<int, int> shipsCounts;
 
     const float SHIP_COVERED_AREA_RATIO = 0.2f;
     float totalArea = static_cast<float>(fieldSize) * static_cast<float>(fieldSize);
@@ -20,26 +20,16 @@ std::vector<int> MatchSettingsController::calculateOptimalLengthShips(int fieldS
         int scaledCount = static_cast<int>(baseShipCounts[i] * scalingFactor);
         int maxPossibleShips = std::min(scaledCount, totalShipArea / shipLengths[i]);
 
-        shipsCounts.push_back(maxPossibleShips);
+        shipsCounts[shipLengths[i]] = maxPossibleShips;
         totalShipArea -= maxPossibleShips * shipLengths[i];
     }
 
-    std::sort(shipsCounts.begin(), shipsCounts.end(), std::greater<int>());
     return shipsCounts;
 }
 
 MatchSettings* MatchSettingsController::createMatchSettings(int fieldSize) {
-    std::vector<int> shipsCount = calculateOptimalLengthShips(fieldSize);
+    std::map<int, int> shipsCount = calculateOptimalLengthShips(fieldSize);
 
-    std::vector<int> temp;
-    for (int i = 0; i < shipsCount.size(); i++) {
-        for (int j = 0; j < shipsCount[i]; j++) {
-            temp.push_back(i + 1);
-        }
-    }
-
-    auto* settings = new MatchSettings(fieldSize);
-    settings->setPlayerManager(temp);
-    settings->setFieldSize(fieldSize);
+    auto* settings = new MatchSettings(shipsCount, fieldSize);
     return settings;
 }

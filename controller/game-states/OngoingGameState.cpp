@@ -21,7 +21,7 @@ void OngoingGameState::openState() {
 }
 
 void OngoingGameState::updateState() {
-    SubStateContext subStateContext;
+    SubStateContext subStateContext{ };
     currentSubState = new NewMatchSettingsSubState(subStateContext);
     currentSubState->openSubState();
 

@@ -2,13 +2,13 @@
 #include <iostream>
 #include <set>
 
-#include "MatchSettings.h"
+#include "../game/MatchSettings.h"
 
 DoubleDamage::DoubleDamage(MatchSettings* settings)
     : settings(settings)
 {}
 
 void DoubleDamage::apply() {
-    settings->setDamageCount(2);
-    settings->setActiveDoubleDamage(true);
+    // settings->setDamageCount(2);
+    // settings->setActiveDoubleDamage(true);
 }

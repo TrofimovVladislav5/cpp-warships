@@ -1,5 +1,5 @@
 #pragma once
-#include "MatchSettings.h"
+#include "../game/MatchSettings.h"
 #include "Skill.h"
 
 class DoubleDamage : public ISkill{

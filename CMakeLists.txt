@@ -74,18 +74,18 @@ add_executable(cpp_warships
         controller/MatchSettingsController.h
         controller/GameController.cpp
         controller/GameController.h
-        model/GameField.cpp
-        model/GameField.h
-        model/GameStateDTO.cpp
-        model/GameStateDTO.h
-        model/MatchSettings.cpp
-        model/MatchSettings.h
+        model/game/GameField.cpp
+        model/game/GameField.h
+        model/game/GameStateDTO.cpp
+        model/game/GameStateDTO.h
+        model/game/MatchSettings.cpp
+        model/game/MatchSettings.h
         model/Player.cpp
         model/Player.h
-        model/Segment.cpp
-        model/Segment.h
-        model/Ship.cpp
-        model/Ship.h
+        model/game/Segment.cpp
+        model/game/Segment.h
+        model/game/Ship.cpp
+        model/game/Ship.h
         model/ShipManager.cpp
         model/ShipManager.h
         model/StateContext.cpp
@@ -104,26 +104,26 @@ add_executable(cpp_warships
 #        view/game-substates/BattleOngoingGameSubState.h
 #        view/game-substates/FinishOngoingGameSubState.cpp
 #        view/game-substates/FinishOngoingGameSubState.h
-        view/model/GameFieldView.cpp
-        view/model/GameFieldView.h
+        view/GameFieldView.cpp
+        view/GameFieldView.h
         library/defaults/Initials.h
-        model/DoubleDamage.h
-        model/DoubleDamage.cpp
-        model/Scanner.cpp
-        model/Scanner.h
-        model/ShootingRandomlySkill.cpp
-        model/ShootingRandomlySkill.h
-        model/SkillManager.h
-        model/SkillManager.cpp
-        model/SkillFactory.h
-        model/Skill.h
-        model/Skill.cpp
-        library/defaults/ShipPlacementException.h
-        library/defaults/ShipPlacementException.cpp
-        library/defaults/SkillException.h
-        library/defaults/SkillException.cpp
-        library/defaults/BattleException.h
-        library/defaults/BattleException.cpp
+        model/skills/DoubleDamage.h
+        model/skills/DoubleDamage.cpp
+        model/skills/Scanner.cpp
+        model/skills/Scanner.h
+        model/skills/ShootingRandomlySkill.cpp
+        model/skills/ShootingRandomlySkill.h
+        model/skills/SkillManager.h
+        model/skills/SkillManager.cpp
+        model/skills/SkillFactory.h
+        model/skills/Skill.h
+        model/skills/Skill.cpp
+        model/exceptions/ShipPlacementException.h
+        model/exceptions/ShipPlacementException.cpp
+        model/exceptions/SkillException.h
+        model/exceptions/SkillException.cpp
+        model/exceptions/BattleException.h
+        model/exceptions/BattleException.cpp
         model/ComputerPlayer.h
         model/ComputerPlayer.cpp
         library/defaults/FieldCoordinateHelper.h
@@ -135,4 +135,12 @@ add_executable(cpp_warships
         model/SubStateContext.cpp
         model/SubStateContext.h
         controller/ongoing-game-substates/NewMatchSettingsSubState.h
+        view/FieldCellView.cpp
+        view/FieldCellView.h
+        view/PlaceShipControllerView.cpp
+        view/PlaceShipControllerView.h
+        model/PlayerFieldState.cpp
+        model/PlayerFieldState.h
+        controller/AttackHandler.cpp
+        controller/AttackHandler.h
 )

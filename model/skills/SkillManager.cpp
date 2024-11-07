@@ -4,9 +4,9 @@
 #include "DoubleDamage.h"
 #include "ShootingRandomlySkill.h"
 #include "Scanner.h"
-#include "SkillException.h"
 #include "SkillFactory.h"
 #include "ViewHelper.h"
+#include "exceptions/SkillException.h"
 
 SkillManager::SkillManager(MatchSettings *settings)
     : settings(settings)

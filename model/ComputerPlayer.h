@@ -1,7 +1,8 @@
 #pragma once
+#include "AttackHandler.h"
 #include "ComputerPlayer.h"
-#include "GameField.h"
 #include "defaults//FieldCoordinateHelper.h"
+#include "game/GameField.h"
 
 using FieldCoordinate = std::pair<int, int>;
 

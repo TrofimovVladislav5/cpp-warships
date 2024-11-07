@@ -1,9 +1,15 @@
 #include "ShipManager.h"
+#include <map>
 
-ShipManager::ShipManager(const std::vector<int>& shipsSize){
+
+ShipManager::ShipManager(const std::map<int, int>& shipsSize)
+    : shipsSize(shipsSize)
+{
     for (auto& size : shipsSize){
-        Ship* currentShip = new Ship(size);
-        ships.push_back(currentShip);
+        for (int i = 0; i < size.second; i++) {
+            Ship* currentShip = new Ship(size.first);
+            ships.push_back(currentShip);
+        }
     }
 }
 
@@ -30,6 +36,10 @@ void ShipManager::removeShipNumber(int indexRemoving){
         throw std::out_of_range("Invalid Index for removing ship");
     }
     ships.erase(ships.begin() + indexRemoving);
+}
+
+void ShipManager::clear() {
+    ships.clear();
 }
 
 std::vector<Ship*> ShipManager::getShips() {

@@ -20,13 +20,17 @@ public:
     GameField(GameField&& other);
     GameField& operator=(const GameField& other);
     GameField& operator=(GameField&& other);
+
     int getHeight() const;
     int getWidth() const;
+
     const std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>, hashFunc>>& getShipsCoordinateMap() const;
     const std::unordered_set<std::pair<int, int>, hashFunc>& getAttacksOnField () const;
+
     bool canPlaceShip(std::pair<int, int> initialCoordinate, Direction direction, int length);
-    bool allShipsDestroyed() const;
     void placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction);
+    std::pair<int, int> removeShip(const std::pair<int, int>& coordinate);
+
     AttackResult attack(std::pair<int, int> initialCoordinate, int damageCount);
-    int removeShip(const std::pair<int, int>& coordinate);
+    void clear();
 };

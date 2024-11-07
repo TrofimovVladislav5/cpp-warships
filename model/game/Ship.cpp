@@ -38,18 +38,3 @@ bool Ship::isDestroyed() {
     }
     return true;
 }
-
-void Ship::status(){
-    std::string shipInfo;
-    for (int i = segments.size() - 1;i >= 0;i--) {
-        if (segments[i].getHitPoints() == maxSegmentHealth) {
-            shipInfo += " int ";
-        } else if (segments[i].getHitPoints() == 0) {
-            shipInfo += " destroyed ";
-        } else {
-            shipInfo += " damaged ";
-        }
-    }
-
-    std::cout << "Segments info: " << shipInfo << std::endl;
-}

@@ -1,5 +1,5 @@
 #pragma once
-#include "model/GameStateDTO.h"
+#include "../../model/game/GameStateDTO.h"
 
 class GameView {
 public:

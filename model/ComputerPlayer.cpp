@@ -1,9 +1,8 @@
 #include "ComputerPlayer.h"
-#include "GameField.h"
 #include "defaults//FieldCoordinateHelper.h"
 #include "Structures.h"
-#include <utility>
 #include <algorithm>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 
@@ -42,7 +41,6 @@ FieldCoordinate ComputerPlayer::getRandomNeighbourCoordinate(FieldCoordinate coo
 
     std::vector<FieldCoordinate> finalNeighbours = {};
     for (const auto& neighbour : potentialNeighbours) {
-        // TODO: replace with field.size - 1
         bool isInsideField = neighbour.first >= 0 && neighbour.first < field->getWidth() && neighbour.second >= 0 && neighbour.second < field->getHeight();
         bool isShot = std::find(emptyCells.begin(), emptyCells.end(), neighbour) != emptyCells.end();
         if (isInsideField && !isShot) {
@@ -66,10 +64,8 @@ FieldCoordinate ComputerPlayer::getRandomDirectionCoordinate() {
     if (currentShotCells[0].first == currentShotCells[1].first) {
         int maxY = FieldCoordinateHelper::findMaxPairValue(currentShotCells, false);
         int minY = FieldCoordinateHelper::findMinPairValue(currentShotCells, false);
-        // TODO: replace with field.size - 1
         if ((forwardValue && maxY < field->getHeight() - 1) || (!forwardValue && minY == 0 && maxY < field->getHeight() - 1)) {
             return {currentShotCells[0].first, maxY + 1};
-        // TODO: replace with field.size - 1
         }
         if (minY > 0) {
             return {currentShotCells[0].first, minY - 1};
@@ -77,11 +73,9 @@ FieldCoordinate ComputerPlayer::getRandomDirectionCoordinate() {
     } else {
         int maxX = FieldCoordinateHelper::findMaxPairValue(currentShotCells, true);
         int minX = FieldCoordinateHelper::findMinPairValue(currentShotCells, true);
-        // TODO: replace with field.size - 1
         if ((forwardValue && maxX < field->getWidth() - 1) || (!forwardValue && minX == 0 && maxX < field->getWidth() - 1)) {
             return {maxX + 1, currentShotCells[0].second};
         }
-        // TODO: replace with field.size - 1
         if (minX > 0) {
             return {minX - 1, currentShotCells[0].second};
         }
@@ -112,6 +106,7 @@ bool ComputerPlayer::makeAShot() {
     } else {
         attackCoordinate = this->getRandomDirectionCoordinate();
     }
+
     return proceedShot(attackCoordinate);
 }
 

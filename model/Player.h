@@ -1,13 +1,17 @@
 #pragma once
 #include "ParserCommandInfo.h"
-#include "SkillManager.h"
+#include "game/GameField.h"
+#include "game/GameStateDTO.h"
+#include "game/MatchSettings.h"
+#include "skills/SkillManager.h"
 
 class Player {
 private:
-    MatchSettings* settings;
+    GameField* opponentField;
+    AttackHandler* playerAttackHandler;
     SkillManager* skillsManager;
 public:
-    explicit Player(MatchSettings* settings);
+    explicit Player(GameStateDTO* dto);
     ~Player();
     bool makeATurn(ParsedOptions options);
     bool makeAShot(ParsedOptions options);

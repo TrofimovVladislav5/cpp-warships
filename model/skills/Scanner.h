@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GameFieldView.h"
-#include "MatchSettings.h"
+#include "../../view/GameFieldView.h"
+#include "../game/MatchSettings.h"
 #include "Skill.h"
 
 class Scanner : public ISkill {

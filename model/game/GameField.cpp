@@ -1,7 +1,6 @@
 #include "GameField.h"
 
 #include <iostream>
-#include "defaults/ShipPlacementException.h"
 #include "Structures.h"
 #include <unordered_map>
 #include <unordered_set>
@@ -132,35 +131,32 @@ AttackResult GameField::attack(std::pair<int, int> initialCoordinate, int damage
     if (initialCoordinate.first < 0 || initialCoordinate.first >= width
     ||  initialCoordinate.second < 0 || initialCoordinate.second >= height) throw std::out_of_range("Invalid coordinates to attack");
 
-
+    attacksOnField.insert(initialCoordinate);
     for (const auto& [ship, coordinates] : shipsCoordinateMap) {
         if (auto it = coordinates.find(initialCoordinate); it != coordinates.end()) {
             int index = std::distance(coordinates.begin(),it);
             ship->takeDamage(index, damageCount);
-            attacksOnField.insert(*it);
             return (ship->isDestroyed()) ? AttackResult::destroyed : AttackResult::damaged;
         }
     }
+
     return AttackResult::miss;
 }
 
-int GameField::removeShip(const std::pair<int, int> &coordinate) {
+std::pair<int, int> GameField::removeShip(const std::pair<int, int> &coordinate) {
     int index = 0;
     for (const auto& [ship, coordinates] : shipsCoordinateMap) {
         if (coordinates.find(coordinate) != coordinates.end()) {
+            int size = ship->getLength();
             shipsCoordinateMap.erase(ship);
-            return index;
+            return {index, size};
         }
         index++;
     }
-    return -1;
+    return {-1, -1};
 }
 
-bool GameField::allShipsDestroyed() const {
-    for (const auto& [ship, coordinates] : shipsCoordinateMap) {
-        if (!ship->isDestroyed()) {
-            return false;
-        }
-    }
-    return true;
+void GameField::clear() {
+    this->shipsCoordinateMap.clear();
+    this->attacksOnField.clear();
 }

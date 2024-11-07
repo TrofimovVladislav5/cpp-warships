@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 
-#include "GameStateDTO.h"
+#include "game/GameStateDTO.h"
 
 class StateContext {
 public:

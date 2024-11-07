@@ -1,8 +1,8 @@
 #pragma once
-#include "MatchSettings.h"
+#include "game/GameStateDTO.h"
 
 class SubStateContext {
 public:
     SubStateContext() = default;
-    MatchSettings* settings;
+    GameStateDTO* matchDTO;
 };
