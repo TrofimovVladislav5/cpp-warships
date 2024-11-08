@@ -7,10 +7,10 @@
 #include "SkillFactory.h"
 #include "ViewHelper.h"
 #include "exceptions/SkillException.h"
+#include "game/GameStateDTO.h"
 
-SkillManager::SkillManager(MatchSettings *settings)
-    : settings(settings)
-    , currentSkill(nullptr)
+SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager)
+    : currentSkill(nullptr)
 {
     availableSkills = {
         {"Scanner"},
@@ -18,9 +18,9 @@ SkillManager::SkillManager(MatchSettings *settings)
         {"Shooting"}
     };
 
-    factory["Scanner"] = new ConcreteSkillFactory<Scanner, MatchSettings*>(settings);
+    factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
     factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
-    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, MatchSettings*>(settings);
+    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*>(enemyManager);
 
     std::shuffle(availableSkills.begin(), availableSkills.end(), std::random_device());
     for (const auto& skillName : availableSkills) {
@@ -44,7 +44,7 @@ void SkillManager::randomSkill() {
 const std::vector<std::string>& SkillManager::nameSkills() {
     return availableSkills;
 }
-const std::string& SkillManager::canUseSkill() {
+const std::string& SkillManager::availableSkill() {
     return skills.front();
 }
 
@@ -73,4 +73,6 @@ void SkillManager::status() const {
                     :"Available skill to apply" + skills.front());
 }
 
-
+std::deque<std::string> SkillManager::getSkillsQueue() const {
+    return skills;
+}

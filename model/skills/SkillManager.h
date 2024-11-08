@@ -1,12 +1,14 @@
 #pragma once
 #include "Skill.h"
 #include <queue>
-#include "../game/MatchSettings.h"
+
+#include "ShipManager.h"
 #include "SkillFactory.h"
+#include "game/GameField.h"
+#include "game/MatchSettings.h"
 
 class SkillManager {
 private:
-    MatchSettings* settings;
     std::deque<std::string> skills;
     std::vector<std::string> availableSkills;
     std::unordered_map<std::string, SkillFactory*> factory;
@@ -14,13 +16,14 @@ private:
     ISkill* createSkill(const std::string& skillName);
     void randomSkill();
 public:
-    explicit SkillManager(MatchSettings* settings);
+    explicit SkillManager(GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager);
     const std::vector<std::string>& nameSkills();
-    const std::string& canUseSkill();
+    const std::string& availableSkill();
     ~SkillManager();
     void addSkill();
     void applySkill();
     void status() const;
+    [[nodiscard]] std::deque<std::string> getSkillsQueue() const;
 };
 
 

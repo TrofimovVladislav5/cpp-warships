@@ -80,6 +80,25 @@ void GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Dir
     }
 }
 
+bool GameField::intersectsWithArea(std::pair<int, int> center, int radius) {
+    for (int dy = -radius; dy <= radius; ++dy) {
+        for (int dx = -radius; dx <= radius; ++dx) {
+            int newX = center.first + dx;
+            int newY = center.second + dy;
+            if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                std::pair<int, int> checkCoord = {newX, newY};
+                for (const auto& [ship, coordinates] : shipsCoordinateMap) {
+                    if (coordinates.find(checkCoord) != coordinates.end()) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 bool GameField::shipCoordinatesInField(std::pair<int, int> coords, int length, Direction direction) const {
     if (direction == Direction::horizontal) {
         return coords.first + length <= width;

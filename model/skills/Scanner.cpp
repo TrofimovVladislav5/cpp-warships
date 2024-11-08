@@ -1,14 +1,25 @@
 #include "Scanner.h"
 
-#include <set>
+#include <iostream>
 
+#include "TypesHelper.h"
+#include "ViewHelper.h"
 #include "../../view/GameFieldView.h"
-Scanner::Scanner(MatchSettings* settings)
-    : settings(settings)
-{
-    // scannerView = new GameFieldView(settings->getOpponentField());
-}
+#include "exceptions/SkillException.h"
+
+
+Scanner::Scanner(GameField* opponentField)
+    : opponentField(opponentField)
+{}
 
 void Scanner::apply() {
-    // scannerView->displayScan(settings->coordinateToScan());
+    try {
+        std::string input;
+        std::getline(std::cin, input);
+        std::pair<int, int> cell = TypesHelper::cell(input);
+        bool contacting = opponentField->intersectsWithArea(cell, 1);
+        ViewHelper::consoleOut(contacting ? "Ship in area" : "No ship in area");
+    } catch (const std::exception& exception) {
+        throw SkillException("Wrong cell value");
+    }
 }

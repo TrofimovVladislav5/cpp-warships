@@ -143,4 +143,6 @@ add_executable(cpp_warships
         model/PlayerFieldState.h
         controller/AttackHandler.cpp
         controller/AttackHandler.h
+        view/SkillManagerView.cpp
+        view/SkillManagerView.h
 )

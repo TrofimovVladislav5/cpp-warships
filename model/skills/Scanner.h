@@ -6,9 +6,8 @@
 
 class Scanner : public ISkill {
 private:
-    MatchSettings* settings;
-    GameFieldView* scannerView;
+    GameField* opponentField;
 public:
-    explicit Scanner(MatchSettings* settings);
+    explicit Scanner(GameField* opponentField);
     void apply() override;
 };

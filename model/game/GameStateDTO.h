@@ -1,14 +1,14 @@
 #pragma once
-#include "AttackHandler.h"
 #include "MatchSettings.h"
-#include "PlayerFieldState.h"
 #include "ShipManager.h"
+#include "skills/SkillManager.h"
 
 class GameStateDTO {
 public:
     GameStateDTO();
     explicit GameStateDTO(MatchSettings* settings);
     ShipManager* playerManager;
+    SkillManager* playerSkillManager;
     GameField* playerField;
     ShipManager* enemyManager;
     GameField* enemyField;

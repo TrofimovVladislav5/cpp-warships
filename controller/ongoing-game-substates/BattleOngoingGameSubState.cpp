@@ -10,6 +10,7 @@
 #include "exceptions/BattleException.h"
 #include "parser-builder/ConfigCommandBuilder.h"
 
+
 BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
     : OngoingGameSubState(context)
     , battleController(new BattleController(context.matchDTO))
@@ -36,21 +37,6 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
                 .setCallback(TypesHelper::methodToFunction(&BattleController::applySkill, battleController))
                 .setDescription("Apply the skill")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
-                .addParameter(
-                    parameterBuilder
-                        .addFlag("--type")
-                        .setValidator(std::regex("^(Scanner|DoubleDamage|Shooting)$"))
-                        .setNecessary(true)
-                        .buildAndReset()
-                )
-                .addParameter(
-                    parameterBuilder
-                        .addFlag("--cell")
-                        .setValidator(std::regex("^[A-Z][0-9]{1,2}$"))
-                        .setNecessary(false)
-                        .setDescription("flag is necessary if you are going to use a scanner")
-                        .buildAndReset()
-                )
                 .buildAndReset()
         )}
     };

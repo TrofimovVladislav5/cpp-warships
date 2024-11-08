@@ -29,6 +29,7 @@ public:
 
     bool canPlaceShip(std::pair<int, int> initialCoordinate, Direction direction, int length);
     void placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction);
+    bool intersectsWithArea(std::pair<int, int> center, int radius);
     std::pair<int, int> removeShip(const std::pair<int, int>& coordinate);
 
     AttackResult attack(std::pair<int, int> initialCoordinate, int damageCount);
