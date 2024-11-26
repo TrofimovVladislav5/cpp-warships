@@ -1,4 +1,7 @@
+#pragma once
 #include <functional>
+#include <string>
+#include <regex>
 
 class TypesHelper {
 public:
@@ -8,4 +11,5 @@ public:
             (instance->*method)(options);
         };
     }
+    static std::pair<int, int> cell(const std::string& coord);
 };

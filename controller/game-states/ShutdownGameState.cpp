@@ -1,15 +1,15 @@
 #include "ShutdownGameState.h"
 
 
-ShutdownGameState::ShutdownGameState(StateContext& context) : GameState(context) {
-}
+ShutdownGameState::ShutdownGameState(StateContext& context)
+    : GameState(context)
+{}
 
-ShutdownGameState::~ShutdownGameState() {
-}
-
+ShutdownGameState::~ShutdownGameState()
+{}
 
 void ShutdownGameState::openState() {
-
+    context.finishCallback(context);
 }
 
 void ShutdownGameState::updateState() {

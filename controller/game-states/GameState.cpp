@@ -1,19 +1,8 @@
 #include "GameState.h"
 
-GameState::GameState(StateContext& context) : context(context) {
-    this->view = new GameView;
-}
+#include "model/StateContext.h"
 
-GameState::~GameState() {
-    delete this->view;
-}
+GameState::GameState(StateContext& context) 
+    : context(context)
+{}
 
-void GameState::openState(){};
-
-void GameState::updateState(){};
-
-void GameState::closeState(){};
-
-GameState* GameState::transitToState() {
-    return nullptr;
-};

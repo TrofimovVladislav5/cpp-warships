@@ -1,10 +1,11 @@
-#include "library/parser/__showcase__/parserShowcase.h"
+#include <library/defaults/Initials.h>
+
+#include "GameController.h"
 
 int main(){
-    // GameController controller;
-    // controller.run();
-
-    runParser();
+    Initials::consoleOutInitials();
+    GameController controller;
+    controller.run();
 
     return 0;
 }

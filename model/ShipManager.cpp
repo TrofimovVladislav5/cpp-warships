@@ -1,13 +1,15 @@
-#include <iostream>
 #include "ShipManager.h"
-#include "Ship.h"
-#include "Structures.h"
-#include "view/ViewHelper.h"
+#include <map>
 
-ShipManager::ShipManager(const std::vector<int>& shipsSize){
+
+ShipManager::ShipManager(const std::map<int, int>& shipsSize)
+    : shipsSize(shipsSize)
+{
     for (auto& size : shipsSize){
-        Ship* currentShip = new Ship(size);
-        ships.push_back(currentShip);
+        for (int i = 0; i < size.second; i++) {
+            Ship* currentShip = new Ship(size.first);
+            ships.push_back(currentShip);
+        }
     }
 }
 
@@ -36,10 +38,10 @@ void ShipManager::removeShipNumber(int indexRemoving){
     ships.erase(ships.begin() + indexRemoving);
 }
 
-void ShipManager::showShipsInfo() {
-    for (int i = 0; i < ships.size();i++) {
-        std::cout << "Ship " << std::to_string(i + 1) 
-                  << " length " << ships[i]->getLength() 
-                  << " "; ships[i]->status(); 
-    }
+void ShipManager::clear() {
+    ships.clear();
+}
+
+std::vector<Ship*> ShipManager::getShips() {
+    return ships;
 }

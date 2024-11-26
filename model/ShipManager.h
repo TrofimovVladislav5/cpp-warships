@@ -1,13 +1,19 @@
 #pragma once
-#include "Ship.h"
+#include <map>
+#include <vector>
+
+#include "game/Ship.h"
+
 class ShipManager {
 private:
     std::vector<Ship*> ships;
+    std::map<int, int> shipsSize;
 public:
-    ShipManager(const std::vector<int>& shipsSize);
+    explicit ShipManager(const std::map<int, int> &shipsSize);
     ~ShipManager();
+    std::vector<Ship*> getShips();
     Ship* operator[](int index);
     void addShip(int size);
     void removeShipNumber(int indexRemoving);
-    void showShipsInfo();
+    void clear();
 };
