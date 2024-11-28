@@ -14,6 +14,17 @@ include_directories(view)
 include_directories(view/game-states)
 include_directories(view/model)
 
+
+include(FetchContent)
+
+FetchContent_Declare(
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.10.0
+)
+
+FetchContent_MakeAvailable(nlohmann_json)
+
 add_executable(cpp_warships
         main.cpp
         library/ViewHelper.cpp
@@ -145,4 +156,25 @@ add_executable(cpp_warships
         controller/AttackHandler.h
         view/SkillManagerView.cpp
         view/SkillManagerView.h
+#        model/save/test.cpp
+        model/save/Serializer.h
+        model/save/GameSaveCreator.h
+        model/save/GameSaveCreator.cpp
+        model/save/SerializerManager.cpp
+        model/save/SerializerManager.h
+        model/save/SerializerGameField.h
+        model/save/SerializerGameField.cpp
+        model/save/Serializer.cpp
+        model/save/SerializerMatchSettings.h
+        model/save/SerializerMatchSettings.cpp
+        model/save/SerializerSkillManager.h
+        model/save/SerializerSimplifyObjects.h
+        model/save/SerializerSimplifyObjects.cpp
+        model/save/SerializerSkillManager.cpp
+        model/save/SerializerFactory.h
+        model/save/JsonFileHandler.h
+        model/save/JsonFileHandler.cpp
+        view/ShipManagerView.cpp
 )
+
+target_link_libraries(cpp_warships PRIVATE nlohmann_json::nlohmann_json)

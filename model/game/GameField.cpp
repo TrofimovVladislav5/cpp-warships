@@ -46,6 +46,16 @@ GameField& GameField::operator=(GameField&& other) {
     return *this;
 }
 
+GameField::GameField(int width, int height,
+    std::unordered_map<Ship *, std::unordered_set<std::pair<int, int>, hashFunc> > shipsCoordinateMap,
+    std::unordered_set<std::pair<int, int>, hashFunc> attacksOnField
+)
+    : width(width)
+    , height(height)
+    , shipsCoordinateMap(shipsCoordinateMap)
+    , attacksOnField(attacksOnField)
+{}
+
 int GameField::getHeight() const {
     return height;
 }

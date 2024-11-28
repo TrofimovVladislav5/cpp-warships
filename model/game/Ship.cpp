@@ -3,21 +3,34 @@
 
 Ship::Ship(int length, int maxSegmentHealth)
     : maxSegmentHealth(maxSegmentHealth)
-    , segments(std::vector<Segment>(length, maxSegmentHealth))
+{
+    for (int i = 0; i < length;i++) {
+        segments.emplace_back(new Segment(maxSegmentHealth));
+    }
+}
+
+Ship::Ship(std::vector<Segment*> segments)
+    : segments(segments)
 {}
+
+Ship::~Ship(){
+    for (const auto& segment : segments) {
+        delete segment;
+    }
+}
 
 int Ship::getLength() const{
     return this->segments.size();
 }
 
-int Ship::getSegmentHitPoints(int index){
+int Ship::getSegmentHitPoints(int index) const {
     if (index < 0 || index >= segments.size()) {
         throw std::out_of_range("Invalid index error segment");
     }
-    return segments[index].getHitPoints();
+    return segments[index]->getHitPoints();
 }
 
-int Ship::getMaxSegmentHealth() {
+int Ship::getMaxSegmentHealth() const{
     return maxSegmentHealth;
 }
 
@@ -26,15 +39,26 @@ bool Ship::takeDamage(int indexSegment, int damageCount) {
         throw std::out_of_range("Invalid index error");
     }
 
-    segments[indexSegment].takeDamage(damageCount);
+    segments[indexSegment]->takeDamage(damageCount);
     return true;
 }
 
+std::vector<Segment*> Ship::getSegments() const {
+    return segments;
+}
 bool Ship::isDestroyed() {
     for (auto& segment : segments) {
-        if (!segment.isDestroyed()){
+        if (!segment->isDestroyed()){
             return false;
         }
     }
     return true;
+}
+
+std::string Ship::status() {
+    std::string result = "";
+    for (const auto& segment : segments) {
+        result += segment->getHitPoints() + " ";
+    }
+    return result;
 }

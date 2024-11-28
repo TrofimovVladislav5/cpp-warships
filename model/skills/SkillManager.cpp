@@ -28,6 +28,20 @@ SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings, ShipM
     }
 }
 
+SkillManager::SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager)
+    : skills(skills)
+{
+    availableSkills = {
+        {"Scanner"},
+        {"DoubleDamage"},
+        {"Shooting"}
+    };
+
+    factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
+    factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
+    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*>(enemyManager);
+}
+
 SkillManager::~SkillManager() {
     for (auto& pair : factory) {
         delete pair.second;
@@ -75,4 +89,8 @@ void SkillManager::status() const {
 
 std::deque<std::string> SkillManager::getSkillsQueue() const {
     return skills;
+}
+
+void SkillManager::setSkills(const std::deque<std::string>& dequeSkills) {
+    skills = dequeSkills;
 }

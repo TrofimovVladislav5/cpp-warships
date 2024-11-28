@@ -15,6 +15,7 @@ Scanner::Scanner(GameField* opponentField)
 void Scanner::apply() {
     try {
         std::string input;
+        ViewHelper::consoleOut("Enter cell to scan area 2x2: ");
         std::getline(std::cin, input);
         std::pair<int, int> cell = TypesHelper::cell(input);
         bool contacting = opponentField->intersectsWithArea(cell, 1);

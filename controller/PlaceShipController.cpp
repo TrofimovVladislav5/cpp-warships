@@ -17,7 +17,7 @@
 PlaceShipController::PlaceShipController(GameStateDTO* dto, ShipManager* manager)
     : currentField(new GameField(dto->fieldSize, dto->fieldSize))
     , manager(manager)
-    , currentManager(new ShipManager(dto->shipsSize))
+    , currentManager(new ShipManager(dto->shipsSizes))
 {
     for (const auto& ship : manager->getShips()) {
         int length = ship->getLength();

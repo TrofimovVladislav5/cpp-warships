@@ -1,5 +1,5 @@
 #include "StringHelper.h"
-
+#include <algorithm>
 #include <stdexcept>
 
 // template<typename T>

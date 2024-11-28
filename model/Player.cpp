@@ -2,6 +2,7 @@
 
 #include "Structures.h"
 #include "TypesHelper.h"
+#include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 #include "game/GameStateDTO.h"
 
@@ -25,9 +26,12 @@ void Player::applySkill(ParsedOptions options) {
 }
 
 bool Player::makeAShot(ParsedOptions options) {
+
     std::pair<int, int> attackCell = TypesHelper::cell(options["cell"]);
     AttackResult currentAttack = playerAttackHandler->attack(attackCell);
-
+    if (currentAttack == AttackResult::outOfBounds) {
+        throw BattleException("Invalid cell coordinates");
+    }
     if (currentAttack != AttackResult::miss) {
         if (currentAttack == AttackResult::destroyed) {
             skillsManager->addSkill();

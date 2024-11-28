@@ -1,6 +1,7 @@
 #include "BattleController.h"
 #include <random>
 
+#include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 
 
@@ -46,10 +47,14 @@ void BattleController::applySkill(ParsedOptions options) {
 }
 
 void BattleController::battle(ParsedOptions options) {
-    bool keepTurn = player->makeAShot(std::move(options));
+    try {
+        bool keepTurn = player->makeAShot(std::move(options));
 
-    if (!keepTurn) {
-        while (computer->makeAShot());
+        if (!keepTurn) {
+            while (computer->makeAShot());
+        }
+    } catch (const BattleException& exception) {
+        exception.displayError();
     }
 
     printBattleState();

@@ -17,6 +17,7 @@ void NewMatchSettingsSubState::handleMatchSettings(ParsedOptions options) {
 NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext& context)
     : OngoingGameSubState(context)
     , controller(new MatchSettingsController())
+    , currentSettings(nullptr)
 {
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
