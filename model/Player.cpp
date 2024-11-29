@@ -13,7 +13,9 @@ Player::Player(GameStateDTO* dto)
 {}
 
 Player::~Player() {
+    delete playerAttackHandler;
     delete skillsManager;
+    delete opponentField;
 }
 
 void Player::applySkill(ParsedOptions options) {

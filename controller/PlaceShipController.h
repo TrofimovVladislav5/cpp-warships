@@ -15,7 +15,6 @@ public:
     explicit PlaceShipController(GameStateDTO* context, ShipManager* manager);
     ~PlaceShipController();
     std::map<int, int> getAvailableLengthShips();
-    bool compareByLengthDesc(Ship* a, Ship* b);
     void addShip(ParsedOptions options);
     void removeShip(ParsedOptions options);
     void placeShipsRandomly();

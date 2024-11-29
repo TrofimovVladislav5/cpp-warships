@@ -5,7 +5,6 @@
 class NewMatchSettingsSubState : public OngoingGameSubState {
 private:
     SchemeMap inputScheme;
-    SchemeMap finishScheme;
     MatchSettingsController* controller;
     bool isConfirmed = false;
     MatchSettings* currentSettings;

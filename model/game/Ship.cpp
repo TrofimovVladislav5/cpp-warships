@@ -13,14 +13,14 @@ Ship::Ship(std::vector<Segment*> segments)
     : segments(segments)
 {}
 
-Ship::~Ship(){
-    for (const auto& segment : segments) {
+Ship::~Ship() {
+    for (auto& segment : segments) {
         delete segment;
     }
 }
 
 int Ship::getLength() const{
-    return this->segments.size();
+    return segments.size();
 }
 
 int Ship::getSegmentHitPoints(int index) const {

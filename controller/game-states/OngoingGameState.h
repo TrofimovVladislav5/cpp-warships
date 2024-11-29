@@ -13,10 +13,8 @@ private:
 protected:
     std::string latestCommand;
     OngoingGameSubState* currentSubState;
-    OngoingGameView* ongoingGameView;
 public:
     OngoingGameState(StateContext &context);
-    virtual ~OngoingGameState();
     void openState() override;
     void updateState() override;
     void closeState() override;

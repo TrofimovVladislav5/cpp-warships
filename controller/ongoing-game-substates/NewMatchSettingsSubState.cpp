@@ -41,6 +41,7 @@ NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext& context)
 }
 
 NewMatchSettingsSubState::~NewMatchSettingsSubState() {
+    delete currentSettings;
     delete controller;
 }
 
@@ -52,7 +53,6 @@ void NewMatchSettingsSubState::closeSubState() {
 
 void NewMatchSettingsSubState::updateSubState() {
     StateMessages::awaitCommandMessage();
-
     std::string input;
     std::getline(std::cin, input);
     Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);

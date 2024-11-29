@@ -90,7 +90,10 @@ InitiateOngoingGameSubState::InitiateOngoingGameSubState(SubStateContext& contex
     };
 }
 
-InitiateOngoingGameSubState::~InitiateOngoingGameSubState(){
+InitiateOngoingGameSubState::~InitiateOngoingGameSubState() {
+    delete playerPlaceController;
+    delete enemyPlaceController;
+    delete placeControllerView;
 }
 
 void InitiateOngoingGameSubState::openSubState() {

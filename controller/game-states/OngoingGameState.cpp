@@ -10,12 +10,7 @@
 OngoingGameState::OngoingGameState(StateContext& context)
     : GameState(context)
     , currentSubState(nullptr)
-    , ongoingGameView(nullptr)
 {}
-
-OngoingGameState::~OngoingGameState(){
-    delete this->ongoingGameView;
-}
 
 void OngoingGameState::openState() {
 }

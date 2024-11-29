@@ -8,6 +8,11 @@ AttackHandler::AttackHandler(GameField* enemyField, MatchSettings* settings)
     , enemyField(enemyField)
 {}
 
+AttackHandler::~AttackHandler() {
+    delete enemyField;
+    delete settings;
+}
+
 AttackResult AttackHandler::attack(std::pair<int, int> initialCoordinate) {
     int finalDamage = settings->damageCount;
     if (settings->isActiveDoubleDamage) finalDamage *= 2;

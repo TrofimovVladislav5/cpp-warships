@@ -1,6 +1,7 @@
 #include "BattleController.h"
 #include <random>
 
+#include "ViewHelper.h"
 #include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 
@@ -18,6 +19,7 @@ BattleController::BattleController(GameStateDTO* dto)
     , playerView(new GameFieldView(dto->playerField))
     , opponentView(new GameFieldView(dto->enemyField))
     , computer(new ComputerPlayer(dto->playerField))
+    , saveCreator(new GameSaveCreator(dto))
 {
     skillManagerView = new SkillManagerView(dto->playerSkillManager);
 
@@ -27,7 +29,9 @@ BattleController::~BattleController() {
     delete playerView;
     delete opponentView;
     delete player;
+    delete skillManagerView;
     delete computer;
+    delete saveCreator;
 }
 
 bool BattleController::finishBattle() const{
@@ -58,4 +62,12 @@ void BattleController::battle(ParsedOptions options) {
     }
 
     printBattleState();
+}
+
+void BattleController::pause(ParsedOptions options) {
+    this->commandPause = "pause";
+}
+
+std::string BattleController::getPause() const {
+    return commandPause;
 }

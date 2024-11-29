@@ -17,7 +17,7 @@
 PlaceShipController::PlaceShipController(GameStateDTO* dto, ShipManager* manager)
     : currentField(new GameField(dto->fieldSize, dto->fieldSize))
     , manager(manager)
-    , currentManager(new ShipManager(dto->shipsSizes))
+    , currentManager(new ShipManager({}))
 {
     for (const auto& ship : manager->getShips()) {
         int length = ship->getLength();
@@ -26,6 +26,7 @@ PlaceShipController::PlaceShipController(GameStateDTO* dto, ShipManager* manager
 }
 
 PlaceShipController::~PlaceShipController() {
+    delete manager;
     delete currentManager;
     delete currentField;
 }
@@ -43,9 +44,7 @@ bool PlaceShipController::isShipLengthAvailable(int length) {
 }
 
 bool PlaceShipController::allShipsPlaced() {
-    auto original = manager->getShips();
-    auto current = currentManager->getShips();
-    return original.size() == current.size();
+    return currentManager->getShips().size() == manager->getShips().size();
 }
 
 void PlaceShipController::addShip(ParsedOptions options) {
@@ -71,9 +70,10 @@ void PlaceShipController::removeShip(ParsedOptions options) {
     if (result.first == - 1) {
         throw ShipPlacementException("(where remove ship) no ship was found at field cells " + options["cell"]);
     }
-
-    availableLengthShips[currentManager->getShips()[result.second]->getLength()]++;
-    currentManager->removeShipNumber(result.first);
+    int shipIndex = result.second;
+    int shipLength = currentManager->getShips()[shipIndex]->getLength();
+    availableLengthShips[shipLength]++;
+    currentManager->removeShipNumber(shipIndex);
 }
 
 GameField * PlaceShipController::getCurrentField() const {

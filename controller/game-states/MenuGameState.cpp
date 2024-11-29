@@ -6,6 +6,7 @@
 #include "OngoingGameState.h"
 #include "ShutdownGameState.h"
 #include "StateMessages.h"
+#include "ViewHelper.h"
 #include "library/TypesHelper.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/defaults/DefaultParserError.h"
@@ -16,6 +17,10 @@ void MenuGameState::handleStart(ParsedOptions options) {
 
 void MenuGameState::handleExit(ParsedOptions options) {
     this->latestCommand = "exit";
+}
+
+void MenuGameState::handlePause(ParsedOptions options) {
+    this->latestCommand = "pause";
 }
 
 MenuGameState::MenuGameState(StateContext& context) 
@@ -39,7 +44,14 @@ MenuGameState::MenuGameState(StateContext& context)
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
                 .buildAndReset()
             )
-        }
+        },
+        {"pause", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handlePause, this))
+                .setDescription("Pause the game")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .buildAndReset()
+        )}
     };
 }
 

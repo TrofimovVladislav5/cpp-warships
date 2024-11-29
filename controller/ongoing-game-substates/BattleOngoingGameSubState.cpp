@@ -1,9 +1,9 @@
 #include "game-states/OngoingGameState.h"
 #include "BattleOngoingGameSubState.h"
-
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
 #include "FinishOngoingGameSubState.h"
+#include "PauseOngoingGameSubState.h"
 #include "StateMessages.h"
 #include "TypesHelper.h"
 #include "../../library/ViewHelper.h"
@@ -36,6 +36,13 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
                 commandBuilder
                 .setCallback(TypesHelper::methodToFunction(&BattleController::applySkill, battleController))
                 .setDescription("Apply the skill")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .buildAndReset()
+        )},
+        {"pause", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&BattleController::pause, battleController))
+                .setDescription("Pause the battle")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
                 .buildAndReset()
         )}
@@ -72,6 +79,8 @@ OngoingGameSubState* BattleOngoingGameSubState::transitToSubState() {
     if (battleController->finishBattle()) {
         return new FinishOngoingGameSubState(context);
     }
-
+    else if (battleController->getPause() == "pause") {
+        return new PauseOngoingGameSubState(context);
+    }
     return nullptr;
 }

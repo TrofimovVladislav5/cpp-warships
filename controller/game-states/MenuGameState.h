@@ -10,6 +10,7 @@ private:
     SchemeMap inputScheme;
     void handleStart(ParsedOptions options);
     void handleExit(ParsedOptions options);
+    void handlePause(ParsedOptions options);
 public:
     explicit MenuGameState(StateContext& context);
     void openState() override;
