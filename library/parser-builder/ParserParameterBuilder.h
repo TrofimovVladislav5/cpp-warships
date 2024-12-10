@@ -7,6 +7,7 @@ protected:
     std::regex validator;
     std::string description;
     bool necessary = false;
+
 public:
     virtual ~ParserParameterBuilder() = default;
 

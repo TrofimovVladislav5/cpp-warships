@@ -9,5 +9,3 @@ public:
     static int findMaxPairValue(const std::vector<FieldCoordinate>& vec, bool first);
     static int findMinPairValue(const std::vector<FieldCoordinate>& vec, bool first);
 };
-
-

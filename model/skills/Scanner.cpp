@@ -2,15 +2,12 @@
 
 #include <iostream>
 
+#include "../../view/GameFieldView.h"
 #include "TypesHelper.h"
 #include "ViewHelper.h"
-#include "../../view/GameFieldView.h"
 #include "exceptions/SkillException.h"
 
-
-Scanner::Scanner(GameField* opponentField)
-    : opponentField(opponentField)
-{}
+Scanner::Scanner(GameField* opponentField) : opponentField(opponentField) {}
 
 void Scanner::apply() {
     try {

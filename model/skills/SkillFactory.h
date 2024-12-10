@@ -11,12 +11,11 @@ template <typename SkillType, typename... Args>
 class ConcreteSkillFactory final : public SkillFactory {
 private:
     std::tuple<Args...> args;
+
 public:
-    explicit ConcreteSkillFactory(Args... args)
-        : args(std::make_tuple(args...))
-    {}
+    explicit ConcreteSkillFactory(Args... args) : args(std::make_tuple(args...)) {}
 
     ISkill* createSkill() override {
-        return std::apply([](Args... args){return new SkillType(args...);}, args);
+        return std::apply([](Args... args) { return new SkillType(args...); }, args);
     }
 };

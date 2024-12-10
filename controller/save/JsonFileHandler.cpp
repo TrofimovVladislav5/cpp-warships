@@ -1,8 +1,6 @@
 #include "JsonFileHandler.h"
 
-JsonFileHandler::JsonFileHandler(const std::string& filename, Mode mode)
-    : mode(mode)
-{
+JsonFileHandler::JsonFileHandler(const std::string& filename, Mode mode) : mode(mode) {
     if (mode == Mode::Read) {
         inputFile.open(filename, std::ios::in);
         if (!inputFile.is_open()) {

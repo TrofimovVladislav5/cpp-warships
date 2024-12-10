@@ -6,6 +6,7 @@ class AttackHandler {
 private:
     MatchSettings* settings;
     GameField* enemyField;
+
 public:
     explicit AttackHandler(GameField* enemyField, MatchSettings* settings);
     ~AttackHandler();

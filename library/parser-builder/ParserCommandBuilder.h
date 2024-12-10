@@ -10,6 +10,7 @@ protected:
     ParseCallback<void> displayError;
     ParseCallback<void> printHelp;
     bool resolveAllFlags = false;
+
 public:
     virtual ~ParserCommandBuilder() = default;
 

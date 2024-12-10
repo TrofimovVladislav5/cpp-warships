@@ -1,14 +1,10 @@
 #include "FieldCellView.h"
+
 #include <cmath>
 #include <iostream>
 
 FieldCellView::FieldCellView(std::string cellContent, bool top, bool right, bool bottom, bool left)
-    : top(top)
-    , right(right)
-    , bottom(bottom)
-    , left(left)
-    , cellContent(std::move(cellContent))
-{}
+    : top(top), right(right), bottom(bottom), left(left), cellContent(std::move(cellContent)) {}
 
 std::string FieldCellView::getTopEdge(bool start, bool end) const {
     std::string result;

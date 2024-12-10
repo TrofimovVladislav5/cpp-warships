@@ -1,9 +1,10 @@
 #pragma once
 #include "model/StateContext.h"
 
-class GameState{
+class GameState {
 protected:
     StateContext& context;
+
 public:
     explicit GameState(StateContext& context);
     virtual ~GameState() = default;

@@ -9,9 +9,7 @@
 #include "library/parser/Parser.h"
 #include "library/parser/ParserCommandInfo.h"
 
-void sayGoodbye(ParsedOptions args) {
-    std::cout << "Goodbye!\n";
-}
+void sayGoodbye(ParsedOptions args) { std::cout << "Goodbye!\n"; }
 
 class TestClass {
 public:
@@ -22,9 +20,7 @@ public:
         if (!args["age"].empty()) std::cout << "Age: " << args["age"] << "\n";
     }
 
-    void sayError(ParsedOptions args) {
-        std::cout << "Error!\n";
-    }
+    void sayError(ParsedOptions args) { std::cout << "Error!\n"; }
 
     void sayNotFound(ParsedOptions args) {
         std::cout << "Command not found or necessary flags are not provided!\n";
@@ -41,8 +37,9 @@ inline void runInlineParser() {
     ParameterBuildDirector parameterDirector(parameterBuilder);
 
     commandDirector
-        .buildBasicCommand(TypesHelper::methodToFunction(&TestClass::sayHello, &test), "The purpose of this function is to start an app")
-        .setDisplayError(TypesHelper::methodToFunction(&TestClass::sayError, &test));
+            .buildBasicCommand(TypesHelper::methodToFunction(&TestClass::sayHello, &test),
+                               "The purpose of this function is to start an app")
+            .setDisplayError(TypesHelper::methodToFunction(&TestClass::sayError, &test));
 
     parameterDirector.buildNecessary("--age", std::regex("^[1-9][0-9]*?$"));
     commandBuilder->addParameter(parameterBuilder->buildAndReset());
@@ -51,19 +48,16 @@ inline void runInlineParser() {
 
     auto startCommand = commandBuilder->buildAndReset();
 
-    commandDirector
-        .buildBasicCommand(sayGoodbye, "The purpose of this function is to end an app")
-        .setDisplayError(TypesHelper::methodToFunction(&TestClass::sayError, &test));
+    commandDirector.buildBasicCommand(sayGoodbye, "The purpose of this function is to end an app")
+            .setDisplayError(TypesHelper::methodToFunction(&TestClass::sayError, &test));
 
     parameterDirector.buildUnnecessary("--hello", std::regex("^[A-Z][a-z]+(\\s[A-Z][a-z]+)?$"));
     commandBuilder->addParameter(parameterBuilder->buildAndReset());
 
     auto endCommand = commandBuilder->buildAndReset();
 
-    SchemeMap schemeMap = {
-        {"start", ParserCommandInfo(startCommand)},
-        {"end", ParserCommandInfo(endCommand)}
-    };
+    SchemeMap schemeMap = {{"start", ParserCommandInfo(startCommand)},
+                           {"end", ParserCommandInfo(endCommand)}};
 
     Parser parser(schemeMap, TypesHelper::methodToFunction(&TestClass::sayNotFound, &test));
     std::string input;

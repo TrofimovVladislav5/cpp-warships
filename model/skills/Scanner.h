@@ -7,6 +7,7 @@
 class Scanner : public ISkill {
 private:
     GameField* opponentField;
+
 public:
     explicit Scanner(GameField* opponentField);
     void apply() override;

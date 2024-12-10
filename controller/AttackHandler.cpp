@@ -4,9 +4,7 @@
 #include "exceptions/BattleException.h"
 
 AttackHandler::AttackHandler(GameField* enemyField, MatchSettings* settings)
-    : settings(settings)
-    , enemyField(enemyField)
-{}
+    : settings(settings), enemyField(enemyField) {}
 
 AttackHandler::~AttackHandler() {
     delete enemyField;

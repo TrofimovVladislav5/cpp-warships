@@ -2,7 +2,4 @@
 
 #include "model/StateContext.h"
 
-GameState::GameState(StateContext& context) 
-    : context(context)
-{}
-
+GameState::GameState(StateContext& context) : context(context) {}
