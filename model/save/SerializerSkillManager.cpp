@@ -2,8 +2,11 @@
 
 json SerializerSkillManager::serialize(const GameStateDTO &object) {
     json j = json{
-        {"skills", object.playerSkillManager->getSkillsQueue()}
+        {"skills", json::array()}
     };
+    if (!object.playerSkillManager->getSkillsQueue().empty()) {
+        j["skills"] = object.playerSkillManager->getSkillsQueue();
+    }
     return j;
 }
 
@@ -12,12 +15,14 @@ void SerializerSkillManager::deserialize(const json &j, GameStateDTO &object) {
         object.playerSkillManager = nullptr;
         return;
     }
-    std::deque<std::string> skills;
-    for (const auto& skill : j.at("skills")) {
-        skills.push_back(skill.get<std::string>());
+    std::deque<std::string> skills = {};
+    if (j.contains("skills") && j["skills"].is_array()) {
+        for (const auto& skill : j["skills"]) {
+            skills.push_back(skill.get<std::string>());
+        }
     }
 
-    SkillManager* skillManager = new SkillManager(object.enemyField, object.settings, object.enemyManager);
+    SkillManager* skillManager = new SkillManager(skills, object.enemyField, object.settings, object.enemyManager);
     skillManager->setSkills(skills);
     object.playerSkillManager = skillManager;
 }

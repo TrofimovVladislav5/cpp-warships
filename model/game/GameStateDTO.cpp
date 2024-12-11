@@ -13,6 +13,4 @@ GameStateDTO::GameStateDTO(MatchSettings* settings)
     , shipsSizes(settings->getShipsCount())
     , fieldSize(settings->getFieldSize())
     , roundNumber(1)
-    , currentShips(0)
-    , playerSkillManager(nullptr)
 {}

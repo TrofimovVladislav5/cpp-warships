@@ -13,16 +13,16 @@ void PauseOngoingGameSubState::handleResume(ParsedOptions options) {
 }
 
 void PauseOngoingGameSubState::handleLoad(ParsedOptions options) {
-    saveCreator = new GameSaveCreator();
-    GameStateDTO newDto = saveCreator->loadSave(options["filename"]);
-    if (newDto.playerSkillManager == nullptr) {
-        newDto.playerSkillManager = new SkillManager(newDto.enemyField, newDto.settings, newDto.enemyManager);
-    }
-    if (newDto.settings== nullptr) {
-        newDto.settings = new MatchSettings(newDto.shipsSizes, newDto.fieldSize);
-    }
-    newDto.settings->damageCount = 1;
-    *dto = newDto;
+    // saveCreator = new GameSaveCreator();
+    // GameStateDTO newDto = saveCreator->loadSave(options["filename"]);
+    // if (newDto.playerSkillManager == nullptr) {
+    //     newDto.playerSkillManager = new SkillManager(newDto.enemyField, newDto.settings, newDto.enemyManager);
+    // }
+    // if (newDto.settings== nullptr) {
+    //     newDto.settings = new MatchSettings(newDto.shipsSizes, newDto.fieldSize);
+    // }
+    // newDto.settings->damageCount = 1;
+    // *dto = newDto;
 }
 
 void PauseOngoingGameSubState::handleSave(ParsedOptions options) {

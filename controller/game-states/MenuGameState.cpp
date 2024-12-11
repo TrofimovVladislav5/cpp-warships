@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "DefaultParameterBuilder.h"
 #include "GameState.h"
 #include "OngoingGameState.h"
 #include "ShutdownGameState.h"
@@ -12,6 +13,7 @@
 #include "library/defaults/DefaultParserError.h"
 
 void MenuGameState::handleStart(ParsedOptions options) {
+    context.loadFileName = options["filename"];
     this->latestCommand = "start";
 }
 
@@ -19,21 +21,25 @@ void MenuGameState::handleExit(ParsedOptions options) {
     this->latestCommand = "exit";
 }
 
-void MenuGameState::handlePause(ParsedOptions options) {
-    this->latestCommand = "pause";
-}
-
 MenuGameState::MenuGameState(StateContext& context) 
-    : GameState(context) 
+    : GameState(context)
 {
     ConfigCommandBuilder commandBuilder;
-
+    DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
-        {"new", ParserCommandInfo(
+        {"start", ParserCommandInfo(
             commandBuilder
                 .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleStart, this))
                 .setDescription("The purpose of this function is to start the match")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--filename")
+                        .setDescription("Write the name of the player")
+                        .setValidator(std::regex("^.*\\.json$"))
+                        .setNecessary(false)
+                        .buildAndReset()
+                )
                 .buildAndReset()
             )
         },
@@ -45,13 +51,6 @@ MenuGameState::MenuGameState(StateContext& context)
                 .buildAndReset()
             )
         },
-        {"pause", ParserCommandInfo(
-            commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handlePause, this))
-                .setDescription("Pause the game")
-                .setDisplayError(DefaultParserError::WrongFlagValueError)
-                .buildAndReset()
-        )}
     };
 }
 
@@ -75,9 +74,8 @@ GameState* MenuGameState::transitToState() {
     if (latestCommand == "start"){
         return new OngoingGameState(context);
     }
-    if (latestCommand == "exit") {
+    else if (latestCommand == "exit") {
         return new ShutdownGameState(context);
     }
-
     return nullptr;
 }

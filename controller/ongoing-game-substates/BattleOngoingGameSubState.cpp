@@ -15,6 +15,7 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
     : OngoingGameSubState(context)
     , battleController(new BattleController(context.matchDTO))
 {
+    context.matchDTO->lastSubState = "BattleOngoingGameSubState";
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {

@@ -1,15 +1,11 @@
 #pragma once
 #include <string>
 #include "GameState.h"
-#include "view/game-states/OngoingGameView.h"
 #include "library/parser/Parser.h"
 #include "model/StateContext.h"
-
-class OngoingGameSubState;
+#include "controller/ongoing-game-substates/OngoingGameSubState.h"
 
 class OngoingGameState : public GameState {
-private: 
-    SchemeMap inputScheme;
 protected:
     std::string latestCommand;
     OngoingGameSubState* currentSubState;

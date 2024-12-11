@@ -7,7 +7,6 @@ private:
     int fieldSize;
 public:
     explicit MatchSettings(std::map<int, int> shipSizesDictionary, int fieldSize);
-    ~MatchSettings();
     int damageCount;
     bool isActiveDoubleDamage = false;
     [[nodiscard]] int getFieldSize() const;

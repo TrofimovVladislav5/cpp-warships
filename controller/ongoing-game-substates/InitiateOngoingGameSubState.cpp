@@ -1,6 +1,7 @@
 #include "InitiateOngoingGameSubState.h"
 #include "../PlaceShipController.h"
 #include "BattleOngoingGameSubState.h"
+#include "PauseOngoingGameSubState.h"
 #include "StateMessages.h"
 #include "ViewHelper.h"
 #include "exceptions/ShipPlacementException.h"
@@ -23,12 +24,18 @@ void InitiateOngoingGameSubState::handleConfirm(ParsedOptions options) {
     }
 }
 
+void InitiateOngoingGameSubState::handlePause(ParsedOptions options) {
+    commandPause = "pause";
+}
+
 InitiateOngoingGameSubState::InitiateOngoingGameSubState(SubStateContext& context)
     : OngoingGameSubState(context)
     , playerPlaceController(new PlaceShipController(context.matchDTO, context.matchDTO->playerManager))
     , enemyPlaceController(new PlaceShipController(context.matchDTO, context.matchDTO->enemyManager))
     , placeControllerView(new PlaceShipControllerView(playerPlaceController))
+    , commandPause("")
 {
+    context.matchDTO->lastSubState = "InitiateOngoingGameSubState";
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
@@ -86,6 +93,13 @@ InitiateOngoingGameSubState::InitiateOngoingGameSubState(SubStateContext& contex
                 .setCallback(TypesHelper::methodToFunction(&InitiateOngoingGameSubState::handleConfirm, this))
                 .setDescription("Finish placing ships and start a game")
                 .buildAndReset()
+        )},
+        {"pause", ParserCommandInfo(
+           commandBuilder
+               .setCallback(TypesHelper::methodToFunction(&InitiateOngoingGameSubState::handlePause, this))
+               .setDescription("Pause the Placement of Ships")
+               .setDisplayError(DefaultParserError::WrongFlagValueError)
+               .buildAndReset()
         )}
     };
 }
@@ -121,8 +135,8 @@ void InitiateOngoingGameSubState::closeSubState() {
 OngoingGameSubState* InitiateOngoingGameSubState::transitToSubState() {
     if (confirmed && playerPlaceController->allShipsPlaced()) {
         enemyPlaceController->placeShipsRandomly();
-        context.matchDTO->playerField = playerPlaceController->getCurrentField();
         context.matchDTO->playerManager = playerPlaceController->getCurrentManager();
+        context.matchDTO->playerField = playerPlaceController->getCurrentField();
         context.matchDTO->enemyField = enemyPlaceController->getCurrentField();
         context.matchDTO->enemyManager = enemyPlaceController->getCurrentManager();
         context.matchDTO->playerSkillManager = new SkillManager(
@@ -133,6 +147,8 @@ OngoingGameSubState* InitiateOngoingGameSubState::transitToSubState() {
 
         return new BattleOngoingGameSubState(context);
     }
-
+    else if (commandPause == "pause") {
+        return new PauseOngoingGameSubState(context);
+    }
     return nullptr;
 }

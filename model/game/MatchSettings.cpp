@@ -8,9 +8,6 @@ MatchSettings::MatchSettings(std::map<int, int> shipSizesDictionary, int fieldSi
     , shipSizesDictionary(std::move(shipSizesDictionary))
 {}
 
-MatchSettings::~MatchSettings() {
-}
-
 int MatchSettings::getFieldSize() const {
     return fieldSize;
 }

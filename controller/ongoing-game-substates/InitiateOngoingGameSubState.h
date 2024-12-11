@@ -11,6 +11,8 @@ private:
     PlaceShipControllerView* placeControllerView;
     void handleShipsShuffle(ParsedOptions options);
     void handleConfirm(ParsedOptions options);
+    void handlePause(ParsedOptions options);
+    std::string commandPause;
     bool confirmed = false;
 public:
     explicit InitiateOngoingGameSubState(SubStateContext& context);

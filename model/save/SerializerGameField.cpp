@@ -21,6 +21,8 @@ std::unordered_set<std::pair<int, int>, hashFunc> SerializerGameField::unordered
     return attacksOnFields;
 }
 
+
+
 json SerializerGameField::unorderedMapToJson(
     const std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>, hashFunc>>& shipsCoordinatesMap
 )
@@ -46,6 +48,7 @@ std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>, hashFunc> > Se
     }
     return shipsCoordinateMap;
 }
+
 
 json SerializerGameField::serialize(const GameStateDTO &object) {
     json playerFieldShips = unorderedMapToJson(object.playerField->getShipsCoordinateMap());

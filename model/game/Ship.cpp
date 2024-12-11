@@ -58,7 +58,7 @@ bool Ship::isDestroyed() {
 std::string Ship::status() {
     std::string result = "";
     for (const auto& segment : segments) {
-        result += segment->getHitPoints() + " ";
+        result += std::to_string(segment->getHitPoints()) + " ";
     }
     return result;
 }
