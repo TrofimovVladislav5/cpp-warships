@@ -156,7 +156,6 @@ add_executable(cpp_warships
         controller/AttackHandler.h
         view/SkillManagerView.cpp
         view/SkillManagerView.h
-#        model/save/test.cpp
         model/save/Serializer.h
         model/save/GameSaveCreator.h
         model/save/GameSaveCreator.cpp
@@ -175,6 +174,7 @@ add_executable(cpp_warships
         model/save/JsonFileHandler.h
         model/save/JsonFileHandler.cpp
         view/ShipManagerView.cpp
+        #        model/save/test.cpp
 )
 
 target_link_libraries(cpp_warships PRIVATE nlohmann_json::nlohmann_json)

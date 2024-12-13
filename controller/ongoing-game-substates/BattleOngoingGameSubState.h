@@ -1,5 +1,6 @@
 #pragma once
 #include "OngoingGameSubState.h"
+#include "PlaceShipController.h"
 #include "../BattleController.h"
 #include "game-states/OngoingGameState.h"
 
@@ -8,6 +9,8 @@ class BattleOngoingGameSubState : public OngoingGameSubState {
 private:
     SchemeMap inputScheme;
     BattleController* battleController;
+    PlaceShipController* enemyPlaceController;
+    OngoingGameSubState* handleFinishBattle();
 public:
     explicit BattleOngoingGameSubState(SubStateContext& context);
     ~BattleOngoingGameSubState() override;

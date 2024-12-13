@@ -20,4 +20,5 @@ public:
     explicit ComputerPlayer(GameField* field);
     ~ComputerPlayer();
     bool makeAShot();
+    bool isWin() const;
 };

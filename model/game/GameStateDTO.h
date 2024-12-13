@@ -6,11 +6,12 @@
 class GameStateDTO {
 public:
     GameStateDTO();
+    ~GameStateDTO();
     explicit GameStateDTO(MatchSettings* settings);
     std::string lastSubState = "";
     ShipManager* playerManager = nullptr;
     SkillManager* playerSkillManager = nullptr;
-    GameField* playerField;;
+    GameField* playerField = nullptr;
     ShipManager* enemyManager = nullptr;
     GameField* enemyField = nullptr;
     std::map<int, int> shipsSizes = {};

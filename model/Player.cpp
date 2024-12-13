@@ -27,6 +27,11 @@ void Player::applySkill(ParsedOptions options) {
     }
 }
 
+bool Player::isWin() const {
+    // return true; TODO: REMOVE WHEN PROTECTION ENDED
+    return opponentField->isAllShipsDestroyed();
+}
+
 bool Player::makeAShot(ParsedOptions options) {
 
     std::pair<int, int> attackCell = TypesHelper::cell(options["cell"]);

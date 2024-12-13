@@ -110,3 +110,7 @@ bool ComputerPlayer::makeAShot() {
     return proceedShot(attackCoordinate);
 }
 
+bool ComputerPlayer::isWin() const {
+    // return true; TODO: REMOVE WHEN PROTECTION ENDED
+    return field->isAllShipsDestroyed();
+}

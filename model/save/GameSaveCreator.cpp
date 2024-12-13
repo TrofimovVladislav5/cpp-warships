@@ -59,24 +59,32 @@ std::size_t GameSaveCreator::decryptChecksum(const std::string& encryptedChecksu
     return std::stoull(decryptedChecksum);
 }
 
-void GameSaveCreator::createSave(const std::string& filename) {
-    json j = json {
-            {"ShipManagers", dto->playerManager ? factory["manager"]->createSerializer()->serialize(*dto) : json()},
-            {"GameFields", dto->playerField ? factory["gameField"]->createSerializer()->serialize(*dto) : json()},
-            {"Settings", dto->settings ? factory["settings"]->createSerializer()->serialize(*dto) : json()},
-            {"SkillManager", dto->playerSkillManager ? factory["skillManager"]->createSerializer()->serialize(*dto) : json()},
-            {"SimplifyObjects", factory["simplifyObjects"]->createSerializer()->serialize(*dto)},
-                {"SubState", dto->lastSubState}
+json GameSaveCreator::distributorCreateSave() {
+    json baseJson = {
+        {"SimplifyObjects", factory["simplifyObjects"]->createSerializer()->serialize(*dto)},
+        {"Settings", dto->settings ? factory["settings"]->createSerializer()->serialize(*dto) : json()},
+        {"SubState", dto->lastSubState}
     };
+
+    if (dto->lastSubState == "InitiateOngoingGameSubState" || dto->lastSubState == "BattleOngoingGameSubState") {
+        baseJson["ShipManagers"] = dto->playerManager ? factory["manager"]->createSerializer()->serialize(*dto) : json();
+    }
+    if (dto->lastSubState == "BattleOngoingGameSubState") {
+        baseJson["GameFields"] = dto->playerField ? factory["gameField"]->createSerializer()->serialize(*dto) : json();
+        baseJson["SkillManager"] = dto->playerSkillManager ? factory["skillManager"]->createSerializer()->serialize(*dto) : json();
+    }
+    return baseJson;
+}
+
+void GameSaveCreator::createSave(const std::string& filename) {
+    json j = distributorCreateSave();
     std::string jsonData = j.dump();
     std::size_t checkSum = calculateHash(jsonData);
     std::string encryptedChecksum = encryptChecksum(checkSum, "encryptKey");
-
     json saveFile {
             {"data", j},
             {"checksum", encryptedChecksum},
     };
-
     try {
         JsonFileHandler fileHandler(filename, JsonFileHandler::Mode::Write);
         fileHandler << saveFile;
@@ -114,9 +122,25 @@ GameStateDTO* GameSaveCreator::loadSave(const std::string& filename) {
         return nullptr;
     }
 
-    GameStateDTO* dto = new GameStateDTO();
+    return distributorLoadSave(data);
+}
 
-    std::vector<std::string> deserializationOrder = getDeserializationOrder(data);
+GameStateDTO* GameSaveCreator::distributorLoadSave(const json &j) {
+    GameStateDTO* dto = new GameStateDTO();
+    dto->lastSubState = j.at("SubState").get<std::string>();
+    std::vector<std::string> order = {
+        "SimplifyObjects",
+        "Settings",
+    };
+    if (dto->lastSubState == "InitiateOngoingGameSubState") {
+        order.emplace_back("ShipManagers");
+    }
+    else if ( dto->lastSubState == "BattleOngoingGameSubState") {
+        order.emplace_back("ShipManagers");
+        order.emplace_back("GameFields");
+        order.emplace_back("SkillManager");
+    }
+
     std::unordered_map<std::string, std::function<void(const json&)>> deserializers = {
         {"SimplifyObjects", [dto](const json& simplifyJson) {
             if (simplifyJson.contains("fieldSize") && simplifyJson["fieldSize"].is_number()) {
@@ -131,51 +155,25 @@ GameStateDTO* GameSaveCreator::loadSave(const std::string& filename) {
                 }
             }
         }},
-        {"Settings", [this, dto](const json& j) {
-            factory["settings"]->createSerializer()->deserialize(j, *dto);
+        {"Settings", [this, dto](const json& settingsJson) {
+            factory["settings"]->createSerializer()->deserialize(settingsJson, *dto);
         }},
-        {"ShipManagers", [this, dto](const json& j) {
-            factory["manager"]->createSerializer()->deserialize(j, *dto);
+        {"ShipManagers", [this, dto](const json& shipManagersJson) {
+            factory["manager"]->createSerializer()->deserialize(shipManagersJson, *dto);
         }},
-        {"GameFields", [this, dto](const json& j) {
-            factory["gameField"]->createSerializer()->deserialize(j, *dto);
-        }},
-        {"SkillManager", [this, dto](const json& j) {
-            factory["skillManager"]->createSerializer()->deserialize(j, *dto);
+        {"GameFields", [this, dto](const json& gameFieldsJson) {
+            factory["gameField"]->createSerializer()->deserialize(gameFieldsJson, *dto);
         }}
     };
 
-    if (data.contains("SubState") && data["SubState"].is_string()) {
-        dto->lastSubState = data["SubState"].get<std::string>();
-    }
-
-    for (const auto& key : deserializationOrder) {
-        if (data.contains(key) && data[key].is_object()) {
-            deserializers[key](data[key]);
+    for (const auto& key : order) {
+        if (j.contains(key) && j[key].is_object()) {
+            deserializers[key](j[key]);
         }
     }
 
+    if (j.contains("SkillManager")) {
+        factory["skillManager"]->createSerializer()->deserialize(j["SkillManager"], *dto);
+    }
     return dto;
-}
-
-std::vector<std::string> GameSaveCreator::getDeserializationOrder(const json &j) const {
-    std::vector<std::string> order = {};
-    std::string subState = j.at("SubState").get<std::string>();
-    if (subState == "InitiateOngoingGameSubState") {
-        order = {
-            "SimplifyObjects",
-            "Settings"
-            "ShipManagers",
-        };
-    }
-    else if (subState== "BattleOngoingGameSubState") {
-        order = {
-            "SimplifyObjects",
-            "Settings",
-            "ShipManagers",
-            "GameFields",
-            "SkillManager"
-        };
-    }
-    return order;
 }

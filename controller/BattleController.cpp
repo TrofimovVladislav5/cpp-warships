@@ -20,9 +20,9 @@ BattleController::BattleController(GameStateDTO* dto)
     , opponentView(new GameFieldView(dto->enemyField))
     , computer(new ComputerPlayer(dto->playerField))
     , saveCreator(new GameSaveCreator(dto))
+    , command("")
 {
     skillManagerView = new SkillManagerView(dto->playerSkillManager);
-
 }
 
 BattleController::~BattleController() {
@@ -34,8 +34,10 @@ BattleController::~BattleController() {
     delete saveCreator;
 }
 
-bool BattleController::finishBattle() const{
-    return battleIsFinished;
+bool BattleController::finishBattle() {
+    command = (player->isWin() ? "player" : "");
+    command = (computer->isWin() ? "computer" : "");
+    return player->isWin() || computer->isWin();
 }
 
 void BattleController::applySkill(ParsedOptions options) {
@@ -65,9 +67,9 @@ void BattleController::battle(ParsedOptions options) {
 }
 
 void BattleController::pause(ParsedOptions options) {
-    this->commandPause = "pause";
+    this->command = "pause";
 }
 
-std::string BattleController::getPause() const {
-    return commandPause;
+std::string BattleController::getCommand() const {
+    return command;
 }

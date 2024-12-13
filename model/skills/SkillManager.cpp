@@ -1,6 +1,9 @@
 #include <random>
 #include <algorithm>
 #include "SkillManager.h"
+
+#include <iostream>
+
 #include "DoubleDamage.h"
 #include "ShootingRandomlySkill.h"
 #include "Scanner.h"
@@ -11,16 +14,13 @@
 
 SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager)
     : currentSkill(nullptr)
+    , skills({})
 {
-    availableSkills = {
-        {"Scanner"},
-        {"DoubleDamage"},
-        {"Shooting"}
-    };
-
     factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
     factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
     factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*>(enemyManager);
+
+    availableSkills = {"Scanner", "DoubleDamage", "Shooting"};
 
     std::shuffle(availableSkills.begin(), availableSkills.end(), std::random_device());
     for (const auto& skillName : availableSkills) {
@@ -30,16 +30,13 @@ SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings, ShipM
 
 SkillManager::SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager)
     : skills(skills)
+    , currentSkill(nullptr)
 {
-    availableSkills = {
-        {"Scanner"},
-        {"DoubleDamage"},
-        {"Shooting"}
-    };
-
+    std::cout << skills.empty() << std::endl;
     factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
     factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
     factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*>(enemyManager);
+    availableSkills = {"Scanner", "DoubleDamage", "Shooting"};
 }
 
 SkillManager::~SkillManager() {
@@ -58,7 +55,10 @@ void SkillManager::randomSkill() {
 const std::vector<std::string>& SkillManager::nameSkills() {
     return availableSkills;
 }
-const std::string& SkillManager::availableSkill() {
+std::string SkillManager::availableSkill() {
+    if (skills.empty()) {
+        return "No available skill";
+    }
     return skills.front();
 }
 

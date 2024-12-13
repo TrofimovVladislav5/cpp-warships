@@ -3,6 +3,7 @@
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
 #include "FinishOngoingGameSubState.h"
+#include "NewMatchSettingsSubState.h"
 #include "PauseOngoingGameSubState.h"
 #include "StateMessages.h"
 #include "TypesHelper.h"
@@ -10,10 +11,26 @@
 #include "exceptions/BattleException.h"
 #include "parser-builder/ConfigCommandBuilder.h"
 
+OngoingGameSubState *BattleOngoingGameSubState::handleFinishBattle() {
+    if (battleController->getCommand() == "computer") {
+        ViewHelper::consoleOut("Computer won the battle on round " + std::to_string(context.matchDTO->roundNumber));
+        return new NewMatchSettingsSubState(context);
+    }
+    ViewHelper::consoleOut("Player won the battle round " + std::to_string(context.matchDTO->roundNumber));
+    context.matchDTO->roundNumber++;
+    enemyPlaceController = new PlaceShipController(context.matchDTO, context.matchDTO->enemyManager);
+    enemyPlaceController->placeShipsRandomly();
+    context.matchDTO->enemyField->updateShipsCoordinateMap(
+        enemyPlaceController->getCurrentField()->getShipsCoordinateMap()
+    );
+    return new BattleOngoingGameSubState(context);
+}
+
 
 BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
     : OngoingGameSubState(context)
     , battleController(new BattleController(context.matchDTO))
+    , enemyPlaceController(nullptr)
 {
     context.matchDTO->lastSubState = "BattleOngoingGameSubState";
     ConfigCommandBuilder commandBuilder;
@@ -77,11 +94,11 @@ void BattleOngoingGameSubState::updateSubState() {
 }
 
 OngoingGameSubState* BattleOngoingGameSubState::transitToSubState() {
-    if (battleController->finishBattle()) {
-        return new FinishOngoingGameSubState(context);
-    }
-    else if (battleController->getPause() == "pause") {
+    if (battleController->getCommand() == "pause") {
         return new PauseOngoingGameSubState(context);
+    }
+    else if (battleController->finishBattle()) {
+        return handleFinishBattle();
     }
     return nullptr;
 }

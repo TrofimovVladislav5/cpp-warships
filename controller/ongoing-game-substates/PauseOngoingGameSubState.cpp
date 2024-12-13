@@ -3,26 +3,20 @@
 #include "ConfigCommandBuilder.h"
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
+#include "InitiateOngoingGameSubState.h"
 #include "StateMessages.h"
 #include "TypesHelper.h"
 #include "ongoing-game-substates/BattleOngoingGameSubState.h"
 #include "../../library/ViewHelper.h"
 
 void PauseOngoingGameSubState::handleResume(ParsedOptions options) {
-    this->latestCommand = "resume";
+    latestCommand = "resume";
 }
 
 void PauseOngoingGameSubState::handleLoad(ParsedOptions options) {
-    // saveCreator = new GameSaveCreator();
-    // GameStateDTO newDto = saveCreator->loadSave(options["filename"]);
-    // if (newDto.playerSkillManager == nullptr) {
-    //     newDto.playerSkillManager = new SkillManager(newDto.enemyField, newDto.settings, newDto.enemyManager);
-    // }
-    // if (newDto.settings== nullptr) {
-    //     newDto.settings = new MatchSettings(newDto.shipsSizes, newDto.fieldSize);
-    // }
-    // newDto.settings->damageCount = 1;
-    // *dto = newDto;
+    latestCommand = "load";
+    saveCreator = new GameSaveCreator();
+    dto = saveCreator->loadSave(options["filename"]);
 }
 
 void PauseOngoingGameSubState::handleSave(ParsedOptions options) {
@@ -78,7 +72,7 @@ PauseOngoingGameSubState::PauseOngoingGameSubState(SubStateContext &context)
 }
 
 void PauseOngoingGameSubState::openSubState() {
-    ViewHelper::consoleOut("\n------------ Battle on paused ------------\n");
+    ViewHelper::consoleOut("\n------------ Game on paused ------------\n");
 }
 
 void PauseOngoingGameSubState::closeSubState() {
@@ -94,8 +88,18 @@ void PauseOngoingGameSubState::updateSubState() {
 }
 
 OngoingGameSubState* PauseOngoingGameSubState::transitToSubState() {
+    if (latestCommand == "load") {
+        if (dto->lastSubState == "InitiateOngoingGameSubState") {
+            return new InitiateOngoingGameSubState(context);
+        }
+        else if (dto->lastSubState == "BattleOngoingGameSubState") {
+            return new BattleOngoingGameSubState(context);
+        }
+    }
+
     if (latestCommand == "resume") {
         return new BattleOngoingGameSubState(context);
     }
+
     return nullptr;
 }

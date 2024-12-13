@@ -14,7 +14,8 @@ private:
     [[nodiscard]] std::string encryptChecksum(std::size_t checksum, const std::string& key);
     [[nodiscard]] std::size_t decryptChecksum(const std::string& encryptedChecksum, const std::string& key);
     void initializeFactories();
-    std::vector<std::string> getDeserializationOrder(const json& j) const;
+    GameStateDTO* distributorLoadSave(const json& j);
+    json distributorCreateSave();
 public:
     explicit GameSaveCreator(GameStateDTO* dto);
     explicit GameSaveCreator();

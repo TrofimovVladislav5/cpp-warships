@@ -10,13 +10,13 @@ private:
     GameSaveCreator* saveCreator;
     SchemeMap inputScheme;
     std::string latestCommand;
+    void handleResume(ParsedOptions options);
+    void handleSave(ParsedOptions options);
+    void handleLoad(ParsedOptions options);
 public:
     explicit PauseOngoingGameSubState(SubStateContext& context);
     void openSubState() override;
     void closeSubState() override;
     void updateSubState() override;
-    void handleResume(ParsedOptions options);
-    void handleSave(ParsedOptions options);
-    void handleLoad(ParsedOptions options);
     OngoingGameSubState* transitToSubState() override;
 };

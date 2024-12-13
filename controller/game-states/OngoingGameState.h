@@ -9,6 +9,7 @@ class OngoingGameState : public GameState {
 protected:
     std::string latestCommand;
     OngoingGameSubState* currentSubState;
+    std::string loadFileName;
 public:
     OngoingGameState(StateContext &context);
     void openState() override;

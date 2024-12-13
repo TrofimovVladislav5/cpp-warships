@@ -31,11 +31,10 @@ NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext& context)
                     parameterBuilder
                         .addFlag("--size")
                         .setValidator(std::regex("^(1[0-9]|2[0-5])$"))
-                        .setNecessary(false)
+                        .setNecessary(true)
                         .buildAndReset()
                 )
                 .buildAndReset()
-
         )}
     };
 }
@@ -52,6 +51,11 @@ void NewMatchSettingsSubState::closeSubState() {
 }
 
 void NewMatchSettingsSubState::updateSubState() {
+    if (context.matchDTO) {
+        delete context.matchDTO;
+        context.matchDTO = nullptr;
+    }
+
     StateMessages::awaitCommandMessage();
     std::string input;
     std::getline(std::cin, input);

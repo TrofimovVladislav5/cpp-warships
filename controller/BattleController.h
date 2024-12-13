@@ -16,13 +16,13 @@ private:
     GameSaveCreator* saveCreator;
     bool battleIsFinished;
     void printBattleState();
-    std::string commandPause;
+    std::string command;
 public:
     void applySkill(ParsedOptions options);
     void battle(ParsedOptions options);
     void pause(ParsedOptions options);
     explicit BattleController(GameStateDTO* dto);
     ~BattleController();
-    bool finishBattle() const;
-    std::string getPause() const;
+    bool finishBattle();
+    std::string getCommand() const;
 };

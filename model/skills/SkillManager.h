@@ -19,7 +19,7 @@ public:
     explicit SkillManager(GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager);
     explicit SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager);
     const std::vector<std::string>& nameSkills();
-    const std::string& availableSkill();
+    std::string availableSkill();
     ~SkillManager();
     void addSkill();
     void applySkill();

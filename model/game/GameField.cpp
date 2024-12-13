@@ -189,3 +189,18 @@ void GameField::clear() {
     this->shipsCoordinateMap.clear();
     this->attacksOnField.clear();
 }
+
+bool GameField::isAllShipsDestroyed() const {
+    for (const auto& [ship, coordinates] : shipsCoordinateMap) {
+        if (!ship->isDestroyed()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void GameField::updateShipsCoordinateMap(const std::unordered_map<Ship *, std::unordered_set<std::pair<int, int>, hashFunc> > &newMap) {
+    shipsCoordinateMap.clear();
+    attacksOnField.clear();
+    shipsCoordinateMap = newMap;
+}
