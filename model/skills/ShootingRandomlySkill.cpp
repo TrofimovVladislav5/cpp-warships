@@ -5,34 +5,33 @@
 #include "exceptions/SkillException.h"
 
 
-ShootingRandomlySkill::ShootingRandomlySkill(ShipManager* opponentShipManager)
-    : opponentShipManager(opponentShipManager)
+ShootingRandomlySkill::ShootingRandomlySkill(GameField* enemyField)
+    : enemyField(enemyField)
 {}
 
 void ShootingRandomlySkill::apply() {
     std::mt19937 mersenneEngine(std::random_device{}());
-
     bool success = false;
-    auto ships = opponentShipManager->getShips();
-
-    if (ships.empty()) {
-        throw SkillException("Unreachable state");
-    }
-
     while (!success) {
-        std::uniform_int_distribution<> distShips(0, ships.size() - 1);
-        int indexShip = distShips(mersenneEngine);
+        auto& shipsMap = enemyField->getShipsCoordinateMap();
+        std::uniform_int_distribution<> distShips(0, shipsMap.size() - 1);
+        auto it = shipsMap.begin();
+        std::advance(it, distShips(mersenneEngine));
 
-        Ship* selectedShip = ships[indexShip];
+        Ship* selectedShip = it->first;
+        auto& coordinates = it->second;
+
         if (selectedShip->isDestroyed()) {
             continue;
         }
 
-        std::uniform_int_distribution<> distSegment(0, selectedShip->getLength() - 1);
+        std::vector<std::pair<int, int>> segments(coordinates.begin(), coordinates.end());
+        std::uniform_int_distribution<> distSegment(0, segments.size() - 1);
         int indexSegment = distSegment(mersenneEngine);
+        auto targetCoordinate = segments[indexSegment];
 
-        if (selectedShip->getSegmentHitPoints(indexSegment) != 0) {
-            selectedShip->takeDamage(indexSegment, 1);
+        if (selectedShip->getSegmentHitPoints(indexSegment) > 0) {
+            enemyField->attack(targetCoordinate, 1);
             success = true;
         }
     }

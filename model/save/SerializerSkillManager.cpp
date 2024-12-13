@@ -15,7 +15,7 @@ void SerializerSkillManager::deserialize(const json &j, GameStateDTO &object) {
         }
     }
 
-    SkillManager* skillManager = new SkillManager(skills, object.enemyField, object.settings, object.enemyManager);
+    SkillManager* skillManager = new SkillManager(skills, object.enemyField, object.settings);
     object.playerSkillManager = skillManager;
 }
 

@@ -42,7 +42,7 @@ Segment* Serializer::segmentFromJson(const json& j) {
 }
 Ship* Serializer::shipFromJson(const json& j) {
     std::vector<Segment*> segments = segmentsFromJson(j.at("segments"));
-    return new Ship(segments.size());
+    return new Ship(segments);
 }
 
 std::vector<Segment*> Serializer::segmentsFromJson(const json& j) {

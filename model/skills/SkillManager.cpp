@@ -12,13 +12,13 @@
 #include "exceptions/SkillException.h"
 #include "game/GameStateDTO.h"
 
-SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager)
+SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings)
     : currentSkill(nullptr)
     , skills({})
 {
     factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
     factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
-    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*>(enemyManager);
+    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, GameField*>(enemyField);
 
     availableSkills = {"Scanner", "DoubleDamage", "Shooting"};
 
@@ -28,14 +28,14 @@ SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings, ShipM
     }
 }
 
-SkillManager::SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager)
+SkillManager::SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings)
     : skills(skills)
     , currentSkill(nullptr)
 {
     std::cout << skills.empty() << std::endl;
     factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
     factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
-    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*>(enemyManager);
+    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, GameField*>(enemyField);
     availableSkills = {"Scanner", "DoubleDamage", "Shooting"};
 }
 

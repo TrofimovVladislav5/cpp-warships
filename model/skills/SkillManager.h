@@ -16,8 +16,8 @@ private:
     ISkill* createSkill(const std::string& skillName);
     void randomSkill();
 public:
-    explicit SkillManager(GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager);
-    explicit SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager);
+    explicit SkillManager(GameField* enemyField, MatchSettings* settings);
+    explicit SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings);
     const std::vector<std::string>& nameSkills();
     std::string availableSkill();
     ~SkillManager();

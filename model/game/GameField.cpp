@@ -204,3 +204,7 @@ void GameField::updateShipsCoordinateMap(const std::unordered_map<Ship *, std::u
     attacksOnField.clear();
     shipsCoordinateMap = newMap;
 }
+
+
+
+

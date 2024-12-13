@@ -141,8 +141,7 @@ OngoingGameSubState* InitiateOngoingGameSubState::transitToSubState() {
         context.matchDTO->enemyManager = enemyPlaceController->getCurrentManager();
         context.matchDTO->playerSkillManager = new SkillManager(
             enemyPlaceController->getCurrentField(),
-            context.matchDTO->settings,
-            enemyPlaceController->getCurrentManager()
+            context.matchDTO->settings
         );
 
         return new BattleOngoingGameSubState(context);

@@ -13,7 +13,6 @@ private:
     SkillManagerView* skillManagerView;
     Player* player;
     ComputerPlayer* computer;
-    GameSaveCreator* saveCreator;
     bool battleIsFinished;
     void printBattleState();
     std::string command;

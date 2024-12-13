@@ -19,7 +19,6 @@ BattleController::BattleController(GameStateDTO* dto)
     , playerView(new GameFieldView(dto->playerField))
     , opponentView(new GameFieldView(dto->enemyField))
     , computer(new ComputerPlayer(dto->playerField))
-    , saveCreator(new GameSaveCreator(dto))
     , command("")
 {
     skillManagerView = new SkillManagerView(dto->playerSkillManager);
@@ -31,7 +30,6 @@ BattleController::~BattleController() {
     delete player;
     delete skillManagerView;
     delete computer;
-    delete saveCreator;
 }
 
 bool BattleController::finishBattle() {
