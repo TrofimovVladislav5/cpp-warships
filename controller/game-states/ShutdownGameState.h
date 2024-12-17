@@ -4,7 +4,7 @@
 class ShutdownGameState : public GameState {
 public:
     ShutdownGameState(StateContext& context);
-    ~ShutdownGameState();
+    ~ShutdownGameState() = default;
 
     void openState() override;
     void updateState() override;

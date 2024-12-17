@@ -14,7 +14,7 @@ private:
     void handleSave(ParsedOptions options);
     void handleLoad(ParsedOptions options);
 public:
-    explicit PauseOngoingGameSubState(SubStateContext& context);
+    explicit PauseOngoingGameSubState(SubStateContext* context);
     void openSubState() override;
     void closeSubState() override;
     void updateSubState() override;

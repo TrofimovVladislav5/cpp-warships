@@ -88,7 +88,7 @@ void GameSaveCreator::createSave(const std::string& filename) {
     try {
         JsonFileHandler fileHandler(filename, JsonFileHandler::Mode::Write);
         fileHandler << saveFile;
-    }catch (const std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         ViewHelper::errorOut("Error saving file: " + std::string(e.what()));
     }
 }

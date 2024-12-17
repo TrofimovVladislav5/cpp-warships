@@ -10,7 +10,7 @@ private:
     MatchSettings* currentSettings;
     void handleMatchSettings(ParsedOptions options);
 public:
-    explicit NewMatchSettingsSubState(SubStateContext& context);
+    explicit NewMatchSettingsSubState(SubStateContext* context);
     ~NewMatchSettingsSubState() override;
     void openSubState() override;
     void closeSubState() override;

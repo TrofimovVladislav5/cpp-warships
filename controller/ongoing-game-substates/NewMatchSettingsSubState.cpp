@@ -14,7 +14,7 @@ void NewMatchSettingsSubState::handleMatchSettings(ParsedOptions options) {
     currentSettings = controller->createMatchSettings(fieldSize);
 }
 
-NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext& context)
+NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext* context)
     : OngoingGameSubState(context)
     , controller(new MatchSettingsController())
     , currentSettings(nullptr)
@@ -51,11 +51,6 @@ void NewMatchSettingsSubState::closeSubState() {
 }
 
 void NewMatchSettingsSubState::updateSubState() {
-    if (context.matchDTO) {
-        delete context.matchDTO;
-        context.matchDTO = nullptr;
-    }
-
     StateMessages::awaitCommandMessage();
     std::string input;
     std::getline(std::cin, input);
@@ -64,9 +59,7 @@ void NewMatchSettingsSubState::updateSubState() {
 }
 
 OngoingGameSubState* NewMatchSettingsSubState::transitToSubState() {
-    if (!currentSettings) {
-        return nullptr;
-    } else {
+    if (currentSettings) {
         auto* playerManager = new ShipManager(currentSettings->getShipsCount());
         std::vector<Ship*> ships = playerManager->getShips();
         ViewHelper::consoleOut("Optimal set of ships is: ");
@@ -76,8 +69,10 @@ OngoingGameSubState* NewMatchSettingsSubState::transitToSubState() {
 
         ViewHelper::consoleOut("Do you want to confirm these settings? (yes/no)");
         if (ViewHelper::confirmAction("yes")) {
-            this->context.matchDTO = new GameStateDTO(currentSettings);
+            this->context->matchDTO = new GameStateDTO(currentSettings);
             return new InitiateOngoingGameSubState(context);
+        } else {
+            this->currentSettings = nullptr;
         }
     }
 

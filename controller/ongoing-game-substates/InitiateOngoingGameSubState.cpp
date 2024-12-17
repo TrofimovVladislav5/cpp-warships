@@ -20,22 +20,22 @@ void InitiateOngoingGameSubState::handleConfirm(ParsedOptions options) {
     if (playerPlaceController->allShipsPlaced()) {
         confirmed = true;
     } else {
-        ViewHelper::errorOut("Cannot confirm ship placement when not ships are placed");
+        ViewHelper::errorOut("Cannot confirm ship placement when ships are not placed");
     }
 }
 
 void InitiateOngoingGameSubState::handlePause(ParsedOptions options) {
-    commandPause = "pause";
+    latestCommand = "pause";
 }
 
-InitiateOngoingGameSubState::InitiateOngoingGameSubState(SubStateContext& context)
+InitiateOngoingGameSubState::InitiateOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
-    , playerPlaceController(new PlaceShipController(context.matchDTO, context.matchDTO->playerManager))
-    , enemyPlaceController(new PlaceShipController(context.matchDTO, context.matchDTO->enemyManager))
+    , playerPlaceController(new PlaceShipController(context->matchDTO, context->matchDTO->playerManager))
+    , enemyPlaceController(new PlaceShipController(context->matchDTO, context->matchDTO->enemyManager))
     , placeControllerView(new PlaceShipControllerView(playerPlaceController))
-    , commandPause("")
+    , confirmed(false)
 {
-    context.matchDTO->lastSubState = "InitiateOngoingGameSubState";
+    context->matchDTO->lastSubState = "InitiateOngoingGameSubState";
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
@@ -135,19 +135,19 @@ void InitiateOngoingGameSubState::closeSubState() {
 OngoingGameSubState* InitiateOngoingGameSubState::transitToSubState() {
     if (confirmed && playerPlaceController->allShipsPlaced()) {
         enemyPlaceController->placeShipsRandomly();
-        context.matchDTO->playerManager = playerPlaceController->getCurrentManager();
-        context.matchDTO->playerField = playerPlaceController->getCurrentField();
-        context.matchDTO->enemyField = enemyPlaceController->getCurrentField();
-        context.matchDTO->enemyManager = enemyPlaceController->getCurrentManager();
-        context.matchDTO->playerSkillManager = new SkillManager(
+        context->matchDTO->playerManager = playerPlaceController->getCurrentManager();
+        context->matchDTO->playerField = playerPlaceController->getCurrentField();
+        context->matchDTO->enemyField = enemyPlaceController->getCurrentField();
+        context->matchDTO->enemyManager = enemyPlaceController->getCurrentManager();
+        context->matchDTO->playerSkillManager = new SkillManager(
             enemyPlaceController->getCurrentField(),
-            context.matchDTO->settings
+            context->matchDTO->settings
         );
 
         return new BattleOngoingGameSubState(context);
-    }
-    else if (commandPause == "pause") {
+    } else if (latestCommand == "pause") {
         return new PauseOngoingGameSubState(context);
     }
+
     return nullptr;
 }

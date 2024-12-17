@@ -5,52 +5,77 @@
 #include "DefaultParameterBuilder.h"
 #include "GameState.h"
 #include "OngoingGameState.h"
-#include "ShutdownGameState.h"
 #include "StateMessages.h"
 #include "ViewHelper.h"
 #include "library/TypesHelper.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/defaults/DefaultParserError.h"
 
-void MenuGameState::handleStart(ParsedOptions options) {
-    context.loadFileName = options["filename"];
-    this->latestCommand = "start";
+
+void MenuGameState::handleGameLoad(ParsedOptions options) {
+    std::string filename = options["filename"];
+    this->matchBuilder->loadSave(filename);
+    ViewHelper::consoleOut("Successfully read file from " + filename);
 }
 
-void MenuGameState::handleExit(ParsedOptions options) {
-    this->latestCommand = "exit";
+void MenuGameState::handleNewGame(ParsedOptions options) {
+    bool isDefault = options["default"] == "true";
+    this->matchBuilder->newGame(isDefault);
+    ViewHelper::consoleOut("Successfully initialized new game");
+}
+
+void MenuGameState::handleConfirm(ParsedOptions options) {
+    isRunning = true;
 }
 
 MenuGameState::MenuGameState(StateContext& context) 
     : GameState(context)
+    , matchBuilder(new MatchBuilder())
+    , latestCommand("")
 {
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
-    this->inputScheme = {
-        {"start", ParserCommandInfo(
+    inputScheme = {
+        {"load", ParserCommandInfo(
             commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleStart, this))
-                .setDescription("The purpose of this function is to start the match")
+                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleGameLoad, this))
+                .setDescription("Load a game from a file")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
                 .addParameter(
                     parameterBuilder
                         .addFlag("--filename")
-                        .setDescription("Write the name of the player")
+                        .setDescription("Specify the file name to load the game from. Make sure it's a .json file")
                         .setValidator(std::regex("^.*\\.json$"))
-                        .setNecessary(false)
+                        .setNecessary(true)
                         .buildAndReset()
                 )
                 .buildAndReset()
             )
         },
-        {"exit", ParserCommandInfo(
+        {"new", ParserCommandInfo(
             commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleExit, this))
-                .setDescription("Leave the game")
+                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleNewGame, this))
+                .setDescription("Start new game from scratch")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--default")
+                        .setDescription("Start game with default settings and skip the initialization phase (true/false")
+                        .setNecessary(false)
+                        .setValidator(std::regex("^(true|false)$"))
+                        .buildAndReset()
+                    )
                 .buildAndReset()
             )
         },
+        {"confirm", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleConfirm, this))
+                .setDescription("Confirm the initialization phase and start the game")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .buildAndReset()
+            )
+        }
     };
 }
 
@@ -71,11 +96,10 @@ void MenuGameState::updateState() {
 }
 
 GameState* MenuGameState::transitToState() {
-    if (latestCommand == "start"){
+    if (isRunning) {
+        context.initialGameSubState = matchBuilder->getStateBuilder()();
         return new OngoingGameState(context);
     }
-    else if (latestCommand == "exit") {
-        return new ShutdownGameState(context);
-    }
+
     return nullptr;
 }

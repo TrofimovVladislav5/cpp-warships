@@ -174,6 +174,8 @@ add_executable(cpp_warships
         model/save/JsonFileHandler.h
         model/save/JsonFileHandler.cpp
         view/ShipManagerView.cpp
+        controller/MatchBuilder.cpp
+        controller/MatchBuilder.h
         #        model/save/test.cpp
 )
 

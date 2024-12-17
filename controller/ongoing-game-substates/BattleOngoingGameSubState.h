@@ -12,7 +12,7 @@ private:
     PlaceShipController* enemyPlaceController;
     OngoingGameSubState* handleFinishBattle();
 public:
-    explicit BattleOngoingGameSubState(SubStateContext& context);
+    explicit BattleOngoingGameSubState(SubStateContext* context);
     ~BattleOngoingGameSubState() override;
     void openSubState() override;
     void closeSubState() override;

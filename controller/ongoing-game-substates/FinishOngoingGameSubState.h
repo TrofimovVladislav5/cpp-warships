@@ -4,7 +4,7 @@
 
 class FinishOngoingGameSubState : public OngoingGameSubState {
 public:
-    explicit FinishOngoingGameSubState(SubStateContext& context);
+    explicit FinishOngoingGameSubState(SubStateContext* context);
     void openSubState() override;
     void updateSubState() override;
     void closeSubState() override;

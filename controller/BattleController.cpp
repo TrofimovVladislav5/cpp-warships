@@ -1,7 +1,6 @@
 #include "BattleController.h"
 #include <random>
 
-#include "ViewHelper.h"
 #include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 
@@ -33,8 +32,8 @@ BattleController::~BattleController() {
 }
 
 bool BattleController::finishBattle() {
-    command = (player->isWin() ? "player" : "");
-    command = (computer->isWin() ? "computer" : "");
+    command = player->isWin() ? "player" : "";
+    command = computer->isWin() ? "computer" : "";
     return player->isWin() || computer->isWin();
 }
 

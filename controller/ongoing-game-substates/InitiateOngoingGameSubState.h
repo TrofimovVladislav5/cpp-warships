@@ -12,10 +12,10 @@ private:
     void handleShipsShuffle(ParsedOptions options);
     void handleConfirm(ParsedOptions options);
     void handlePause(ParsedOptions options);
-    std::string commandPause;
-    bool confirmed = false;
+    std::string latestCommand;
+    bool confirmed;
 public:
-    explicit InitiateOngoingGameSubState(SubStateContext& context);
+    explicit InitiateOngoingGameSubState(SubStateContext* context);
     ~InitiateOngoingGameSubState() override;
     void openSubState() override;
     void updateSubState() override;

@@ -9,6 +9,7 @@
 #include "ongoing-game-substates/BattleOngoingGameSubState.h"
 #include "../../library/ViewHelper.h"
 
+
 void PauseOngoingGameSubState::handleResume(ParsedOptions options) {
     latestCommand = "resume";
 }
@@ -24,9 +25,9 @@ void PauseOngoingGameSubState::handleSave(ParsedOptions options) {
     saveCreator->createSave(options["filename"]);
 }
 
-PauseOngoingGameSubState::PauseOngoingGameSubState(SubStateContext &context)
+PauseOngoingGameSubState::PauseOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
-    , dto(context.matchDTO)
+    , dto(context->matchDTO)
 {
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;

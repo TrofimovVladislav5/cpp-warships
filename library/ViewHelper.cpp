@@ -14,6 +14,11 @@ void ViewHelper::errorOut(const std::string &output) {
     std::cerr << output << std::endl;
 }
 
+void ViewHelper::errorOut(const std::string &output, const std::exception &e) {
+    errorOut(output);
+    errorOut(e.what());
+}
+
 bool ViewHelper::confirmAction(const std::string &confirmMessage) {
     std::string input;
     std::getline(std::cin, input);

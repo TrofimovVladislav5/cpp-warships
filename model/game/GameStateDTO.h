@@ -5,17 +5,19 @@
 
 class GameStateDTO {
 public:
-    GameStateDTO();
-    ~GameStateDTO();
+    explicit GameStateDTO();
     explicit GameStateDTO(MatchSettings* settings);
-    std::string lastSubState = "";
-    ShipManager* playerManager = nullptr;
-    SkillManager* playerSkillManager = nullptr;
-    GameField* playerField = nullptr;
-    ShipManager* enemyManager = nullptr;
-    GameField* enemyField = nullptr;
-    std::map<int, int> shipsSizes = {};
-    MatchSettings* settings = nullptr;
-    int fieldSize = 0;
-    int roundNumber = 0;
+    ~GameStateDTO();
+
+    std::string lastSubState;
+    ShipManager* playerManager;
+    SkillManager* playerSkillManager;
+    GameField* playerField;
+    ShipManager* enemyManager;
+    GameField* enemyField;
+    std::map<int, int> shipsSizes;
+    MatchSettings* settings;
+    bool isFinished;
+    int fieldSize;
+    int roundNumber;
 };

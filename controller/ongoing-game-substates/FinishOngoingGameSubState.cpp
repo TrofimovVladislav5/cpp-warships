@@ -2,7 +2,7 @@
 
 #include "ViewHelper.h"
 
-FinishOngoingGameSubState::FinishOngoingGameSubState(SubStateContext& context)
+FinishOngoingGameSubState::FinishOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
 {
     ViewHelper::consoleOut("FinishGameState");

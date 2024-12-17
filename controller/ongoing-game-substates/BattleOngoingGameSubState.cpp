@@ -2,7 +2,6 @@
 #include "BattleOngoingGameSubState.h"
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
-#include "FinishOngoingGameSubState.h"
 #include "NewMatchSettingsSubState.h"
 #include "PauseOngoingGameSubState.h"
 #include "StateMessages.h"
@@ -11,28 +10,31 @@
 #include "exceptions/BattleException.h"
 #include "parser-builder/ConfigCommandBuilder.h"
 
+
 OngoingGameSubState *BattleOngoingGameSubState::handleFinishBattle() {
     if (battleController->getCommand() == "computer") {
-        ViewHelper::consoleOut("Computer won the battle on round " + std::to_string(context.matchDTO->roundNumber));
+        ViewHelper::consoleOut("Computer won the battle on round " + std::to_string(context->matchDTO->roundNumber));
         return new NewMatchSettingsSubState(context);
     }
-    ViewHelper::consoleOut("Player won the battle round " + std::to_string(context.matchDTO->roundNumber));
-    context.matchDTO->roundNumber++;
-    enemyPlaceController = new PlaceShipController(context.matchDTO, context.matchDTO->enemyManager);
+
+    ViewHelper::consoleOut("Player won the battle round " + std::to_string(context->matchDTO->roundNumber));
+    context->matchDTO->roundNumber++;
+    enemyPlaceController = new PlaceShipController(context->matchDTO, context->matchDTO->enemyManager);
     enemyPlaceController->placeShipsRandomly();
-    context.matchDTO->enemyField->updateShipsCoordinateMap(
+    context->matchDTO->enemyField->updateShipsCoordinateMap(
         enemyPlaceController->getCurrentField()->getShipsCoordinateMap()
     );
     return new BattleOngoingGameSubState(context);
 }
 
 
-BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
+BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
-    , battleController(new BattleController(context.matchDTO))
+    , battleController(new BattleController(context->matchDTO))
     , enemyPlaceController(nullptr)
 {
-    context.matchDTO->lastSubState = "BattleOngoingGameSubState";
+    context->matchDTO->lastSubState = "BattleOngoingGameSubState";
+
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {

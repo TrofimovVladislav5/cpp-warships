@@ -1,16 +1,18 @@
 #include "GameStateDTO.h"
 
-GameStateDTO::GameStateDTO() {
-    this->roundNumber = 1;
-}
-
-GameStateDTO::~GameStateDTO() {
-    delete playerManager;
-    delete playerField;
-    delete enemyManager;
-    delete enemyField;
-    delete settings;
-}
+GameStateDTO::GameStateDTO()
+    : playerManager(nullptr)
+    , playerField(nullptr)
+    , enemyManager(nullptr)
+    , enemyField(nullptr)
+    , settings(nullptr)
+    , shipsSizes({})
+    , fieldSize(0)
+    , roundNumber(0)
+    , lastSubState("")
+    , playerSkillManager(nullptr)
+    , isFinished(false)
+{}
 
 GameStateDTO::GameStateDTO(MatchSettings* settings)
     : playerManager(new ShipManager(settings->getShipsCount()))
@@ -21,4 +23,15 @@ GameStateDTO::GameStateDTO(MatchSettings* settings)
     , shipsSizes(settings->getShipsCount())
     , fieldSize(settings->getFieldSize())
     , roundNumber(1)
+    , lastSubState("")
+    , playerSkillManager(nullptr)
+    , isFinished(false)
 {}
+
+GameStateDTO::~GameStateDTO() {
+    delete playerManager;
+    delete playerField;
+    delete enemyManager;
+    delete enemyField;
+    delete settings;
+}
