@@ -1,7 +1,5 @@
 #include "SerializerManager.h"
 
-#include "SerializerFactory.h"
-
 json SerializerManager::serialize(const GameStateDTO &object) {
     json shipsSizesJson = shipsSizesToJson(object.shipsSizes);
     json playerManagerJson = vectorShipsToJson(object.playerManager->getShips());

@@ -97,8 +97,8 @@ add_executable(cpp_warships
         model/game/Segment.h
         model/game/Ship.cpp
         model/game/Ship.h
-        model/ShipManager.cpp
-        model/ShipManager.h
+        controller/ShipManager.cpp
+        controller/ShipManager.h
         model/StateContext.cpp
         model/StateContext.h
         model/Structures.cpp
@@ -157,25 +157,29 @@ add_executable(cpp_warships
         view/SkillManagerView.cpp
         view/SkillManagerView.h
         model/save/Serializer.h
-        model/save/GameSaveCreator.h
-        model/save/GameSaveCreator.cpp
-        model/save/SerializerManager.cpp
-        model/save/SerializerManager.h
+        controller/save/GameSaveCreator.h
+        controller/save/GameSaveCreator.cpp
+        controller/save/SerializerManager.cpp
+        controller/save/SerializerManager.h
         model/save/SerializerGameField.h
         model/save/SerializerGameField.cpp
         model/save/Serializer.cpp
         model/save/SerializerMatchSettings.h
         model/save/SerializerMatchSettings.cpp
-        model/save/SerializerSkillManager.h
+        controller/save/SerializerSkillManager.h
         model/save/SerializerSimplifyObjects.h
         model/save/SerializerSimplifyObjects.cpp
-        model/save/SerializerSkillManager.cpp
+        controller/save/SerializerSkillManager.cpp
         model/save/SerializerFactory.h
-        model/save/JsonFileHandler.h
-        model/save/JsonFileHandler.cpp
+        controller/save/JsonFileHandler.h
+        controller/save/JsonFileHandler.cpp
         view/ShipManagerView.cpp
         controller/MatchBuilder.cpp
         controller/MatchBuilder.h
+        view/GamePauseView.cpp
+        view/GamePauseView.h
+        view/BattleView.cpp
+        view/BattleView.h
         #        model/save/test.cpp
 )
 

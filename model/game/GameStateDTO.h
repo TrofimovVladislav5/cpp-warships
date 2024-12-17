@@ -1,6 +1,6 @@
 #pragma once
 #include "MatchSettings.h"
-#include "ShipManager.h"
+#include "../../controller/ShipManager.h"
 #include "skills/SkillManager.h"
 
 class GameStateDTO {

@@ -2,7 +2,7 @@
 #include "Skill.h"
 #include <queue>
 #include <string>
-#include "ShipManager.h"
+#include "../../controller/ShipManager.h"
 #include "SkillFactory.h"
 #include "game/GameField.h"
 #include "game/MatchSettings.h"

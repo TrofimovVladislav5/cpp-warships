@@ -4,14 +4,6 @@
 #include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 
-
-void BattleController::printBattleState() {
-    playerView->displayField(false, false);
-    opponentView->displayField(false, false);
-    skillManagerView->displayCurrentSkill();
-    skillManagerView->displayAvailableSkills();
-}
-
 BattleController::BattleController(GameStateDTO* dto)
     : battleIsFinished(false)
     , player(new Player(dto))
@@ -46,7 +38,6 @@ void BattleController::applySkill(ParsedOptions options) {
     }
 
     computer->makeAShot();
-    printBattleState();
 }
 
 void BattleController::battle(ParsedOptions options) {
@@ -59,8 +50,6 @@ void BattleController::battle(ParsedOptions options) {
     } catch (const BattleException& exception) {
         exception.displayError();
     }
-
-    printBattleState();
 }
 
 void BattleController::pause(ParsedOptions options) {

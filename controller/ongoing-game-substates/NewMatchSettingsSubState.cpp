@@ -4,7 +4,7 @@
 #include "library/TypesHelper.h"
 #include "library/defaults/DefaultParserError.h"
 #include "InitiateOngoingGameSubState.h"
-#include "ShipManager.h"
+#include "../ShipManager.h"
 #include "StateMessages.h"
 #include "ViewHelper.h"
 
@@ -67,7 +67,6 @@ OngoingGameSubState* NewMatchSettingsSubState::transitToSubState() {
             ViewHelper::consoleOut(std::to_string(ship->getLength()), 1);
         }
 
-        ViewHelper::consoleOut("Do you want to confirm these settings? (yes/no)");
         if (ViewHelper::confirmAction("yes")) {
             this->context->matchDTO = new GameStateDTO(currentSettings);
             return new InitiateOngoingGameSubState(context);

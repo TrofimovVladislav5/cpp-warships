@@ -74,7 +74,7 @@ void SerializerGameField::deserialize(const json &j, GameStateDTO &object) {
     auto enemyShipsCoordinateMap = unorderedMapFromJson(j.at("enemyShipsCoordinatesMap"));
     int w = j.at("width");
     int h = j.at("height");
-    GameField* playerField = new GameField(w, h, shipsCoordinateMap, enemyAttacksOnField);
+    GameField* playerField = new GameField(w, h, shipsCoordinateMap, attacksOnField);
     GameField* enemyField = new GameField(w, h, enemyShipsCoordinateMap, enemyAttacksOnField);
     object.playerField = playerField;
     object.enemyField = enemyField;

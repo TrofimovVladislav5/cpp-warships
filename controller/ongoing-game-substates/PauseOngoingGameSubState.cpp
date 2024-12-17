@@ -11,23 +11,48 @@
 
 
 void PauseOngoingGameSubState::handleResume(ParsedOptions options) {
-    latestCommand = "resume";
+    try {
+        loadedSubState = new BattleOngoingGameSubState(context);
+    } catch (std::exception &e) {
+        ViewHelper::errorOut("Something went wrong while resuming the game", e);
+        loadedSubState = nullptr;
+    }
 }
 
 void PauseOngoingGameSubState::handleLoad(ParsedOptions options) {
-    latestCommand = "load";
-    saveCreator = new GameSaveCreator();
-    dto = saveCreator->loadSave(options["filename"]);
+    try {
+        matchBuilder.loadSave(options["filename"]);
+        ViewHelper::consoleOut("Save loaded successfully");
+
+        const bool isForcedLoad = options["force"] == "true";
+        const bool isConfirmed = isForcedLoad || ViewHelper::confirmAction("yes");
+
+        if (isConfirmed) {
+            loadedSubState = matchBuilder.getStateBuilder()();
+        } else {
+            loadedSubState = nullptr;
+        }
+    } catch (std::exception &e) {
+        ViewHelper::errorOut("Something went wrong while loading the game", e);
+        loadedSubState = nullptr;
+    }
 }
 
 void PauseOngoingGameSubState::handleSave(ParsedOptions options) {
-    saveCreator = new GameSaveCreator(dto);
-    saveCreator->createSave(options["filename"]);
+    try {
+        GameSaveCreator saveCreator(context->matchDTO);
+        saveCreator.createSave(options["filename"]);
+        view.printImportantMessage("Game saved to file: " + options["filename"]);
+    } catch (std::exception &e) {
+        ViewHelper::errorOut("Something went wrong while saving the game", e);
+    }
 }
 
 PauseOngoingGameSubState::PauseOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
-    , dto(context->matchDTO)
+    , matchBuilder(MatchBuilder())
+    , view(GamePauseView(30))
+    , loadedSubState(nullptr)
 {
     ConfigCommandBuilder commandBuilder;
     DefaultParameterBuilder parameterBuilder;
@@ -67,39 +92,42 @@ PauseOngoingGameSubState::PauseOngoingGameSubState(SubStateContext* context)
                         .setNecessary(true)
                         .buildAndReset()
                 )
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--force")
+                        .setDescription("Skip action verification")
+                        .setNecessary(false)
+                        .setValidator(std::regex("true|false"))
+                        .buildAndReset()
+                )
                 .buildAndReset()
         )}
     };
 }
 
 void PauseOngoingGameSubState::openSubState() {
-    ViewHelper::consoleOut("\n------------ Game on paused ------------\n");
+    view.printImportantMessage("Game paused");
 }
 
 void PauseOngoingGameSubState::closeSubState() {
-    ViewHelper::consoleOut("\n------------ Match resume ------------\n");
+    view.printImportantMessage("Match is resumed");
 }
 
 void PauseOngoingGameSubState::updateSubState() {
-    StateMessages::awaitCommandMessage();
-    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
-    std::string input;
-    std::getline(std::cin, input);
-    parser.executedParse(input);
+    try {
+        StateMessages::awaitCommandMessage();
+        Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+        std::string input;
+        std::getline(std::cin, input);
+        parser.executedParse(input);
+    } catch (std::exception &e) {
+        ViewHelper::errorOut("Can't parse the inputted command", e);
+    }
 }
 
 OngoingGameSubState* PauseOngoingGameSubState::transitToSubState() {
-    if (latestCommand == "load") {
-        if (dto->lastSubState == "InitiateOngoingGameSubState") {
-            return new InitiateOngoingGameSubState(context);
-        }
-        else if (dto->lastSubState == "BattleOngoingGameSubState") {
-            return new BattleOngoingGameSubState(context);
-        }
-    }
-
-    if (latestCommand == "resume") {
-        return new BattleOngoingGameSubState(context);
+    if (loadedSubState) {
+        return loadedSubState;
     }
 
     return nullptr;

@@ -1,7 +1,7 @@
 #include "ShootingRandomlySkill.h"
 #include <random>
 
-#include "ShipManager.h"
+#include "../../controller/ShipManager.h"
 #include "exceptions/SkillException.h"
 
 

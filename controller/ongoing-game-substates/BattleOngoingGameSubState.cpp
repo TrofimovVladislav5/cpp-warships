@@ -32,6 +32,7 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
     , battleController(new BattleController(context->matchDTO))
     , enemyPlaceController(nullptr)
+    , view(BattleView(context->matchDTO))
 {
     context->matchDTO->lastSubState = "BattleOngoingGameSubState";
 
@@ -87,6 +88,7 @@ void BattleOngoingGameSubState::updateSubState() {
     Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
 
     try {
+        view.printBattleState();
         std::string input;
         std::getline(std::cin, input);
         parser.executedParse(input);

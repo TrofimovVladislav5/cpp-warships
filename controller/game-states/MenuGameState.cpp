@@ -14,8 +14,10 @@
 
 void MenuGameState::handleGameLoad(ParsedOptions options) {
     std::string filename = options["filename"];
-    this->matchBuilder->loadSave(filename);
-    ViewHelper::consoleOut("Successfully read file from " + filename);
+
+    if (this->matchBuilder->loadSave(filename)) {
+        ViewHelper::consoleOut("Successfully read file from " + filename);
+    }
 }
 
 void MenuGameState::handleNewGame(ParsedOptions options) {

@@ -1,5 +1,6 @@
 #pragma once
-#include "Serializer.h"
+#include "save/Serializer.h"
+
 class SerializerManager final : public Serializer {
 public:
     json serialize(const GameStateDTO &object) override;

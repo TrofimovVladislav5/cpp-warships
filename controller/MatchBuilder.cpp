@@ -21,14 +21,12 @@ OngoingGameSubState* MatchBuilder::loadSavedMatch() {
     SubStateContext* context = new SubStateContext(currentData);
 
     try {
-        int placedShipsAmount = static_cast<int>(currentData->playerField->getShipsCoordinateMap().size());
-        int expectedShipsAmount = static_cast<int>(currentData->playerManager->getShips().size());
+        if (
+            currentData->playerField && currentData->playerManager &&
+            currentData->playerField->getShipsCoordinateMap().size() == currentData->playerManager->getShips().size()
+        ) return new BattleOngoingGameSubState(context);
 
-        if (placedShipsAmount == expectedShipsAmount) {
-            return new BattleOngoingGameSubState(context);
-        } else {
-            return new InitiateOngoingGameSubState(context);
-        }
+        return new InitiateOngoingGameSubState(context);
     } catch (std::exception &e) {
         ViewHelper::errorOut("Something went wrong while trying to create a new match from the loaded save", e);
         return nullptr;
@@ -59,15 +57,18 @@ void MatchBuilder::newGame(bool fromTemplate) {
     }
 }
 
-void MatchBuilder::loadSave(const std::string &filename) {
+bool MatchBuilder::loadSave(const std::string &filename) {
     try {
         GameSaveCreator saveCreator;
         currentData = saveCreator.loadSave(filename);
-        isLoaded = true;
+        isLoaded = currentData != nullptr;
     } catch (std::exception &e) {
         ViewHelper::errorOut("Something went wrong while loading the save file at path: " + filename, e);
         currentData = nullptr;
+        isLoaded = false;
     }
+
+    return isLoaded;
 }
 
 std::function<OngoingGameSubState*()> MatchBuilder::getStateBuilder() {

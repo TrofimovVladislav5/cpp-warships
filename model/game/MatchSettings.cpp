@@ -1,6 +1,6 @@
 #include "MatchSettings.h"
 
-#include "../ShipManager.h"
+#include "../../controller/ShipManager.h"
 
 MatchSettings::MatchSettings(std::map<int, int> shipSizesDictionary, int fieldSize)
     : fieldSize(fieldSize)

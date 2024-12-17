@@ -53,12 +53,12 @@ In this section you will find future plans for improvement of the project
 3) Code refactor
 
 ## Features 
-1) Command pattern wrapper around input parser
-2) Game settings in file
-3) Better save loaders
-4) Make saves folder selectable
+1) Command pattern wrapper around input parser :see_no_evil:
+2) Game settings in file :see_no_evil:
+3) Better save loaders :see_no_evil:
+4) Make saves folder selectable :see_no_evil:
 
 ## Bugs
-1) Field view empty line while printing
-2) List of ships can go below 0
-3) Program crashes when trying to load file that was saved in Intialization state
+1) Field view empty line while printing :broken_heart:
+2) List of ships can go below 0 :broken_heart:
+3) Program crashes when trying to load file that was saved in Intialization state :mending_heart:

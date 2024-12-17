@@ -3,21 +3,23 @@
 #include <iostream>
 
 #include "SerializerManager.h"
-#include "SerializerGameField.h"
-#include "SerializerMatchSettings.h"
-#include "SerializerSimplifyObjects.h"
 #include "SerializerSkillManager.h"
-#include "SerializerFactory.h"
 #include "ViewHelper.h"
+#include "save/SerializerFactory.h"
+#include "save/SerializerGameField.h"
+#include "save/SerializerMatchSettings.h"
+#include "save/SerializerSimplifyObjects.h"
 
 GameSaveCreator::GameSaveCreator(GameStateDTO* dto)
     : dto(dto)
+    , factory({})
 {
     initializeFactories();
 }
 
 GameSaveCreator::GameSaveCreator()
     : dto(nullptr)
+    , factory({})
 {
     initializeFactories();
 }
@@ -126,9 +128,6 @@ GameStateDTO* GameSaveCreator::loadSave(const std::string& filename) {
 }
 
 GameStateDTO* GameSaveCreator::distributorLoadSave(const json &j) {
-    // Order create for correct deserialization
-    // SimplifyObjects -> Settings -> ShipManagers = InitiateOngoingGameSubState
-    // SimplifyObjects -> Settings -> ShipManagers -> GameFields = BattleOngoingGameSubState
     GameStateDTO* dto = new GameStateDTO();
     dto->lastSubState = j.at("SubState").get<std::string>();
     std::vector<std::string> order = {

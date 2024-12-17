@@ -2,7 +2,7 @@
 #include <map>
 #include <vector>
 
-#include "game/Ship.h"
+#include "../model/game/Ship.h"
 
 class ShipManager {
 private:
