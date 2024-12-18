@@ -201,10 +201,5 @@ bool GameField::isAllShipsDestroyed() const {
 
 void GameField::updateShipsCoordinateMap(const std::unordered_map<Ship *, std::unordered_set<std::pair<int, int>, hashFunc> > &newMap) {
     shipsCoordinateMap.clear();
-    attacksOnField.clear();
     shipsCoordinateMap = newMap;
 }
-
-
-
-

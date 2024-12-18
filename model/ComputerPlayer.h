@@ -14,6 +14,7 @@ private:
     [[nodiscard]] FieldCoordinate getRandomAttackCoordinate();
     [[nodiscard]] FieldCoordinate getRandomNeighbourCoordinate(FieldCoordinate coordinate);
     [[nodiscard]] FieldCoordinate getRandomDirectionCoordinate();
+    std::vector<FieldCoordinate> getShotCellsNeighbours();
     bool proceedShot(FieldCoordinate coordinate);
 
 public:

@@ -9,7 +9,10 @@ private:
     ShipManager* manager;
     ShipManager* currentManager;
     std::map<int, int> availableLengthShips;
+
+    void handleRemoveShip(std::pair<int, int> coordinate);
     bool isShipLengthAvailable(int length);
+    void eraseShipsDictionary();
 public:
     bool allShipsPlaced();
     explicit PlaceShipController(GameStateDTO* context, ShipManager* manager);

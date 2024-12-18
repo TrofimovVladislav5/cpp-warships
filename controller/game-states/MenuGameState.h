@@ -15,6 +15,8 @@ private:
     void handleGameLoad(ParsedOptions options);
     void handleNewGame(ParsedOptions options);
     void handleConfirm(ParsedOptions options);
+    void handleInfo(ParsedOptions options);
+    void handleList(ParsedOptions options);
 public:
     explicit MenuGameState(StateContext& context);
     void openState() override;

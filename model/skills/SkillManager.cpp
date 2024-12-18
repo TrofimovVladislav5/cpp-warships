@@ -32,7 +32,6 @@ SkillManager::SkillManager(const std::deque<std::string>& skills, GameField* ene
     : skills(skills)
     , currentSkill(nullptr)
 {
-    std::cout << skills.empty() << std::endl;
     factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
     factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
     factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, GameField*>(enemyField);

@@ -8,7 +8,7 @@ BattleView::BattleView(GameStateDTO* matchDto)
 
 void BattleView::printBattleState() {
     playerField.displayField(false, false);
-    enemyField.displayField(false, false);
+    enemyField.displayField(true, true);
     skillManager.displayCurrentSkill();
     skillManager.displayAvailableSkills();
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "OngoingGameSubState.h"
+#include "Parser.h"
 
 
 class FinishOngoingGameSubState : public OngoingGameSubState {

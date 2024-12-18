@@ -1,5 +1,7 @@
 #include "ShutdownGameState.h"
 
+#include "ViewHelper.h"
+
 
 ShutdownGameState::ShutdownGameState(StateContext& context)
     : GameState(context)
@@ -10,7 +12,7 @@ void ShutdownGameState::openState() {
 }
 
 void ShutdownGameState::updateState() {
-
+    ViewHelper::consoleOut("Good good bye!");
 }
 
 void ShutdownGameState::closeState() {

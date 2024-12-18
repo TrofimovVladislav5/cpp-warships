@@ -180,6 +180,8 @@ add_executable(cpp_warships
         view/GamePauseView.h
         view/BattleView.cpp
         view/BattleView.h
+        controller/game-states/TransitGameState.cpp
+        controller/game-states/TransitGameState.h
         #        model/save/test.cpp
 )
 

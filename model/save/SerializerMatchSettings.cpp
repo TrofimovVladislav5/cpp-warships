@@ -1,5 +1,4 @@
 #include "SerializerMatchSettings.h"
-#include <iostream>
 
 json SerializerMatchSettings::serialize(const GameStateDTO &object) {
     json j = json {
@@ -15,10 +14,6 @@ void SerializerMatchSettings::deserialize(const json &j, GameStateDTO &object) {
         return;
     }
     object.settings = new MatchSettings(object.shipsSizes, object.fieldSize);
-    for (auto& ship : object.shipsSizes) {
-        std::cout << ship.first << " " << ship.second << std::endl;
-    }
-    std::cout << object.fieldSize << std::endl;
     if (j.contains("damageCount")) object.settings->damageCount = j.at("damageCount").get<int>();
     if (j.contains("isActiveDoubleDamage")) object.settings->isActiveDoubleDamage = j.at("isActiveDoubleDamage").get<bool>();
 }

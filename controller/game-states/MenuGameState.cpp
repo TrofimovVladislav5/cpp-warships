@@ -10,6 +10,7 @@
 #include "library/TypesHelper.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/defaults/DefaultParserError.h"
+#include "save/GameSaveCreator.h"
 
 
 void MenuGameState::handleGameLoad(ParsedOptions options) {
@@ -23,11 +24,26 @@ void MenuGameState::handleGameLoad(ParsedOptions options) {
 void MenuGameState::handleNewGame(ParsedOptions options) {
     bool isDefault = options["default"] == "true";
     this->matchBuilder->newGame(isDefault);
-    ViewHelper::consoleOut("Successfully initialized new game");
+    ViewHelper::consoleOut("Successfully initialized new game (to confirm use 'confirm' command)");
 }
 
 void MenuGameState::handleConfirm(ParsedOptions options) {
     isRunning = true;
+}
+
+void MenuGameState::handleInfo(ParsedOptions options) {
+    this->matchBuilder->printBattleScreenshot();
+}
+
+void MenuGameState::handleList(ParsedOptions options) {
+    std::string path = options["filename"];
+    GameSaveCreator creator;
+    std::vector<std::string> saves = creator.listSaves(path.empty() ? "." : path);
+
+    ViewHelper::consoleOut("Available saves:");
+    for (const auto& save : saves) {
+        ViewHelper::consoleOut(save, 1);
+    }
 }
 
 MenuGameState::MenuGameState(StateContext& context) 
@@ -67,6 +83,30 @@ MenuGameState::MenuGameState(StateContext& context)
                         .setValidator(std::regex("^(true|false)$"))
                         .buildAndReset()
                     )
+                .buildAndReset()
+            )
+        },
+        {"info", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleInfo, this))
+                .setDescription("Print the latest screenshot from currently handled save")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .buildAndReset()
+            )
+        },
+        {"list", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&MenuGameState::handleList, this))
+                .setDescription("List all available saves")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .addParameter(
+                    parameterBuilder
+                        .addFlag("--filename")
+                        .setNecessary(false)
+                        .setDescription("Specify path to the directory with saves")
+                        .setValidator(std::regex("^.*$"))
+                        .buildAndReset()
+                )
                 .buildAndReset()
             )
         },

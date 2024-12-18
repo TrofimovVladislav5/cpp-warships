@@ -78,6 +78,28 @@ json GameSaveCreator::distributorCreateSave() {
     return baseJson;
 }
 
+std::vector<std::string> GameSaveCreator::listSaves(const std::string& path) {
+    std::vector<std::string> jsonFiles;
+
+    if (!std::filesystem::is_directory(path)) {
+        ViewHelper::errorOut("Error listing saves: path is not a directory");
+        return {};
+    }
+
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(path)) {
+            if (entry.is_regular_file() && entry.path().extension() == ".json") {
+                jsonFiles.push_back(entry.path().string());
+            }
+        }
+
+        return jsonFiles;
+    } catch (std::exception& e) {
+        ViewHelper::errorOut("Error listing saves", e);
+        return {};
+    }
+}
+
 void GameSaveCreator::createSave(const std::string& filename) {
     json j = distributorCreateSave();
     std::string jsonData = j.dump();

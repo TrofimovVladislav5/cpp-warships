@@ -41,12 +41,7 @@ MatchBuilder::MatchBuilder()
 
 void MatchBuilder::newGame(bool fromTemplate) {
     try {
-        MatchSettings matchSettings({
-            {1, 4},
-            {2, 3},
-            {3, 2},
-            {4, 1}
-        }, 10);
+        MatchSettings matchSettings(defaultSettings.shipsCount, defaultSettings.fieldSize);
 
         currentData = new GameStateDTO(&matchSettings);
         isLoaded = false;
@@ -70,6 +65,30 @@ bool MatchBuilder::loadSave(const std::string &filename) {
 
     return isLoaded;
 }
+
+void MatchBuilder::printBattleScreenshot() {
+    if (isLoaded && currentData) {
+        BattleView view = BattleView(currentData);
+        view.printBattleState();
+    } else if (currentData && isLoadedFromTemplate) {
+        MatchSettings matchSettings(defaultSettings.shipsCount, defaultSettings.fieldSize);
+
+        ViewHelper::consoleOut("Current save is loaded from template with the following settings:");
+        ViewHelper::consoleOut("Field size: ", 1);
+        ViewHelper::consoleOut(std::to_string(matchSettings.getFieldSize()), 2);
+        ViewHelper::consoleOut("Ships sizes: ", 1);
+        for (auto& ship : matchSettings.getShipsCount()) {
+            ViewHelper::consoleOut("Ship of size " + std::to_string(ship.first) + " - " + std::to_string(ship.second), 2);
+        }
+        ViewHelper::consoleOut("Damage count: ", 1);
+        ViewHelper::consoleOut(std::to_string(matchSettings.damageCount), 2);
+    } else if (currentData) {
+        ViewHelper::consoleOut("Empty save is currently handled. If you start a game, you will need to initialize all the settings.");
+    } else {
+        ViewHelper::consoleOut("No data is currently handled.");
+    }
+}
+
 
 std::function<OngoingGameSubState*()> MatchBuilder::getStateBuilder() {
     return isLoaded

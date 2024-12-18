@@ -10,7 +10,10 @@ private:
     BattleController* battleController;
     PlaceShipController* enemyPlaceController;
     BattleView view;
-    OngoingGameSubState* handleFinishBattle();
+    bool isPaused;
+    OngoingGameSubState* handleComputerWin() const;
+    OngoingGameSubState* handlePlayerWin();
+    void handlePause(ParsedOptions options);
 public:
     explicit BattleOngoingGameSubState(SubStateContext* context);
     ~BattleOngoingGameSubState() override;

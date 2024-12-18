@@ -21,6 +21,7 @@ public:
     explicit GameSaveCreator(GameStateDTO* dto);
     explicit GameSaveCreator();
     ~GameSaveCreator();
+    std::vector<std::string> listSaves(const std::string& path = ".");
     void createSave(const std::string& filename);
     [[nodiscard]] GameStateDTO* loadSave(const std::string& filename);
 };

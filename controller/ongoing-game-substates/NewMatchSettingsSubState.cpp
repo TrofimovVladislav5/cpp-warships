@@ -62,9 +62,16 @@ OngoingGameSubState* NewMatchSettingsSubState::transitToSubState() {
     if (currentSettings) {
         auto* playerManager = new ShipManager(currentSettings->getShipsCount());
         std::vector<Ship*> ships = playerManager->getShips();
-        ViewHelper::consoleOut("Optimal set of ships is: ");
-        for (const auto& ship : ships) {
-            ViewHelper::consoleOut(std::to_string(ship->getLength()), 1);
+        std::map<int, int> shipsSizes = currentSettings->getShipsCount();
+
+        ViewHelper::consoleOut("Optimal set of ships: ");
+        for (const auto& [size, amount] : shipsSizes) {
+            std::string sizeString = std::string("Amount of ships with size ")
+                .append(std::to_string(size))
+                .append(": ")
+                .append(std::to_string(amount));
+
+            ViewHelper::consoleOut(sizeString, 1);
         }
 
         if (ViewHelper::confirmAction("yes")) {

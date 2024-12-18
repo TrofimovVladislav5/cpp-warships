@@ -2,7 +2,6 @@
 #include "defaults//FieldCoordinateHelper.h"
 #include "Structures.h"
 #include <algorithm>
-#include <iostream>
 #include <random>
 #include <stdexcept>
 
@@ -50,7 +49,7 @@ FieldCoordinate ComputerPlayer::getRandomNeighbourCoordinate(FieldCoordinate coo
 
     std::shuffle(finalNeighbours.begin(), finalNeighbours.end(), std::mt19937(std::random_device()()));
     if (finalNeighbours.size() == 0) {
-        throw std::out_of_range("No empty neighbours, but the ship is not completely destroyed. \n\t Unreachable state, unluck.");
+        throw std::out_of_range("No empty neighbours, but the ship is not completely destroyed. \n\t Unreachable state.");
     }
     return finalNeighbours[0];
 }
@@ -81,7 +80,30 @@ FieldCoordinate ComputerPlayer::getRandomDirectionCoordinate() {
         }
     }
 
-    throw std::out_of_range("It seems that the destroy wasn't handled \n\t Unreachable state, unluck.");
+    throw std::out_of_range("It seems that the destroy wasn't handled \n\t Unreachable state.");
+}
+
+std::vector<FieldCoordinate> ComputerPlayer::getShotCellsNeighbours() {
+    std::vector<FieldCoordinate> result;
+    for (auto& cell : currentShotCells) {
+        std::vector<FieldCoordinate> potentialNeighbours = {
+            {cell.first - 1, cell.second},
+            {cell.first + 1, cell.second},
+            {cell.first, cell.second - 1},
+            {cell.first, cell.second + 1}
+        };
+
+        for (const auto& neighbour : potentialNeighbours) {
+            bool isInsideField = neighbour.first >= 0 && neighbour.first < field->getWidth() && neighbour.second >= 0 && neighbour.second < field->getHeight();
+            bool isUnique = std::find(result.begin(), result.end(), neighbour) == result.end();
+
+            if (isInsideField && isUnique) {
+                result.emplace_back(neighbour);
+            }
+        }
+    }
+
+    return result;
 }
 
 bool ComputerPlayer::proceedShot(FieldCoordinate coordinate) {
@@ -90,10 +112,15 @@ bool ComputerPlayer::proceedShot(FieldCoordinate coordinate) {
         currentShotCells.push_back(coordinate);
     }
     else if (isHit == AttackResult::destroyed) {
+        currentShotCells.push_back(coordinate);
+
+        std::vector<FieldCoordinate> neighbours = getShotCellsNeighbours();
+        emptyCells.insert(emptyCells.end(), neighbours.begin(), neighbours.end());
+
         currentShotCells.clear();
     }
-    this->emptyCells.push_back(coordinate);
 
+    this->emptyCells.push_back(coordinate);
     return (isHit != AttackResult::miss);
 }
 
@@ -111,6 +138,5 @@ bool ComputerPlayer::makeAShot() {
 }
 
 bool ComputerPlayer::isWin() const {
-    // return true; TODO: REMOVE WHEN PROTECTION ENDED
     return field->isAllShipsDestroyed();
 }
