@@ -1,4 +1,5 @@
 #include "GamePauseView.h"
+#include <cmath>
 
 #include "ViewHelper.h"
 
