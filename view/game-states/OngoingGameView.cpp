@@ -2,7 +2,7 @@
 #include "library/ViewHelper.h"
 #include <vector>
 
-void OngoingGameView::displayAvailableCommands(const GameStateDTO* currentMatch) {
+void OngoingGameView::displayAvailableCommands(const GameStateDTO* currentMatchData) {
     std::vector<std::string> availableCommands;
     availableCommands.emplace_back("attack - attack the opponent cell field");
     availableCommands.emplace_back("pause - pause game");

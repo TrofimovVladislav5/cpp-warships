@@ -1,5 +1,5 @@
 #include "OngoingGameSubState.h"
 
-OngoingGameSubState::OngoingGameSubState(SubStateContext &context)
+OngoingGameSubState::OngoingGameSubState(SubStateContext* context)
     : context(context)
 {}

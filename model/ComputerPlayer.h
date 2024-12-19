@@ -11,13 +11,15 @@ private:
     GameField* field;
     std::vector<FieldCoordinate> emptyCells;
     std::vector<FieldCoordinate> currentShotCells;
-    FieldCoordinate getRandomAttackCoordinate();
-    FieldCoordinate getRandomNeighbourCoordinate(FieldCoordinate coordinate);
-    FieldCoordinate getRandomDirectionCoordinate();
+    [[nodiscard]] FieldCoordinate getRandomAttackCoordinate();
+    [[nodiscard]] FieldCoordinate getRandomNeighbourCoordinate(FieldCoordinate coordinate);
+    [[nodiscard]] FieldCoordinate getRandomDirectionCoordinate();
+    std::vector<FieldCoordinate> getShotCellsNeighbours();
     bool proceedShot(FieldCoordinate coordinate);
 
 public:
     explicit ComputerPlayer(GameField* field);
     ~ComputerPlayer();
     bool makeAShot();
+    bool isWin() const;
 };

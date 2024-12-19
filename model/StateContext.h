@@ -2,11 +2,12 @@
 #include <functional>
 
 #include "game/GameStateDTO.h"
+#include "ongoing-game-substates/OngoingGameSubState.h"
 
 class StateContext {
 public:
     StateContext();
-    GameStateDTO* currentMatch;
-    std::function<void(StateContext&)> finishCallback;
-    std::function<void(StateContext&)> finishMatchCallback;
+    std::string loadFileName;
+    GameStateDTO* currentMatchData;
+    OngoingGameSubState* initialGameSubState;
 };

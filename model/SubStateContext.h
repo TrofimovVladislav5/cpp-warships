@@ -3,6 +3,6 @@
 
 class SubStateContext {
 public:
-    SubStateContext() = default;
+    explicit SubStateContext(GameStateDTO* matchData);
     GameStateDTO* matchDTO;
 };

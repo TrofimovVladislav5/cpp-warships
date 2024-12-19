@@ -1,5 +1,5 @@
 #include "FieldCellView.h"
-
+#include <cmath>
 #include <iostream>
 
 FieldCellView::FieldCellView(std::string cellContent, bool top, bool right, bool bottom, bool left)

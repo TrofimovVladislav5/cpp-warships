@@ -1,32 +1,29 @@
 #include "GameController.h"
 
+#include "ViewHelper.h"
 #include "game-states/MenuGameState.h"
-#include "../library/ViewHelper.h"
 
-#include "library/TypesHelper.h"
 
-GameController::GameController() {
-    stateContext = StateContext();
-    currentState = nullptr;
-    currentMatch = nullptr;
-}
+GameController::GameController()
+    : stateContext(StateContext())
+    , currentState(nullptr)
+    , currentMatchData(nullptr)
+{}
 
 GameController::~GameController() {
     delete currentState;
-    delete currentMatch;
-}
-
-void GameController::finishGame(StateContext& context) {
-    this->isFinished = true;
-    ViewHelper::consoleOut("Shutting down...");
+    delete currentMatchData;
 }
 
 void GameController::run() {
-    stateContext.finishCallback = TypesHelper::methodToFunction(&GameController::finishGame, this);
     currentState = new MenuGameState(stateContext);
     currentState->openState();
+    currentState->updateState();
 
-    while (!this->isFinished) {
+    while (
+        !stateContext.currentMatchData ||
+        (stateContext.currentMatchData && !stateContext.currentMatchData->isFinished)
+    ) {
         GameState *newState = currentState->transitToState();
 
         if (newState) {

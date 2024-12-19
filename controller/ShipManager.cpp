@@ -1,11 +1,11 @@
 #include "ShipManager.h"
 #include <map>
-
+#include <stdexcept>
 
 ShipManager::ShipManager(const std::map<int, int>& shipsSize)
-    : shipsSize(shipsSize)
+    : shipsSizes(shipsSize)
 {
-    for (auto& size : shipsSize){
+    for (auto& size : shipsSizes){
         for (int i = 0; i < size.second; i++) {
             Ship* currentShip = new Ship(size.first);
             ships.push_back(currentShip);
@@ -42,6 +42,15 @@ void ShipManager::clear() {
     ships.clear();
 }
 
-std::vector<Ship*> ShipManager::getShips() {
+std::vector<Ship*> ShipManager::getShips() const{
     return ships;
 }
+
+std::map<int, int> ShipManager::getShipsSizes() const {
+    return shipsSizes;
+}
+
+ShipManager::ShipManager(const std::map<int, int> &shipsSizes, std::vector<Ship*> ships)
+    : shipsSizes(shipsSizes)
+    , ships(ships)
+{}

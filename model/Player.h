@@ -13,6 +13,7 @@ private:
 public:
     explicit Player(GameStateDTO* dto);
     ~Player();
+    bool isWin() const;
     bool makeAShot(ParsedOptions options);
     void applySkill(ParsedOptions options);
 };

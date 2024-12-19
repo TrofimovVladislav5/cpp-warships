@@ -14,10 +14,15 @@ void ViewHelper::errorOut(const std::string &output) {
     std::cerr << output << std::endl;
 }
 
+void ViewHelper::errorOut(const std::string &output, const std::exception &e) {
+    errorOut(output);
+    errorOut(e.what());
+}
+
 bool ViewHelper::confirmAction(const std::string &confirmMessage) {
+    consoleOut("Do you want to confirm the action? (" + confirmMessage + " to confirm)");
     std::string input;
     std::getline(std::cin, input);
-
     std::string inputLower = StringHelper::toLower(input);
     std::string confirmMessageLower = StringHelper::toLower(confirmMessage);
     return inputLower == confirmMessageLower;

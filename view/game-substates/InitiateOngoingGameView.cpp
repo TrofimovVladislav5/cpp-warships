@@ -1,7 +1,7 @@
 #include "InitiateOngoingGameView.h"
 #include "library/ViewHelper.h"
 
-void InitiateOngoingGameView::displayAvailableCommands(const GameStateDTO* currentMatch) {
+void InitiateOngoingGameView::displayAvailableCommands(const GameStateDTO* currentMatchData) {
     const std::vector<std::string> availableCommands = {
         {"Add\n"
          "   Usage: add --length <length> --direction <horizontal|vertical> --cell <x,y>"},

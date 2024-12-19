@@ -17,17 +17,24 @@
 PlaceShipController::PlaceShipController(GameStateDTO* dto, ShipManager* manager)
     : currentField(new GameField(dto->fieldSize, dto->fieldSize))
     , manager(manager)
-    , currentManager(new ShipManager(dto->shipsSize))
+    , currentManager(new ShipManager({}))
 {
+    eraseShipsDictionary();
+}
+
+PlaceShipController::~PlaceShipController() {
+    delete manager;
+    delete currentManager;
+    delete currentField;
+}
+
+void PlaceShipController::eraseShipsDictionary() {
+    availableLengthShips.clear();
+
     for (const auto& ship : manager->getShips()) {
         int length = ship->getLength();
         availableLengthShips[length]++;
     }
-}
-
-PlaceShipController::~PlaceShipController() {
-    delete currentManager;
-    delete currentField;
 }
 
 std::map<int, int> PlaceShipController::getAvailableLengthShips() {
@@ -43,9 +50,7 @@ bool PlaceShipController::isShipLengthAvailable(int length) {
 }
 
 bool PlaceShipController::allShipsPlaced() {
-    auto original = manager->getShips();
-    auto current = currentManager->getShips();
-    return original.size() == current.size();
+    return currentManager->getShips().size() == manager->getShips().size();
 }
 
 void PlaceShipController::addShip(ParsedOptions options) {
@@ -65,15 +70,20 @@ void PlaceShipController::addShip(ParsedOptions options) {
     availableLengthShips[length]--;
 }
 
-void PlaceShipController::removeShip(ParsedOptions options) {
-    std::pair<int, int> coordinate = TypesHelper::cell(options["cell"]);
+void PlaceShipController::handleRemoveShip(std::pair<int, int> coordinate) {
     std::pair<int, int> result = currentField->removeShip(coordinate);
     if (result.first == - 1) {
-        throw ShipPlacementException("(where remove ship) no ship was found at field cells " + options["cell"]);
+        throw ShipPlacementException("No ship found at field cell " + coordinate.first + coordinate.second);
     }
+    int shipIndex = result.second;
+    int shipLength = currentManager->getShips()[shipIndex]->getLength();
+    availableLengthShips[shipLength]++;
+    currentManager->removeShipNumber(shipIndex);
+}
 
-    availableLengthShips[currentManager->getShips()[result.second]->getLength()]++;
-    currentManager->removeShipNumber(result.first);
+void PlaceShipController::removeShip(ParsedOptions options) {
+    std::pair<int, int> coordinate = TypesHelper::cell(options["cell"]);
+    handleRemoveShip(coordinate);
 }
 
 GameField * PlaceShipController::getCurrentField() const {
@@ -90,6 +100,8 @@ void PlaceShipController::placeShipsRandomly() {
     std::uniform_int_distribution distY{0, currentField->getHeight() - 1};
     std::uniform_int_distribution distX{0, currentField->getWidth() - 1};
     std::uniform_int_distribution distDirection{0, 1};
+
+    eraseShipsDictionary();
     currentManager->clear();
     currentField->clear();
 

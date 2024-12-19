@@ -1,6 +1,9 @@
 #include <random>
 #include <algorithm>
 #include "SkillManager.h"
+
+#include <iostream>
+
 #include "DoubleDamage.h"
 #include "ShootingRandomlySkill.h"
 #include "Scanner.h"
@@ -9,23 +12,30 @@
 #include "exceptions/SkillException.h"
 #include "game/GameStateDTO.h"
 
-SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings, ShipManager* enemyManager)
+SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings)
     : currentSkill(nullptr)
+    , skills({})
 {
-    availableSkills = {
-        {"Scanner"},
-        {"DoubleDamage"},
-        {"Shooting"}
-    };
-
     factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
     factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
-    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, ShipManager*>(enemyManager);
+    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, GameField*>(enemyField);
+
+    availableSkills = {"Scanner", "DoubleDamage", "Shooting"};
 
     std::shuffle(availableSkills.begin(), availableSkills.end(), std::random_device());
     for (const auto& skillName : availableSkills) {
         skills.emplace_back(skillName);
     }
+}
+
+SkillManager::SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings)
+    : skills(skills)
+    , currentSkill(nullptr)
+{
+    factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
+    factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);
+    factory["Shooting"] = new ConcreteSkillFactory<ShootingRandomlySkill, GameField*>(enemyField);
+    availableSkills = {"Scanner", "DoubleDamage", "Shooting"};
 }
 
 SkillManager::~SkillManager() {
@@ -44,7 +54,10 @@ void SkillManager::randomSkill() {
 const std::vector<std::string>& SkillManager::nameSkills() {
     return availableSkills;
 }
-const std::string& SkillManager::availableSkill() {
+std::string SkillManager::availableSkill() {
+    if (skills.empty()) {
+        return "No available skill";
+    }
     return skills.front();
 }
 
@@ -75,4 +88,8 @@ void SkillManager::status() const {
 
 std::deque<std::string> SkillManager::getSkillsQueue() const {
     return skills;
+}
+
+void SkillManager::setSkills(const std::deque<std::string>& dequeSkills) {
+    skills = dequeSkills;
 }
