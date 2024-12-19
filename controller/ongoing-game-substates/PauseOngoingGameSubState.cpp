@@ -54,7 +54,7 @@ PauseOngoingGameSubState::PauseOngoingGameSubState(SubStateContext* context)
     , view(GamePauseView(30))
     , loadedSubState(nullptr)
 {
-    ConfigCommandBuilder commandBuilder;
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"resume", ParserCommandInfo(

@@ -19,7 +19,7 @@ void TransitGameState::handleMenu(ParsedOptions options) {
 TransitGameState::TransitGameState(StateContext &context)
     : GameState(context)
 {
-    ConfigCommandBuilder commandBuilder;
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
 
     inputScheme = {

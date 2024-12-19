@@ -36,7 +36,7 @@ InitiateOngoingGameSubState::InitiateOngoingGameSubState(SubStateContext* contex
     , confirmed(false)
 {
     context->matchDTO->lastSubState = "InitiateOngoingGameSubState";
-    ConfigCommandBuilder commandBuilder;
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"shuffle", ParserCommandInfo(

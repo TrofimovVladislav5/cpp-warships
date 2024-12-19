@@ -4,7 +4,7 @@
 
 class NewMatchSettingsSubState : public OngoingGameSubState {
 private:
-    SchemeMap inputScheme;
+    SchemeMap<void> inputScheme;
     MatchSettingsController* controller;
     bool isConfirmed = false;
     MatchSettings* currentSettings;

@@ -6,7 +6,7 @@
 
 class BattleOngoingGameSubState : public OngoingGameSubState {
 private:
-    SchemeMap inputScheme;
+    SchemeMap<void> inputScheme;
     BattleController* battleController;
     PlaceShipController* enemyPlaceController;
     BattleView view;

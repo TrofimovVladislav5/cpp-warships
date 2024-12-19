@@ -8,7 +8,7 @@
 
 class PauseOngoingGameSubState final : public OngoingGameSubState {
 private:
-    SchemeMap inputScheme;
+    SchemeMap<void> inputScheme;
     MatchBuilder matchBuilder;
     GamePauseView view;
     OngoingGameSubState* loadedSubState;

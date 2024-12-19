@@ -41,7 +41,7 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext* context)
 {
     context->matchDTO->lastSubState = "BattleOngoingGameSubState";
 
-    ConfigCommandBuilder commandBuilder;
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"attack", ParserCommandInfo(

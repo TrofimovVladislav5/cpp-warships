@@ -19,7 +19,7 @@ NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext* context)
     , controller(new MatchSettingsController())
     , currentSettings(nullptr)
 {
-    ConfigCommandBuilder commandBuilder;
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"set", ParserCommandInfo(

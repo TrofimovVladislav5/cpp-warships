@@ -5,7 +5,7 @@
 
 class InitiateOngoingGameSubState : public OngoingGameSubState {
 private:
-    SchemeMap inputScheme;
+    SchemeMap<void> inputScheme;
     PlaceShipController* playerPlaceController;
     PlaceShipController* enemyPlaceController;
     PlaceShipControllerView* placeControllerView;

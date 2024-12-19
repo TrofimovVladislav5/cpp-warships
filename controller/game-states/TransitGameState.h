@@ -9,7 +9,7 @@ private:
     void handleExit(ParsedOptions options);
     void handleMenu(ParsedOptions options);
     std::string latestCommand;
-    SchemeMap inputScheme;
+    SchemeMap<void> inputScheme;
 public:
     explicit TransitGameState(StateContext &context);
     void openState() override;

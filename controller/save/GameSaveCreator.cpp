@@ -158,7 +158,7 @@ GameStateDTO* GameSaveCreator::distributorLoadSave(const json &j) {
         "Settings",
         "ShipManagers",
     };
-   if ( dto->lastSubState == "BattleOngoingGameSubState") {
+    if ( dto->lastSubState == "BattleOngoingGameSubState") {
         order.emplace_back("GameFields");
         order.emplace_back("SkillManager");
     }
@@ -187,9 +187,9 @@ GameStateDTO* GameSaveCreator::distributorLoadSave(const json &j) {
             factory["gameField"]->createSerializer()->deserialize(gameFieldsJson, *dto);
         }},
        {"SkillManager", [this, dto](const json& skillManagerJson) {
-            factory["skillManager"]->createSerializer()->deserialize(skillManagerJson, *dto);
-        }},
-    };
+           factory["skillManager"]->createSerializer()->deserialize(skillManagerJson, *dto);
+       }},
+   };
 
     for (const auto& key : order) {
         if (j.contains(key) && j[key].is_object()) {

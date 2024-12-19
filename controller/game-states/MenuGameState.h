@@ -8,7 +8,7 @@
 class MenuGameState : public GameState{
 private:
     std::string latestCommand;
-    SchemeMap inputScheme;
+    SchemeMap<void> inputScheme;
     MatchBuilder* matchBuilder;
     bool isRunning;
 

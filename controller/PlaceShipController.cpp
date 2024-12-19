@@ -73,7 +73,11 @@ void PlaceShipController::addShip(ParsedOptions options) {
 void PlaceShipController::handleRemoveShip(std::pair<int, int> coordinate) {
     std::pair<int, int> result = currentField->removeShip(coordinate);
     if (result.first == - 1) {
-        throw ShipPlacementException("No ship found at field cell " + coordinate.first + coordinate.second);
+        throw ShipPlacementException(
+            std::string("No ship found at field cell ")
+            .append(std::to_string(coordinate.first))
+            .append(std::to_string(coordinate.second))
+        );
     }
     int shipIndex = result.second;
     int shipLength = currentManager->getShips()[shipIndex]->getLength();

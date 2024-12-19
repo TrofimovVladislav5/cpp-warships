@@ -1,6 +1,6 @@
 #pragma once
 #include "model/game/GameStateDTO.h"
-#include "../cmake-build-debug/_deps/nlohmann_json-src/single_include/nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
@@ -21,6 +21,3 @@ public:
     virtual json serialize(const GameStateDTO& object) = 0;
     virtual void deserialize(const json& j, GameStateDTO& object) = 0;
 };
-
-
-

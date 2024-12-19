@@ -1,6 +1,6 @@
 #pragma once
 #include <fstream>
-#include "../cmake-build-debug/_deps/nlohmann_json-src/single_include/nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
 class JsonFileHandler {
 public:

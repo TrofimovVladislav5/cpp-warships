@@ -6,49 +6,80 @@
 #include "ParserParameter.h"
 
 
-// template <typename T>
 typedef std::map<std::string, std::string> ParsedOptions;
 
-// template <typename T>
-typedef std::function<void(ParsedOptions)> ParseCallback;
+template <typename T>
+using ParseCallback = std::function<T(ParsedOptions)>;
 
-//template <typename T>
-typedef std::function<void()> BindedParseCallback;
+template <typename T>
+using BindedParseCallback = std::function<T()>;
 
+
+template <typename T>
 struct ParserCommandInfoConfig {
     ParserCommandInfoConfig(
         std::string description,
         std::vector<ParserParameter> parameters,
-        ParseCallback function,
-        ParseCallback displayError,
-        bool requireAllFlags,
-        ParseCallback printHelp
-    );
+        ParseCallback<T> function,
+        ParseCallback<void> displayError,
+        bool resolveAllFlags,
+        ParseCallback<void> printHelp
+    )
+        : resolveAllFlags(resolveAllFlags)
+        , description(std::move(description))
+        , parameters(std::move(parameters))
+        , executable(std::move(function))
+        , displayError(std::move(displayError))
+        , printHelp(std::move(printHelp))
+    {}
 
     ParserCommandInfoConfig(
         std::string description,
         std::vector<ParserParameter> parameters,
-        ParseCallback function
-    );
+        ParseCallback<T> function
+    )
+        : description(std::move(description))
+        , parameters(std::move(parameters))
+        , executable(std::move(function))
+    {}
 
     bool resolveAllFlags = false;
     std::string description;
     std::vector<ParserParameter> parameters;
-    ParseCallback executable;
-    ParseCallback displayError;
-    ParseCallback printHelp;
+    ParseCallback<T> executable;
+    ParseCallback<void> displayError;
+    ParseCallback<void> printHelp;
 };
 
-// template<typename T>
+template<typename T>
 class ParserCommandInfo {
 private:
-    ParserCommandInfoConfig config;
+    ParserCommandInfoConfig<T> config;
 public:
-    explicit ParserCommandInfo(ParserCommandInfoConfig config);
-    std::vector<ParserParameter> getParams() const;
-    std::string getDescription() const;
-    bool getResolveAllFlags() const;
-    ParseCallback getErrorDisplay() const;
-    ParseCallback getExecutable() const;
-    ParseCallback getPrintHelp() const;
+    explicit ParserCommandInfo(ParserCommandInfoConfig<T> config)
+        : config(std::move(config))
+    {}
+    [[nodiscard]] std::string getDescription() const {
+        return this->config.description;
+    }
+
+    [[nodiscard]] bool getResolveAllFlags() const {
+        return this->config.resolveAllFlags;
+    }
+
+    [[nodiscard]] ParseCallback<void> getErrorDisplay() const {
+        return this->config.displayError;
+    }
+
+    [[nodiscard]] ParseCallback<T> getExecutable() const {
+        return this->config.executable;
+    }
+
+    [[nodiscard]] std::vector<ParserParameter> getParams() const {
+        return this->config.parameters;
+    }
+
+    [[nodiscard]] ParseCallback<void> getPrintHelp() const {
+        return this->config.printHelp;
+    }
 };

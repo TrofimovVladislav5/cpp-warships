@@ -28,29 +28,19 @@ FetchContent_MakeAvailable(nlohmann_json)
 add_executable(cpp_warships main.cpp
         library/ViewHelper.cpp
         library/ViewHelper.h
-        library/parser/ParserParameter.cpp
         library/parser/ParserParameter.h
-        library/parser/ParserCommandInfo.cpp
         library/parser/ParserCommandInfo.h
-        library/parser/Parser.cpp
         library/parser/Parser.h
         library/StringHelper.cpp
         library/StringHelper.h
         library/TypesHelper.cpp
         library/TypesHelper.h
-        library/parser-builder/ParserCommandBuilder.cpp
         library/parser-builder/ParserCommandBuilder.h
-        library/parser-builder/ConfigCommandBuilder.cpp
         library/parser-builder/ConfigCommandBuilder.h
-        library/parser-builder/ParserBuilderDirector.cpp
         library/parser-builder/ParserBuilderDirector.h
-        library/parser-builder/ParserParameterBuilder.cpp
         library/parser-builder/ParserParameterBuilder.h
-        library/parser-builder/DefaultParameterBuilder.cpp
         library/parser-builder/DefaultParameterBuilder.h
-        library/parser-builder/CommandBuildDirector.cpp
         library/parser-builder/CommandBuildDirector.h
-        library/parser-builder/ParameterBuildDirector.cpp
         library/parser-builder/ParameterBuildDirector.h
         library/parser/__showcase__/parserShowcase.h
         library/parser/__showcase__/parserShowcaseInline.h
@@ -177,6 +167,11 @@ add_executable(cpp_warships main.cpp
         view/BattleView.h
         controller/game-states/TransitGameState.cpp
         controller/game-states/TransitGameState.h
+        library/parser/command/ParserCommandWrapper.cpp
+        library/parser/command/ParserCommandWrapper.h
+        library/parser/command/Command.h
+        library/parser/command/CommandParser.cpp
+        library/parser/command/CommandParser.h
 )
 
 target_link_libraries(cpp_warships PRIVATE nlohmann_json::nlohmann_json)

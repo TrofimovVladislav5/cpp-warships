@@ -51,8 +51,9 @@ MenuGameState::MenuGameState(StateContext& context)
     , matchBuilder(new MatchBuilder())
     , latestCommand("")
 {
-    ConfigCommandBuilder commandBuilder;
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
+
     inputScheme = {
         {"load", ParserCommandInfo(
             commandBuilder
