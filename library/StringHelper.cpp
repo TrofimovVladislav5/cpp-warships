@@ -1,5 +1,7 @@
 #include "StringHelper.h"
 
+#include <stdexcept>
+
 // template<typename T>
 std::vector<std::string> StringHelper::split(const std::string &initial, char delim) {
     std::vector<std::string> elems;
@@ -19,4 +21,26 @@ std::vector<std::string> StringHelper::split(const std::string &initial, char de
     }
 
     return elems;
+}
+
+std::string StringHelper::patternCoordinate(int fieldSize) {
+    std::string pattern;
+    if (fieldSize < 10 || fieldSize > 26) {
+        throw std::invalid_argument("Method functions support field size from 10 to 25");
+    }
+    if (fieldSize < 20) {
+        pattern = "^([0-9]|1[0-" + std::to_string(fieldSize % 10) + "])\\,([0-9]|1[0-" + std::to_string(fieldSize % 10) + "])$";
+    } else if (fieldSize - 1 < 26) {
+        pattern = "^([0-9]|1[0-9]|2[0-" + std::to_string(fieldSize % 10) + "])\\,([0-9]|1[0-9]|2[0-" + std::to_string(fieldSize % 10) + "])$";
+    }
+
+    return pattern;
+}
+
+std::string StringHelper::toLower(const std::string& input) {
+    std::string result = input;
+    std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
+    return result;
 }
