@@ -172,6 +172,8 @@ add_executable(cpp_warships main.cpp
         library/parser/command/Command.h
         library/parser/command/CommandParser.cpp
         library/parser/command/CommandParser.h
+        library/parser/void/VoidParser.cpp
+        library/parser/void/VoidParser.h
 )
 
 target_link_libraries(cpp_warships PRIVATE nlohmann_json::nlohmann_json)

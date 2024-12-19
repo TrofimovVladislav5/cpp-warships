@@ -10,6 +10,7 @@
 #include "library/defaults/DefaultParserError.h"
 #include "library/TypesHelper.h"
 #include "library/parser-builder/DefaultParameterBuilder.h"
+#include "void/VoidParser.h"
 
 
 void InitiateOngoingGameSubState::handleShipsShuffle(ParsedOptions options) {
@@ -116,7 +117,7 @@ void InitiateOngoingGameSubState::openSubState() {
 
 void InitiateOngoingGameSubState::updateSubState() {
     StateMessages::awaitCommandMessage();
-    Parser parser(inputScheme, DefaultParserError::CommandNotFoundError);
+    VoidParser parser(inputScheme, DefaultParserError::CommandNotFoundError);
 
     try {
         std::string input;

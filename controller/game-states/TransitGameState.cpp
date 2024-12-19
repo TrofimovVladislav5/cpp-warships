@@ -7,6 +7,7 @@
 #include "ShutdownGameState.h"
 #include "StateMessages.h"
 #include "TypesHelper.h"
+#include "void/VoidParser.h"
 
 void TransitGameState::handleExit(ParsedOptions options) {
     latestCommand = "exit";
@@ -49,7 +50,7 @@ void TransitGameState::updateState() {
     std::string input;
     StateMessages::awaitCommandMessage();
     std::getline(std::cin, input);
-    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+    VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);
 }
 

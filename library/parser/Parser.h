@@ -119,11 +119,17 @@ private:
         return std::make_pair(isValid, validParamValues);
     }
 public:
+    virtual ~Parser() = default;
+
     explicit Parser(SchemeMap<T> scheme)
         : scheme(std::move(scheme))
     {}
 
-    explicit Parser(SchemeMap<T> scheme, ParseCallback<void> displayError, const SchemeHelpCallback<void>& printHelp = nullptr)
+    explicit Parser(
+        SchemeMap<T> scheme,
+        ParseCallback<void> displayError,
+        const SchemeHelpCallback<void>& printHelp = nullptr
+    )
         : scheme(std::move(scheme))
         , displayError(std::move(displayError))
     {
@@ -179,13 +185,6 @@ public:
         return std::make_pair(relatedCommand.getExecutable(), parsedArguments);
     }
 
-    BindedParseCallback<T> bindedParse(const std::string &input) {
-        std::pair<ParseCallback<T>, ParsedOptions> result = this->parse(input);
-        return std::bind(result.first, result.second);
-    }
-
-    void executedParse(const std::string &input) {
-        std::pair<ParseCallback<T>, ParsedOptions> result = this->parse(input);
-        result.first(result.second);
-    }
+    virtual BindedParseCallback<T> bindedParse(const std::string &input) = 0;
+    virtual void executedParse(const std::string &input) = 0;
 };

@@ -9,6 +9,7 @@
 #include "../../library/ViewHelper.h"
 #include "exceptions/BattleException.h"
 #include "parser-builder/ConfigCommandBuilder.h"
+#include "void/VoidParser.h"
 
 
 OngoingGameSubState *BattleOngoingGameSubState::handleComputerWin() const {
@@ -90,7 +91,7 @@ void BattleOngoingGameSubState::closeSubState() {
 
 void BattleOngoingGameSubState::updateSubState() {
     StateMessages::awaitCommandMessage();
-    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+    VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
 
     try {
         view.printBattleState();

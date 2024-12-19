@@ -3,11 +3,11 @@
 #include "ConfigCommandBuilder.h"
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
-#include "InitiateOngoingGameSubState.h"
 #include "StateMessages.h"
 #include "TypesHelper.h"
 #include "ongoing-game-substates/BattleOngoingGameSubState.h"
 #include "../../library/ViewHelper.h"
+#include "void/VoidParser.h"
 
 
 void PauseOngoingGameSubState::handleResume(ParsedOptions options) {
@@ -116,7 +116,7 @@ void PauseOngoingGameSubState::closeSubState() {
 void PauseOngoingGameSubState::updateSubState() {
     try {
         StateMessages::awaitCommandMessage();
-        Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+        VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
         std::string input;
         std::getline(std::cin, input);
         parser.executedParse(input);

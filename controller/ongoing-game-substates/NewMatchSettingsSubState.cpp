@@ -7,6 +7,7 @@
 #include "../ShipManager.h"
 #include "StateMessages.h"
 #include "ViewHelper.h"
+#include "void/VoidParser.h"
 
 
 void NewMatchSettingsSubState::handleMatchSettings(ParsedOptions options) {
@@ -54,7 +55,7 @@ void NewMatchSettingsSubState::updateSubState() {
     StateMessages::awaitCommandMessage();
     std::string input;
     std::getline(std::cin, input);
-    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+    VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);
 }
 

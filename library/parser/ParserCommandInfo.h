@@ -11,6 +11,7 @@ typedef std::map<std::string, std::string> ParsedOptions;
 template <typename T>
 using ParseCallback = std::function<T(ParsedOptions)>;
 
+
 template <typename T>
 using BindedParseCallback = std::function<T()>;
 

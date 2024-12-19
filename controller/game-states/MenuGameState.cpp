@@ -11,6 +11,7 @@
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/defaults/DefaultParserError.h"
 #include "save/GameSaveCreator.h"
+#include "void/VoidParser.h"
 
 
 void MenuGameState::handleGameLoad(ParsedOptions options) {
@@ -134,7 +135,7 @@ void MenuGameState::updateState() {
     std::string input;
     StateMessages::awaitCommandMessage();
     std::getline(std::cin, input);
-    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+    VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);
 }
 
