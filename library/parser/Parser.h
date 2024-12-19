@@ -2,12 +2,10 @@
 #include <map>
 #include <regex>
 
-#include "ConfigCommandBuilder.h"
 #include "DefaultHelp.h"
 #include "ParserCommandInfo.h"
 #include "StringHelper.h"
 #include "TypesHelper.h"
-#include "ViewHelper.h"
 
 template <typename T>
 using SchemeMap = std::map<std::string, ParserCommandInfo<T>>;
@@ -17,7 +15,7 @@ using SchemeHelpCallback = std::function<void(SchemeMap<T>)>;
 
 template<typename T = void>
 class Parser {
-private:
+protected:
     SchemeMap<T> scheme;
     ParseCallback<void> displayError;
 
@@ -32,20 +30,6 @@ private:
     void decreaseAmountOnHashMap(std::string &key, std::unordered_map<std::string, int> &map) {
         if (map.find(key) != map.end()) {
             map[key]--;
-        }
-    }
-
-    void printCommandsHelp(ParsedOptions options){
-        ViewHelper::consoleOut("This is the list of supported commands:");
-
-        for (const auto& command : scheme) {
-            auto commandPrint = command.second.getPrintHelp();
-            if (commandPrint) {
-                commandPrint(options);
-            } else {
-                DefaultHelp::PrintCommand<void>(command, DefaultHelp::PrintParam);
-                ViewHelper::consoleOut("");
-            }
         }
     }
 
@@ -132,31 +116,7 @@ public:
     )
         : scheme(std::move(scheme))
         , displayError(std::move(displayError))
-    {
-        if (scheme.find("help") == scheme.end()) {
-            ConfigCommandBuilder<T> commandBuilder;
-            ParserCommandInfo<T>* helpInfo;
-
-            if (printHelp) {
-                helpInfo = new ParserCommandInfo<void>({
-                    commandBuilder
-                        .setDescription("Command to display this message")
-                        .setCallback(std::bind(printHelp, scheme))
-                        .buildAndReset()
-                });
-            } else {
-                helpInfo = new ParserCommandInfo<void>({
-                    commandBuilder
-                        .setDescription("Command to display this message")
-                        .setCallback(TypesHelper::methodToFunction(&Parser<T>::printCommandsHelp, this))
-                        .buildAndReset()
-                });
-            }
-
-            this->scheme.insert({"help", *helpInfo});
-            delete helpInfo;
-        }
-    }
+    {}
 
     std::pair<ParseCallback<T>, ParsedOptions> parse(const std::string &input) {
         std::vector<std::string> splitInput = StringHelper::split(input, ' ');
@@ -165,10 +125,7 @@ public:
             !commandInScheme(splitInput[0], this->scheme) ||
             !necessaryFlagsPresent(splitInput, this->scheme.at(splitInput[0]))
         ) {
-            ParseCallback<void> commandNotFound = this->displayError
-                ? this->displayError
-                : throw std::invalid_argument("Command not found. You can get better error message by providing displayError callback");
-            return std::make_pair(commandNotFound, ParsedOptions());
+            return getCommandError();
         }
 
         ParserCommandInfo<T> relatedCommand = this->scheme.at(splitInput[0]);
@@ -176,15 +133,14 @@ public:
         ParsedOptions parsedArguments = validationResult.second;
 
         if (!validationResult.first) {
-            ParseCallback<void> protectedDisplayError = relatedCommand.getErrorDisplay()
-                ? relatedCommand.getErrorDisplay()
-                : throw std::invalid_argument("Arguments validation failed. You can get better error message by providing displayError callback");
-            return std::make_pair(protectedDisplayError, parsedArguments);
+            return getOptionsError(relatedCommand, parsedArguments);
         }
 
         return std::make_pair(relatedCommand.getExecutable(), parsedArguments);
     }
 
+    virtual std::pair<ParseCallback<T>, ParsedOptions> getCommandError() = 0;
+    virtual std::pair<ParseCallback<T>, ParsedOptions> getOptionsError(ParserCommandInfo<T> command, ParsedOptions arguments) = 0;
     virtual BindedParseCallback<T> bindedParse(const std::string &input) = 0;
     virtual void executedParse(const std::string &input) = 0;
 };

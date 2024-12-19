@@ -18,5 +18,19 @@ public:
         };
     }
 
+    template<class TClass, class TOptions, class TReturn>
+    static std::function<TReturn(TOptions)> methodToFunction(TReturn (TClass::*method)(TOptions), TClass *instance) {
+        return [method, instance](TOptions options) {
+            return (instance->*method)(options);
+        };
+    }
+
+    template <typename TClass, typename TReturn, typename... TArgs>
+    static std::function<TReturn(TArgs...)> methodToFunction(TReturn (TClass::*method)(TArgs...), TClass* instance) {
+        return [method, instance](TArgs... args) -> TReturn {
+            return (instance->*method)(args...);
+        };
+    }
+
     static std::pair<int, int> cell(const std::string& coord);
 };

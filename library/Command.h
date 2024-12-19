@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+
 #include "ParserCommandInfo.h"
 
 template <typename T>
@@ -8,5 +10,3 @@ public:
 
     virtual void execute(T data) = 0;
 };
-
-class ParserCommand : public Command<ParsedOptions> {};

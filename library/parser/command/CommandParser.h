@@ -1,36 +1,32 @@
 #pragma once
-#include "Command.h"
+
+#include "../ParserCommand.h"
 #include "Parser.h"
 
 using ParseResult = std::pair<ParseCallback<ParserCommand*>, ParsedOptions>;
 
 
 class CommandParser : Parser<ParserCommand*> {
+private:
+    ParserCommand* printCommandsHelp(ParsedOptions options);
+    ParserCommand* printCommandsError(ParsedOptions options);
+    ParserCommand* printArgumentsError(ParserCommandInfo<ParserCommand *> command, ParsedOptions options);
 public:
-    explicit CommandParser(const SchemeMap<ParserCommand*> &scheme)
-        : Parser<ParserCommand*>(scheme) {
-    }
+    explicit CommandParser(const SchemeMap<ParserCommand*> &scheme);
 
     CommandParser(
         const SchemeMap<ParserCommand*> &scheme,
         const ParseCallback<void> &displayError,
         const SchemeHelpCallback<void> &printHelp = nullptr
-    )
-        : Parser<ParserCommand*>(scheme, displayError, printHelp)
-    {}
+    );
 
     ~CommandParser() override = default;
 
-    void executedParse(const std::string &input) override {
-        ParseResult parseResult = this->parse(input);
-        if (parseResult.first) {
-            ParserCommand* command = parseResult.first(parseResult.second);
-            command->execute(parseResult.second);
-        }
-    }
-
-    BindedParseCallback<ParserCommand*> bindedParse(const std::string &input) override {
-        ParseResult result = this->parse(input);
-        return std::bind(result.first, result.second);
-    }
+    void executedParse(const std::string &input) override;
+    std::pair<ParseCallback<ParserCommand *>, ParsedOptions> getCommandError() override;
+    BindedParseCallback<ParserCommand*> bindedParse(const std::string &input) override;
+    std::pair<ParseCallback<ParserCommand *>, ParsedOptions> getOptionsError(
+        ParserCommandInfo<ParserCommand *> command,
+        ParsedOptions arguments
+    ) override;
 };

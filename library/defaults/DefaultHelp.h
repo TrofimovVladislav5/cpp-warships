@@ -19,7 +19,10 @@ public:
     };
 
     template <typename T>
-    static void PrintCommand(const std::pair<std::string, ParserCommandInfo<T>>& command, const std::function<void(ParserParameter)> &printParam) {
+    static void PrintCommand(
+        std::pair<std::string, ParserCommandInfo<T>> command,
+        std::function<void(ParserParameter)> printParam
+    ) {
         ParserCommandInfo currentCommand = command.second;
         ViewHelper::consoleOut("print '" + command.first + "': ", 1);
         ViewHelper::consoleOut("├── description: " + currentCommand.getDescription(), 1);

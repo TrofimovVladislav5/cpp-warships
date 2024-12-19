@@ -169,11 +169,19 @@ add_executable(cpp_warships main.cpp
         controller/game-states/TransitGameState.h
         library/parser/command/ParserCommandWrapper.cpp
         library/parser/command/ParserCommandWrapper.h
-        library/parser/command/Command.h
+        library/Command.h
         library/parser/command/CommandParser.cpp
         library/parser/command/CommandParser.h
         library/parser/void/VoidParser.cpp
         library/parser/void/VoidParser.h
+        library/input-reader/InputReader.h
+        library/parser/ParserCommand.h
+        library/parser/command/helpers/HelpCommand.cpp
+        library/parser/command/helpers/HelpCommand.h
+        library/parser/command/helpers/ErrorCommand.cpp
+        library/parser/command/helpers/ErrorCommand.h
+        library/parser/command/helpers/ArgumentsErrorCommand.cpp
+        library/parser/command/helpers/ArgumentsErrorCommand.h
 )
 
 target_link_libraries(cpp_warships PRIVATE nlohmann_json::nlohmann_json)
