@@ -10,7 +10,7 @@
 #include "library/TypesHelper.h"
 #include "library/parser-builder/ConfigCommandBuilder.h"
 #include "library/defaults/DefaultParserError.h"
-#include "save/GameSaveCreator.h"
+#include "controller/save/GameSaveCreator.h"
 #include "void/VoidParser.h"
 
 
@@ -50,6 +50,7 @@ void MenuGameState::handleList(ParsedOptions options) {
 MenuGameState::MenuGameState(StateContext& context) 
     : GameState(context)
     , matchBuilder(new MatchBuilder(context.getInputReader()))
+    , isRunning(false)
 {
     ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;

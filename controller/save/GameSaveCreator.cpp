@@ -199,5 +199,9 @@ GameStateDTO* GameSaveCreator::distributorLoadSave(const json &j) {
         }
     }
 
+    if (dto->lastSubState == "BattleOngoingGameSubState" && !dto->playerSkillManager) {
+        dto->playerSkillManager = new SkillManager({},dto->enemyField, dto->settings);
+    }
+
     return dto;
 }

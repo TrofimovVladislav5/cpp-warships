@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <utility>
 
 #include "game-states/GameState.h"

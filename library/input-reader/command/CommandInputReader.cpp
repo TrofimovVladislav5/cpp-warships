@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "StringHelper.h"
+#include <filesystem>
 
 CommandInputReader::CommandInputReader(const std::string &filename, char delimiter)
     : keymap({})

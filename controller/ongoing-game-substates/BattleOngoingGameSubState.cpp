@@ -39,6 +39,7 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext* context)
     , battleController(new BattleController(context->matchDTO))
     , enemyPlaceController(nullptr)
     , view(BattleView(context->matchDTO))
+    , isPaused(false)
 {
     context->matchDTO->lastSubState = "BattleOngoingGameSubState";
 
