@@ -25,10 +25,11 @@ private:
     bool isLoaded;
     bool isLoadedFromTemplate;
     GameStateDTO* currentData;
+    InputReader<>* reader;
     OngoingGameSubState* initializeNewMatch();
     OngoingGameSubState* loadSavedMatch();
 public:
-    explicit MatchBuilder();
+    explicit MatchBuilder(InputReader<>* reader);
     void newGame(bool fromTemplate = true);
     bool loadSave(const std::string &filename);
     void printBattleScreenshot();

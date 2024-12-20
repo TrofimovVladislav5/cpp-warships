@@ -72,7 +72,6 @@ add_executable(cpp_warships main.cpp
         controller/PlaceShipController.h
         controller/MatchSettingsController.cpp
         controller/MatchSettingsController.h
-        controller/GameController.cpp
         controller/GameController.h
         model/game/GameField.cpp
         model/game/GameField.h
@@ -182,6 +181,12 @@ add_executable(cpp_warships main.cpp
         library/parser/command/helpers/ErrorCommand.h
         library/parser/command/helpers/ArgumentsErrorCommand.cpp
         library/parser/command/helpers/ArgumentsErrorCommand.h
+        library/input-reader/console/ConsoleInputReader.cpp
+        library/input-reader/console/ConsoleInputReader.h
+        library/input-reader/config/ConfigInputReader.cpp
+        library/input-reader/config/ConfigInputReader.h
+        library/input-reader/command/CommandInputReader.cpp
+        library/input-reader/command/CommandInputReader.h
 )
 
 target_link_libraries(cpp_warships PRIVATE nlohmann_json::nlohmann_json)

@@ -95,8 +95,7 @@ void BattleOngoingGameSubState::updateSubState() {
 
     try {
         view.printBattleState();
-        std::string input;
-        std::getline(std::cin, input);
+        std::string input = context->getInputReader()->readCommand();
         parser.executedParse(input);
     } catch (const BattleException& exception) {
         exception.displayError();

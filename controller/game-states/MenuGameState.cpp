@@ -49,8 +49,7 @@ void MenuGameState::handleList(ParsedOptions options) {
 
 MenuGameState::MenuGameState(StateContext& context) 
     : GameState(context)
-    , matchBuilder(new MatchBuilder())
-    , latestCommand("")
+    , matchBuilder(new MatchBuilder(context.getInputReader()))
 {
     ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
@@ -132,9 +131,8 @@ void MenuGameState::closeState() {
 }
 
 void MenuGameState::updateState() {
-    std::string input;
     StateMessages::awaitCommandMessage();
-    std::getline(std::cin, input);
+    std::string input = context.getInputReader()->readCommand();
     VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);
 }

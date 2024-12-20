@@ -1,0 +1,11 @@
+new --default true
+info
+confirm
+shuffle
+confirm
+attack --cell F4
+attack --cell F5
+attack --cell F6
+attack --cell F7
+attack --cell E7
+attack --cell G7

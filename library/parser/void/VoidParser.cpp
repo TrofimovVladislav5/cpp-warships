@@ -1,5 +1,6 @@
 #include "VoidParser.h"
 
+#include "ConfigCommandBuilder.h"
 #include "ParserCommandInfo.h"
 
 

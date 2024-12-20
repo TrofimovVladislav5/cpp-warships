@@ -1,0 +1,8 @@
+h;new
+u;confirm
+y;set --size 10
+
+s;yes
+o;shuffle
+c;confirm
+i;attack --cell A1

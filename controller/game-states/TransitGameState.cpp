@@ -47,9 +47,8 @@ void TransitGameState::openState() {
 }
 
 void TransitGameState::updateState() {
-    std::string input;
     StateMessages::awaitCommandMessage();
-    std::getline(std::cin, input);
+    std::string input = context.getInputReader()->readCommand();
     VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);
 }

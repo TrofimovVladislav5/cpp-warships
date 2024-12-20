@@ -1,5 +1,6 @@
 #include "CommandParser.h"
 
+#include "ConfigCommandBuilder.h"
 #include "helpers/ArgumentsErrorCommand.h"
 #include "helpers/ErrorCommand.h"
 #include "helpers/HelpCommand.h"

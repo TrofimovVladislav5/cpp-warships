@@ -8,7 +8,7 @@
 #include "save/GameSaveCreator.h"
 
 OngoingGameSubState* MatchBuilder::initializeNewMatch() {
-    SubStateContext* context = new SubStateContext(currentData);
+    SubStateContext* context = new SubStateContext(currentData, reader);
 
     if (isLoadedFromTemplate) {
         return new InitiateOngoingGameSubState(context);
@@ -18,7 +18,7 @@ OngoingGameSubState* MatchBuilder::initializeNewMatch() {
 }
 
 OngoingGameSubState* MatchBuilder::loadSavedMatch() {
-    SubStateContext* context = new SubStateContext(currentData);
+    SubStateContext* context = new SubStateContext(currentData, reader);
 
     try {
         if (
@@ -33,10 +33,11 @@ OngoingGameSubState* MatchBuilder::loadSavedMatch() {
     }
 }
 
-MatchBuilder::MatchBuilder()
+MatchBuilder::MatchBuilder(InputReader<>* reader)
     : isLoaded(false)
     , isLoadedFromTemplate(false)
     , currentData(nullptr)
+    , reader(reader)
 {}
 
 void MatchBuilder::newGame(bool fromTemplate) {

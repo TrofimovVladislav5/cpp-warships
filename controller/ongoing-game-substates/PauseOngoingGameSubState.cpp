@@ -25,7 +25,7 @@ void PauseOngoingGameSubState::handleLoad(ParsedOptions options) {
         ViewHelper::consoleOut("Save loaded successfully");
 
         const bool isForcedLoad = options["force"] == "true";
-        const bool isConfirmed = isForcedLoad || ViewHelper::confirmAction("yes");
+        const bool isConfirmed = isForcedLoad || ViewHelper::confirmAction(context->getInputReader(), "yes");
 
         if (isConfirmed) {
             loadedSubState = matchBuilder.getStateBuilder()();
@@ -50,7 +50,7 @@ void PauseOngoingGameSubState::handleSave(ParsedOptions options) {
 
 PauseOngoingGameSubState::PauseOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
-    , matchBuilder(MatchBuilder())
+    , matchBuilder(MatchBuilder(context->getInputReader()))
     , view(GamePauseView(30))
     , loadedSubState(nullptr)
 {
@@ -117,8 +117,7 @@ void PauseOngoingGameSubState::updateSubState() {
     try {
         StateMessages::awaitCommandMessage();
         VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
-        std::string input;
-        std::getline(std::cin, input);
+        std::string input = context->getInputReader()->readCommand();
         parser.executedParse(input);
     } catch (std::exception &e) {
         ViewHelper::errorOut("Can't parse the inputted command", e);

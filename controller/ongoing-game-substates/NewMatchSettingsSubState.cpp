@@ -53,8 +53,7 @@ void NewMatchSettingsSubState::closeSubState() {
 
 void NewMatchSettingsSubState::updateSubState() {
     StateMessages::awaitCommandMessage();
-    std::string input;
-    std::getline(std::cin, input);
+    std::string input = context->getInputReader()->readCommand();
     VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);
 }
@@ -75,7 +74,7 @@ OngoingGameSubState* NewMatchSettingsSubState::transitToSubState() {
             ViewHelper::consoleOut(sizeString, 1);
         }
 
-        if (ViewHelper::confirmAction("yes")) {
+        if (ViewHelper::confirmAction(context->getInputReader(), "yes")) {
             this->context->matchDTO = new GameStateDTO(currentSettings);
             return new InitiateOngoingGameSubState(context);
         } else {

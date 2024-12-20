@@ -1,6 +1,6 @@
 #pragma once
 
-template <typename T>
+template <typename T = std::string>
 class InputReader {
 public:
     virtual ~InputReader() = default;

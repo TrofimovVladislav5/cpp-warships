@@ -120,8 +120,7 @@ void InitiateOngoingGameSubState::updateSubState() {
     VoidParser parser(inputScheme, DefaultParserError::CommandNotFoundError);
 
     try {
-        std::string input;
-        std::getline(std::cin, input);
+        std::string input = context->getInputReader()->readCommand();
         parser.executedParse(input);
         placeControllerView->displayCurrentField();
         placeControllerView->displayShipsLeft();
