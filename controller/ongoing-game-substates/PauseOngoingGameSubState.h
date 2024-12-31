@@ -1,15 +1,22 @@
 #pragma once
+#include "GamePauseView.h"
+#include "MatchBuilder.h"
 #include "OngoingGameSubState.h"
 #include "Parser.h"
+#include "save/GameSaveCreator.h"
 
 
 class PauseOngoingGameSubState final : public OngoingGameSubState {
 private:
-    SchemeMap inputScheme;
-    std::string latestCommand;
+    SchemeMap<void> inputScheme;
+    MatchBuilder matchBuilder;
+    GamePauseView view;
+    OngoingGameSubState* loadedSubState;
     void handleResume(ParsedOptions options);
+    void handleSave(ParsedOptions options);
+    void handleLoad(ParsedOptions options);
 public:
-    PauseOngoingGameSubState(SubStateContext& context);
+    explicit PauseOngoingGameSubState(SubStateContext* context);
     void openSubState() override;
     void closeSubState() override;
     void updateSubState() override;

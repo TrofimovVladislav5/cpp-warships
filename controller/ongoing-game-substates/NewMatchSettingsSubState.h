@@ -4,14 +4,13 @@
 
 class NewMatchSettingsSubState : public OngoingGameSubState {
 private:
-    SchemeMap inputScheme;
-    SchemeMap finishScheme;
+    SchemeMap<void> inputScheme;
     MatchSettingsController* controller;
     bool isConfirmed = false;
     MatchSettings* currentSettings;
     void handleMatchSettings(ParsedOptions options);
 public:
-    explicit NewMatchSettingsSubState(SubStateContext& context);
+    explicit NewMatchSettingsSubState(SubStateContext* context);
     ~NewMatchSettingsSubState() override;
     void openSubState() override;
     void closeSubState() override;

@@ -10,7 +10,8 @@ enum class Direction{
 enum class AttackResult{
     miss,
     damaged,
-    destroyed
+    destroyed,
+    outOfBounds
 };
 
 struct hashFunc {

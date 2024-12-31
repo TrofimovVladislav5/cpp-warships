@@ -4,9 +4,10 @@
 #include "library/TypesHelper.h"
 #include "library/defaults/DefaultParserError.h"
 #include "InitiateOngoingGameSubState.h"
-#include "ShipManager.h"
+#include "../ShipManager.h"
 #include "StateMessages.h"
 #include "ViewHelper.h"
+#include "void/VoidParser.h"
 
 
 void NewMatchSettingsSubState::handleMatchSettings(ParsedOptions options) {
@@ -14,11 +15,12 @@ void NewMatchSettingsSubState::handleMatchSettings(ParsedOptions options) {
     currentSettings = controller->createMatchSettings(fieldSize);
 }
 
-NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext& context)
+NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext* context)
     : OngoingGameSubState(context)
     , controller(new MatchSettingsController())
+    , currentSettings(nullptr)
 {
-    ConfigCommandBuilder commandBuilder;
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"set", ParserCommandInfo(
@@ -30,16 +32,16 @@ NewMatchSettingsSubState::NewMatchSettingsSubState(SubStateContext& context)
                     parameterBuilder
                         .addFlag("--size")
                         .setValidator(std::regex("^(1[0-9]|2[0-5])$"))
-                        .setNecessary(false)
+                        .setNecessary(true)
                         .buildAndReset()
                 )
                 .buildAndReset()
-
         )}
     };
 }
 
 NewMatchSettingsSubState::~NewMatchSettingsSubState() {
+    delete currentSettings;
     delete controller;
 }
 
@@ -51,28 +53,32 @@ void NewMatchSettingsSubState::closeSubState() {
 
 void NewMatchSettingsSubState::updateSubState() {
     StateMessages::awaitCommandMessage();
-
-    std::string input;
-    std::getline(std::cin, input);
-    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+    std::string input = context->getInputReader()->readCommand();
+    VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
     parser.executedParse(input);
 }
 
 OngoingGameSubState* NewMatchSettingsSubState::transitToSubState() {
-    if (!currentSettings) {
-        return nullptr;
-    } else {
+    if (currentSettings) {
         auto* playerManager = new ShipManager(currentSettings->getShipsCount());
         std::vector<Ship*> ships = playerManager->getShips();
-        ViewHelper::consoleOut("Optimal set of ships is: ");
-        for (const auto& ship : ships) {
-            ViewHelper::consoleOut(std::to_string(ship->getLength()), 1);
+        std::map<int, int> shipsSizes = currentSettings->getShipsCount();
+
+        ViewHelper::consoleOut("Optimal set of ships: ");
+        for (const auto& [size, amount] : shipsSizes) {
+            std::string sizeString = std::string("Amount of ships with size ")
+                .append(std::to_string(size))
+                .append(": ")
+                .append(std::to_string(amount));
+
+            ViewHelper::consoleOut(sizeString, 1);
         }
 
-        ViewHelper::consoleOut("Do you want to confirm these settings? (yes/no)");
-        if (ViewHelper::confirmAction("yes")) {
-            this->context.matchDTO = new GameStateDTO(currentSettings);
+        if (ViewHelper::confirmAction(context->getInputReader(), "yes")) {
+            this->context->matchDTO = new GameStateDTO(currentSettings);
             return new InitiateOngoingGameSubState(context);
+        } else {
+            this->currentSettings = nullptr;
         }
     }
 

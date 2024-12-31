@@ -1,5 +1,5 @@
 #include "StringHelper.h"
-
+#include <algorithm>
 #include <stdexcept>
 
 // template<typename T>
@@ -43,4 +43,15 @@ std::string StringHelper::toLower(const std::string& input) {
         return std::tolower(c);
     });
     return result;
+}
+
+std::string StringHelper::trim(const std::string& str) {
+    auto start = str.find_first_not_of(' ');
+    auto end = str.find_last_not_of(' ');
+
+    if (start == std::string::npos || end == std::string::npos) {
+        return "";
+    }
+
+    return str.substr(start, end - start + 1);
 }

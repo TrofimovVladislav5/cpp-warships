@@ -4,9 +4,9 @@
 
 class OngoingGameSubState {
 protected:
-    SubStateContext& context;
+    SubStateContext* context;
 public:
-    explicit OngoingGameSubState(SubStateContext& context);
+    explicit OngoingGameSubState(SubStateContext* context);
     virtual ~OngoingGameSubState() = default;
     virtual void openSubState() = 0;
     virtual void updateSubState() = 0;

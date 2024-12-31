@@ -1,12 +1,16 @@
 #pragma once
-#include <functional>
 
 #include "game/GameStateDTO.h"
+#include "input-reader/InputReader.h"
+#include "ongoing-game-substates/OngoingGameSubState.h"
 
 class StateContext {
+    InputReader<>* inputReader;
 public:
-    StateContext();
-    GameStateDTO* currentMatch;
-    std::function<void(StateContext&)> finishCallback;
-    std::function<void(StateContext&)> finishMatchCallback;
+    explicit StateContext(InputReader<>* inputReader = nullptr);
+    ~StateContext() = default;
+
+    GameStateDTO* currentMatchData;
+    OngoingGameSubState* initialGameSubState;
+    [[nodiscard]] InputReader<>* getInputReader() const;
 };

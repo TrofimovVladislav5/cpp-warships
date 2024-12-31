@@ -6,8 +6,8 @@ class ShipManager;
 
 class ShootingRandomlySkill : public ISkill  {
 private:
-     ShipManager* opponentShipManager;
+     GameField* enemyField;
 public:
-     explicit ShootingRandomlySkill(ShipManager* opponentShipManager);
+     explicit ShootingRandomlySkill(GameField* enemyField);
      void apply() override;
 };

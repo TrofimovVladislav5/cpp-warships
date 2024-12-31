@@ -2,6 +2,7 @@
 
 #include "Structures.h"
 #include "TypesHelper.h"
+#include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 #include "game/GameStateDTO.h"
 
@@ -12,7 +13,9 @@ Player::Player(GameStateDTO* dto)
 {}
 
 Player::~Player() {
+    delete playerAttackHandler;
     delete skillsManager;
+    delete opponentField;
 }
 
 void Player::applySkill(ParsedOptions options) {
@@ -24,10 +27,18 @@ void Player::applySkill(ParsedOptions options) {
     }
 }
 
+bool Player::isWin() const {
+    // return true; TODO: REMOVE WHEN PROTECTION ENDED
+    return opponentField->isAllShipsDestroyed();
+}
+
 bool Player::makeAShot(ParsedOptions options) {
+
     std::pair<int, int> attackCell = TypesHelper::cell(options["cell"]);
     AttackResult currentAttack = playerAttackHandler->attack(attackCell);
-
+    if (currentAttack == AttackResult::outOfBounds) {
+        throw BattleException("Invalid cell coordinates");
+    }
     if (currentAttack != AttackResult::miss) {
         if (currentAttack == AttackResult::destroyed) {
             skillsManager->addSkill();

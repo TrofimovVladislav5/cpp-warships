@@ -1,15 +1,8 @@
 #include "BattleController.h"
 #include <random>
 
+#include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
-
-
-void BattleController::printBattleState() {
-    playerView->displayField(false, false);
-    opponentView->displayField(false, false);
-    skillManagerView->displayCurrentSkill();
-    skillManagerView->displayAvailableSkills();
-}
 
 BattleController::BattleController(GameStateDTO* dto)
     : battleIsFinished(false)
@@ -19,18 +12,14 @@ BattleController::BattleController(GameStateDTO* dto)
     , computer(new ComputerPlayer(dto->playerField))
 {
     skillManagerView = new SkillManagerView(dto->playerSkillManager);
-
 }
 
 BattleController::~BattleController() {
     delete playerView;
     delete opponentView;
     delete player;
+    delete skillManagerView;
     delete computer;
-}
-
-bool BattleController::finishBattle() const{
-    return battleIsFinished;
 }
 
 void BattleController::applySkill(ParsedOptions options) {
@@ -42,15 +31,23 @@ void BattleController::applySkill(ParsedOptions options) {
     }
 
     computer->makeAShot();
-    printBattleState();
 }
 
 void BattleController::battle(ParsedOptions options) {
-    bool keepTurn = player->makeAShot(std::move(options));
+    try {
+        bool keepTurn = player->makeAShot(std::move(options));
 
-    if (!keepTurn) {
-        while (computer->makeAShot());
+        if (!keepTurn) {
+            while (computer->makeAShot());
+        }
+    } catch (const BattleException& exception) {
+        exception.displayError();
     }
+}
 
-    printBattleState();
+BattleWinner BattleController::getBattleWinner() const {
+    if (player->isWin()) return BattleWinner::User;
+    else if (computer->isWin()) return BattleWinner::Computer;
+
+    return BattleWinner::None;
 }

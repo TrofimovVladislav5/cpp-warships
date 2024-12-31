@@ -1,7 +1,11 @@
 #include "StateContext.h"
 
-StateContext::StateContext() {
-    currentMatch = nullptr;
-    finishCallback = nullptr;
-    finishMatchCallback = nullptr;
+StateContext::StateContext(InputReader<>* inputReader)
+    : currentMatchData(nullptr)
+    , initialGameSubState(nullptr)
+    , inputReader(inputReader)
+{}
+
+InputReader<> * StateContext::getInputReader() const {
+    return inputReader;
 }

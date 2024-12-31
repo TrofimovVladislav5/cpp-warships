@@ -14,5 +14,10 @@ public:
     virtual ParserParameterBuilder& setValidator(std::regex validator) = 0;
     virtual ParserParameterBuilder& setDescription(std::string description) = 0;
     virtual ParserParameterBuilder& setNecessary(bool necessary) = 0;
-    void reset();
+    void reset() {
+        flags.clear();
+        validator = ".";
+        description = "";
+        necessary = false;
+    };
 };

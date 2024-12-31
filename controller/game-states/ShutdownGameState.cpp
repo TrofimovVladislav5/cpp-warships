@@ -1,19 +1,18 @@
 #include "ShutdownGameState.h"
 
+#include "ViewHelper.h"
+
 
 ShutdownGameState::ShutdownGameState(StateContext& context)
     : GameState(context)
 {}
 
-ShutdownGameState::~ShutdownGameState()
-{}
-
 void ShutdownGameState::openState() {
-    context.finishCallback(context);
+    context.currentMatchData->isFinished = true;
 }
 
 void ShutdownGameState::updateState() {
-
+    ViewHelper::consoleOut("Good good bye!");
 }
 
 void ShutdownGameState::closeState() {

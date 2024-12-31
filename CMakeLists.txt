@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(cpp_warships)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
 include_directories(.)
-include_directories(controller)
+include_directories(controller/)
 include_directories(library)
 include_directories(library/parser)
 include_directories(library/parser-builder)
@@ -14,33 +16,33 @@ include_directories(view)
 include_directories(view/game-states)
 include_directories(view/model)
 
-add_executable(cpp_warships
-        main.cpp
+
+include(FetchContent)
+
+FetchContent_Declare(
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.10.0
+)
+
+FetchContent_MakeAvailable(nlohmann_json)
+
+add_executable(cpp_warships main.cpp
         library/ViewHelper.cpp
         library/ViewHelper.h
-        library/parser/ParserParameter.cpp
         library/parser/ParserParameter.h
-        library/parser/ParserCommandInfo.cpp
         library/parser/ParserCommandInfo.h
-        library/parser/Parser.cpp
         library/parser/Parser.h
         library/StringHelper.cpp
         library/StringHelper.h
         library/TypesHelper.cpp
         library/TypesHelper.h
-        library/parser-builder/ParserCommandBuilder.cpp
         library/parser-builder/ParserCommandBuilder.h
-        library/parser-builder/ConfigCommandBuilder.cpp
         library/parser-builder/ConfigCommandBuilder.h
-        library/parser-builder/ParserBuilderDirector.cpp
         library/parser-builder/ParserBuilderDirector.h
-        library/parser-builder/ParserParameterBuilder.cpp
         library/parser-builder/ParserParameterBuilder.h
-        library/parser-builder/DefaultParameterBuilder.cpp
         library/parser-builder/DefaultParameterBuilder.h
-        library/parser-builder/CommandBuildDirector.cpp
         library/parser-builder/CommandBuildDirector.h
-        library/parser-builder/ParameterBuildDirector.cpp
         library/parser-builder/ParameterBuildDirector.h
         library/parser/__showcase__/parserShowcase.h
         library/parser/__showcase__/parserShowcaseInline.h
@@ -58,21 +60,20 @@ add_executable(cpp_warships
         controller/game-states/ShutdownGameState.h
         controller/BattleController.cpp
         controller/BattleController.h
-        controller/ongoing-game-substates/BattleOngoingGameSubstate.cpp
-        controller/ongoing-game-substates/BattleOngoingGameSubstate.h
-        controller/ongoing-game-substates/FinishOngoingGameSubstate.cpp
-        controller/ongoing-game-substates/FinishOngoingGameSubstate.h
-        controller/ongoing-game-substates/InitiateOngoingGameSubstate.cpp
-        controller/ongoing-game-substates/InitiateOngoingGameSubstate.h
+        controller/ongoing-game-substates/BattleOngoingGameSubState.cpp
+        controller/ongoing-game-substates/BattleOngoingGameSubState.h
+        controller/ongoing-game-substates/FinishOngoingGameSubState.cpp
+        controller/ongoing-game-substates/FinishOngoingGameSubState.h
+        controller/ongoing-game-substates/InitiateOngoingGameSubState.cpp
+        controller/ongoing-game-substates/InitiateOngoingGameSubState.h
         controller/ongoing-game-substates/NewMatchSettingsSubState.cpp
         controller/ongoing-game-substates/NewMatchSettingsSubState.h
-        controller/ongoing-game-substates/PauseOngoingGameSubstate.cpp
-        controller/ongoing-game-substates/PauseOngoingGameSubstate.h
+        controller/ongoing-game-substates/PauseOngoingGameSubState.cpp
+        controller/ongoing-game-substates/PauseOngoingGameSubState.h
         controller/PlaceShipController.cpp
         controller/PlaceShipController.h
         controller/MatchSettingsController.cpp
         controller/MatchSettingsController.h
-        controller/GameController.cpp
         controller/GameController.h
         model/game/GameField.cpp
         model/game/GameField.h
@@ -86,8 +87,8 @@ add_executable(cpp_warships
         model/game/Segment.h
         model/game/Ship.cpp
         model/game/Ship.h
-        model/ShipManager.cpp
-        model/ShipManager.h
+        controller/ShipManager.cpp
+        controller/ShipManager.h
         model/StateContext.cpp
         model/StateContext.h
         model/Structures.cpp
@@ -100,10 +101,6 @@ add_executable(cpp_warships
         view/game-states/ShutdownGameView.h
         view/game-substates/InitiateOngoingGameView.cpp
         view/game-substates/InitiateOngoingGameView.h
-        #        view/game-substates/BattleOngoingGameSubState.cpp
-#        view/game-substates/BattleOngoingGameSubState.h
-#        view/game-substates/FinishOngoingGameSubState.cpp
-#        view/game-substates/FinishOngoingGameSubState.h
         view/GameFieldView.cpp
         view/GameFieldView.h
         library/defaults/Initials.h
@@ -145,4 +142,53 @@ add_executable(cpp_warships
         controller/AttackHandler.h
         view/SkillManagerView.cpp
         view/SkillManagerView.h
+        model/save/Serializer.h
+        controller/save/GameSaveCreator.h
+        controller/save/GameSaveCreator.cpp
+        controller/save/SerializerManager.cpp
+        controller/save/SerializerManager.h
+        model/save/SerializerGameField.h
+        model/save/SerializerGameField.cpp
+        model/save/Serializer.cpp
+        model/save/SerializerMatchSettings.h
+        model/save/SerializerMatchSettings.cpp
+        controller/save/SerializerSkillManager.h
+        model/save/SerializerSimplifyObjects.h
+        model/save/SerializerSimplifyObjects.cpp
+        controller/save/SerializerSkillManager.cpp
+        model/save/SerializerFactory.h
+        controller/save/JsonFileHandler.h
+        controller/save/JsonFileHandler.cpp
+        view/ShipManagerView.cpp
+        controller/MatchBuilder.cpp
+        controller/MatchBuilder.h
+        view/GamePauseView.cpp
+        view/GamePauseView.h
+        view/BattleView.cpp
+        view/BattleView.h
+        controller/game-states/TransitGameState.cpp
+        controller/game-states/TransitGameState.h
+        library/parser/command/ParserCommandWrapper.cpp
+        library/parser/command/ParserCommandWrapper.h
+        library/Command.h
+        library/parser/command/CommandParser.cpp
+        library/parser/command/CommandParser.h
+        library/parser/void/VoidParser.cpp
+        library/parser/void/VoidParser.h
+        library/input-reader/InputReader.h
+        library/parser/ParserCommand.h
+        library/parser/command/helpers/HelpCommand.cpp
+        library/parser/command/helpers/HelpCommand.h
+        library/parser/command/helpers/ErrorCommand.cpp
+        library/parser/command/helpers/ErrorCommand.h
+        library/parser/command/helpers/ArgumentsErrorCommand.cpp
+        library/parser/command/helpers/ArgumentsErrorCommand.h
+        library/input-reader/console/ConsoleInputReader.cpp
+        library/input-reader/console/ConsoleInputReader.h
+        library/input-reader/config/ConfigInputReader.cpp
+        library/input-reader/config/ConfigInputReader.h
+        library/input-reader/command/CommandInputReader.cpp
+        library/input-reader/command/CommandInputReader.h
 )
+
+target_link_libraries(cpp_warships PRIVATE nlohmann_json::nlohmann_json)

@@ -3,7 +3,11 @@
 #include "../model/ComputerPlayer.h"
 #include "../view/GameFieldView.h"
 #include "../model/Player.h"
+#include "save/GameSaveCreator.h"
 
+enum BattleWinner {
+    User, Computer, None
+};
 
 class BattleController {
 private:
@@ -15,9 +19,9 @@ private:
     bool battleIsFinished;
     void printBattleState();
 public:
-    explicit BattleController(GameStateDTO* dto);
-    ~BattleController();
-    bool finishBattle() const;
     void applySkill(ParsedOptions options);
     void battle(ParsedOptions options);
+    explicit BattleController(GameStateDTO* dto);
+    ~BattleController();
+    BattleWinner getBattleWinner() const;
 };

@@ -1,5 +1,5 @@
 #pragma once
-#include "ShipManager.h"
+#include "../controller/ShipManager.h"
 #include <iostream>
 class ShipManagerView {
 private:

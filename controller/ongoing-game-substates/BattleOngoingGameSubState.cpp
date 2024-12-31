@@ -1,21 +1,49 @@
 #include "game-states/OngoingGameState.h"
 #include "BattleOngoingGameSubState.h"
-
 #include "DefaultParameterBuilder.h"
 #include "DefaultParserError.h"
 #include "FinishOngoingGameSubState.h"
+#include "PauseOngoingGameSubState.h"
 #include "StateMessages.h"
 #include "TypesHelper.h"
 #include "../../library/ViewHelper.h"
 #include "exceptions/BattleException.h"
 #include "parser-builder/ConfigCommandBuilder.h"
+#include "void/VoidParser.h"
 
 
-BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
+OngoingGameSubState *BattleOngoingGameSubState::handleComputerWin() const {
+    ViewHelper::consoleOut("Computer won the battle on round " + std::to_string(context->matchDTO->roundNumber));
+    return new FinishOngoingGameSubState(context);
+}
+
+OngoingGameSubState * BattleOngoingGameSubState::handlePlayerWin() {
+    ViewHelper::consoleOut("Player won round number " + std::to_string(context->matchDTO->roundNumber));
+    context->matchDTO->roundNumber++;
+    enemyPlaceController = new PlaceShipController(context->matchDTO, context->matchDTO->enemyManager);
+    enemyPlaceController->placeShipsRandomly();
+    context->matchDTO->enemyField->updateShipsCoordinateMap(
+        enemyPlaceController->getCurrentField()->getShipsCoordinateMap()
+    );
+
+    return new BattleOngoingGameSubState(context);
+}
+
+void BattleOngoingGameSubState::handlePause(ParsedOptions options) {
+    isPaused = true;
+}
+
+
+BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext* context)
     : OngoingGameSubState(context)
-    , battleController(new BattleController(context.matchDTO))
+    , battleController(new BattleController(context->matchDTO))
+    , enemyPlaceController(nullptr)
+    , view(BattleView(context->matchDTO))
+    , isPaused(false)
 {
-    ConfigCommandBuilder commandBuilder;
+    context->matchDTO->lastSubState = "BattleOngoingGameSubState";
+
+    ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
     this->inputScheme = {
         {"attack", ParserCommandInfo(
@@ -38,6 +66,13 @@ BattleOngoingGameSubState::BattleOngoingGameSubState(SubStateContext& context)
                 .setDescription("Apply the skill")
                 .setDisplayError(DefaultParserError::WrongFlagValueError)
                 .buildAndReset()
+        )},
+        {"pause", ParserCommandInfo(
+            commandBuilder
+                .setCallback(TypesHelper::methodToFunction(&BattleOngoingGameSubState::handlePause, this))
+                .setDescription("Pause the battle")
+                .setDisplayError(DefaultParserError::WrongFlagValueError)
+                .buildAndReset()
         )}
     };
 }
@@ -57,11 +92,11 @@ void BattleOngoingGameSubState::closeSubState() {
 
 void BattleOngoingGameSubState::updateSubState() {
     StateMessages::awaitCommandMessage();
-    Parser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
+    VoidParser parser(this->inputScheme, DefaultParserError::CommandNotFoundError);
 
     try {
-        std::string input;
-        std::getline(std::cin, input);
+        view.printBattleState();
+        std::string input = context->getInputReader()->readCommand();
         parser.executedParse(input);
     } catch (const BattleException& exception) {
         exception.displayError();
@@ -69,8 +104,12 @@ void BattleOngoingGameSubState::updateSubState() {
 }
 
 OngoingGameSubState* BattleOngoingGameSubState::transitToSubState() {
-    if (battleController->finishBattle()) {
-        return new FinishOngoingGameSubState(context);
+    if (isPaused) {
+        return new PauseOngoingGameSubState(context);
+    } else if (battleController->getBattleWinner() == BattleWinner::Computer) {
+        return handleComputerWin();
+    } else if (battleController->getBattleWinner() == BattleWinner::User) {
+        return handlePlayerWin();
     }
 
     return nullptr;
