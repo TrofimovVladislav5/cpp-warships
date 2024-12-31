@@ -10,6 +10,7 @@ private:
     GameField* opponentField;
     AttackHandler* playerAttackHandler;
     SkillManager* skillsManager;
+
 public:
     explicit Player(GameStateDTO* dto);
     ~Player();

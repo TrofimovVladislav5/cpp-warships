@@ -8,6 +8,7 @@ private:
     GameFieldView playerField;
     GameFieldView enemyField;
     SkillManagerView skillManager;
+
 public:
     explicit BattleView(GameStateDTO* matchDto);
     void printBattleState();

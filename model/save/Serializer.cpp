@@ -2,13 +2,13 @@
 
 json Serializer::segmentToJson(const Segment& s) {
     return json{{"maxSegmentHealth", s.getMaxSegmentHealth()},
-                    {"currentSegmentHealth", s.getHitPoints()}};
+                {"currentSegmentHealth", s.getHitPoints()}};
 }
 
 json Serializer::shipToJson(const Ship& ship) {
     return json{{"maxSegmentHealth", ship.getMaxSegmentHealth()},
-                    {"segments", segmentsToJson(ship.getSegments())},
-                    {"length", ship.getLength()}};
+                {"segments", segmentsToJson(ship.getSegments())},
+                {"length", ship.getLength()}};
 }
 
 json Serializer::shipsSizesToJson(const std::map<int, int>& shipsSizes) {
@@ -61,7 +61,7 @@ std::vector<Ship*> Serializer::vectorShipsFromJson(const json& j) {
     return result;
 }
 
-std::map<int, int> Serializer::shipSizesFromJson(const json &j) {
+std::map<int, int> Serializer::shipSizesFromJson(const json& j) {
     std::map<int, int> result;
     for (const auto& [key, value] : j.items()) {
         result[std::stoi(key)] = value.get<int>();

@@ -4,6 +4,7 @@ class Segment {
 private:
     int maxSegmentHealth;
     int currentSegmentHealth;
+
 public:
     Segment(int maxSegmentHealth);
     Segment(int maxSegmentHealth, int currentSegmentHealth);

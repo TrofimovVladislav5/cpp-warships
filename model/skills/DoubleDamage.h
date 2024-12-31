@@ -2,11 +2,11 @@
 #include "../game/MatchSettings.h"
 #include "Skill.h"
 
-class DoubleDamage : public ISkill{
+class DoubleDamage : public ISkill {
 private:
-	MatchSettings* settings;
-public:
-	explicit DoubleDamage(MatchSettings* settings);
-	void apply() override;
-};
+    MatchSettings* settings;
 
+public:
+    explicit DoubleDamage(MatchSettings* settings);
+    void apply() override;
+};

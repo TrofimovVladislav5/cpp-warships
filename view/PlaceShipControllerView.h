@@ -6,6 +6,7 @@ class PlaceShipControllerView {
 private:
     PlaceShipController* controller;
     GameFieldView* currentFieldView;
+
 public:
     explicit PlaceShipControllerView(PlaceShipController* controller);
     void displayShipsLeft() const;

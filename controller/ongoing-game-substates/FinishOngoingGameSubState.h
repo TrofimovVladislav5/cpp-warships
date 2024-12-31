@@ -2,7 +2,6 @@
 #include "OngoingGameSubState.h"
 #include "Parser.h"
 
-
 class FinishOngoingGameSubState : public OngoingGameSubState {
 public:
     explicit FinishOngoingGameSubState(SubStateContext* context);

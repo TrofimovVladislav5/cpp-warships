@@ -1,17 +1,14 @@
 #include "Ship.h"
+
 #include <iostream>
 
-Ship::Ship(int length, int maxSegmentHealth)
-    : maxSegmentHealth(maxSegmentHealth)
-{
-    for (int i = 0; i < length;i++) {
+Ship::Ship(int length, int maxSegmentHealth) : maxSegmentHealth(maxSegmentHealth) {
+    for (int i = 0; i < length; i++) {
         segments.emplace_back(new Segment(maxSegmentHealth));
     }
 }
 
-Ship::Ship(std::vector<Segment*> segments)
-    : segments(segments)
-{}
+Ship::Ship(std::vector<Segment*> segments) : segments(segments) {}
 
 Ship::~Ship() {
     for (auto& segment : segments) {
@@ -19,9 +16,7 @@ Ship::~Ship() {
     }
 }
 
-int Ship::getLength() const{
-    return segments.size();
-}
+int Ship::getLength() const { return segments.size(); }
 
 int Ship::getSegmentHitPoints(int index) const {
     if (index < 0 || index >= segments.size()) {
@@ -30,9 +25,7 @@ int Ship::getSegmentHitPoints(int index) const {
     return segments[index]->getHitPoints();
 }
 
-int Ship::getMaxSegmentHealth() const{
-    return maxSegmentHealth;
-}
+int Ship::getMaxSegmentHealth() const { return maxSegmentHealth; }
 
 bool Ship::takeDamage(int indexSegment, int damageCount) {
     if (indexSegment < 0 || indexSegment >= segments.size()) {
@@ -43,12 +36,10 @@ bool Ship::takeDamage(int indexSegment, int damageCount) {
     return true;
 }
 
-std::vector<Segment*> Ship::getSegments() const {
-    return segments;
-}
+std::vector<Segment*> Ship::getSegments() const { return segments; }
 bool Ship::isDestroyed() {
     for (auto& segment : segments) {
-        if (!segment->isDestroyed()){
+        if (!segment->isDestroyed()) {
             return false;
         }
     }

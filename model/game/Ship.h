@@ -1,12 +1,14 @@
-#pragma once 
+#pragma once
 #include <string>
 #include <vector>
+
 #include "Segment.h"
 
 class Ship {
 private:
     int maxSegmentHealth;
     std::vector<Segment*> segments;
+
 public:
     explicit Ship(int length, int maxSegmentHealth = 2);
     explicit Ship(std::vector<Segment*> segments);

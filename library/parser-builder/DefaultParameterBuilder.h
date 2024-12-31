@@ -2,7 +2,7 @@
 #include "ParserParameterBuilder.h"
 #include "library/parser/ParserParameter.h"
 
-class DefaultParameterBuilder: public ParserParameterBuilder {
+class DefaultParameterBuilder : public ParserParameterBuilder {
 public:
     ~DefaultParameterBuilder() override = default;
 

@@ -5,6 +5,7 @@ class MatchSettings {
 private:
     std::map<int, int> shipSizesDictionary;
     int fieldSize;
+
 public:
     explicit MatchSettings(std::map<int, int> shipSizesDictionary, int fieldSize);
     int damageCount;

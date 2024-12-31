@@ -1,7 +1,6 @@
 #pragma once
-#include "../model/StateContext.h"
 #include "../library/parser/Parser.h"
-
+#include "../model/StateContext.h"
 
 class PlaceShipController {
 private:
@@ -13,6 +12,7 @@ private:
     void handleRemoveShip(std::pair<int, int> coordinate);
     bool isShipLengthAvailable(int length);
     void eraseShipsDictionary();
+
 public:
     bool allShipsPlaced();
     explicit PlaceShipController(GameStateDTO* context, ShipManager* manager);

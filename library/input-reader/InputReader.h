@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 
 template <typename T = std::string>
 class InputReader {

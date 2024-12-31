@@ -1,6 +1,5 @@
 #include "MatchSettingsController.h"
 
-
 MatchSettingsController::MatchSettingsController() {}
 
 MatchSettingsController::~MatchSettingsController() {}

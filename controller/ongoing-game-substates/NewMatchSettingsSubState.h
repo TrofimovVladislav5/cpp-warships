@@ -9,6 +9,7 @@ private:
     bool isConfirmed = false;
     MatchSettings* currentSettings;
     void handleMatchSettings(ParsedOptions options);
+
 public:
     explicit NewMatchSettingsSubState(SubStateContext* context);
     ~NewMatchSettingsSubState() override;

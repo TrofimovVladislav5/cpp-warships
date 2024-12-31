@@ -2,9 +2,7 @@
 
 #include "ViewHelper.h"
 
-SkillManagerView::SkillManagerView(SkillManager* skillManager)
-    : skillManager(skillManager)
-{}
+SkillManagerView::SkillManagerView(SkillManager* skillManager) : skillManager(skillManager) {}
 
 void SkillManagerView::displayAvailableSkills() {
     std::deque<std::string> skills = skillManager->getSkillsQueue();

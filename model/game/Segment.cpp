@@ -1,14 +1,10 @@
 #include "Segment.h"
 
-Segment::Segment(int maxSegmentHealth) 
-    : maxSegmentHealth(maxSegmentHealth)
-    , currentSegmentHealth(maxSegmentHealth)
-{}
+Segment::Segment(int maxSegmentHealth)
+    : maxSegmentHealth(maxSegmentHealth), currentSegmentHealth(maxSegmentHealth) {}
 
 Segment::Segment(int maxSegmentHealth, int currentSegmentHealth)
-    : maxSegmentHealth(maxSegmentHealth)
-    , currentSegmentHealth(currentSegmentHealth)
-{}
+    : maxSegmentHealth(maxSegmentHealth), currentSegmentHealth(currentSegmentHealth) {}
 
 void Segment::takeDamage(int damageCount) {
     currentSegmentHealth -= damageCount;
@@ -16,16 +12,9 @@ void Segment::takeDamage(int damageCount) {
         currentSegmentHealth = 0;
     }
 }
-    
-int Segment::getHitPoints() const {
-    return currentSegmentHealth;
-}
 
-int Segment::getMaxSegmentHealth() const {
-    return maxSegmentHealth;
-}
+int Segment::getHitPoints() const { return currentSegmentHealth; }
 
-bool Segment::isDestroyed() {
-    return currentSegmentHealth == 0;
-}
+int Segment::getMaxSegmentHealth() const { return maxSegmentHealth; }
 
+bool Segment::isDestroyed() { return currentSegmentHealth == 0; }

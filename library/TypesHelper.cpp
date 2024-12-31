@@ -18,7 +18,7 @@ std::pair<int, int> convertToPair(const std::string& input) {
     return {letterValue, numberValue};
 }
 
-std::pair<int, int> TypesHelper::cell(const std::string &coord) {
+std::pair<int, int> TypesHelper::cell(const std::string& coord) {
     if (coord.length() < 2) {
         throw std::invalid_argument("Input string is too short");
     }
@@ -33,4 +33,3 @@ std::pair<int, int> TypesHelper::cell(const std::string &coord) {
 
     return {letterValue, numberValue};
 }
-

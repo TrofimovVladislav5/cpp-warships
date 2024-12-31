@@ -10,8 +10,5 @@ public:
 template <typename SerializerType>
 class SpecificSerializerFactory final : public SerializerFactory {
 public:
-    Serializer* createSerializer() override {
-        return new SerializerType();
-    }
+    Serializer* createSerializer() override { return new SerializerType(); }
 };
-

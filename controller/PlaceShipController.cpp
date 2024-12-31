@@ -1,24 +1,21 @@
 #include "PlaceShipController.h"
 
-#include <string>
-#include <regex>
-#include "../model/Structures.h"
-
 #include <random>
+#include <regex>
+#include <string>
 
-#include "SubStateContext.h"
-#include "ViewHelper.h"
 #include "../library/TypesHelper.h"
 #include "../library/parser/Parser.h"
+#include "../model/Structures.h"
 #include "../view/GameFieldView.h"
+#include "SubStateContext.h"
+#include "ViewHelper.h"
 #include "exceptions/ShipPlacementException.h"
 
-
 PlaceShipController::PlaceShipController(GameStateDTO* dto, ShipManager* manager)
-    : currentField(new GameField(dto->fieldSize, dto->fieldSize))
-    , manager(manager)
-    , currentManager(new ShipManager({}))
-{
+    : currentField(new GameField(dto->fieldSize, dto->fieldSize)),
+      manager(manager),
+      currentManager(new ShipManager({})) {
     eraseShipsDictionary();
 }
 
@@ -37,9 +34,7 @@ void PlaceShipController::eraseShipsDictionary() {
     }
 }
 
-std::map<int, int> PlaceShipController::getAvailableLengthShips() {
-    return availableLengthShips;
-}
+std::map<int, int> PlaceShipController::getAvailableLengthShips() { return availableLengthShips; }
 
 bool PlaceShipController::isShipLengthAvailable(int length) {
     auto it = availableLengthShips.find(length);
@@ -54,16 +49,19 @@ bool PlaceShipController::allShipsPlaced() {
 }
 
 void PlaceShipController::addShip(ParsedOptions options) {
-    Direction direct = (options["direction"] == "vertical") ? Direction::vertical : Direction::horizontal;
+    Direction direct =
+            (options["direction"] == "vertical") ? Direction::vertical : Direction::horizontal;
 
     std::pair<int, int> coordinate = TypesHelper::cell(options["cell"]);
     int length = std::stoi(options["length"]);
     if (!isShipLengthAvailable(length)) {
-        throw ShipPlacementException("(where add ship) no more ships of length " + options["length"] + " available.");
+        throw ShipPlacementException("(where add ship) no more ships of length " +
+                                     options["length"] + " available.");
     }
     if (!currentField->canPlaceShip(coordinate, direct, length)) {
-        throw ShipPlacementException("(where add ship) cannot place ship at the specified cell " + options["cell"]
-                            + ".\nEither the ship intersects with another or cell out of field bounds.");
+        throw ShipPlacementException(
+                "(where add ship) cannot place ship at the specified cell " + options["cell"] +
+                ".\nEither the ship intersects with another or cell out of field bounds.");
     }
     currentManager->addShip(length);
     currentField->placeShip(currentManager->getShips().back(), coordinate, direct);
@@ -72,12 +70,10 @@ void PlaceShipController::addShip(ParsedOptions options) {
 
 void PlaceShipController::handleRemoveShip(std::pair<int, int> coordinate) {
     std::pair<int, int> result = currentField->removeShip(coordinate);
-    if (result.first == - 1) {
-        throw ShipPlacementException(
-            std::string("No ship found at field cell ")
-            .append(std::to_string(coordinate.first))
-            .append(std::to_string(coordinate.second))
-        );
+    if (result.first == -1) {
+        throw ShipPlacementException(std::string("No ship found at field cell ")
+                                             .append(std::to_string(coordinate.first))
+                                             .append(std::to_string(coordinate.second)));
     }
     int shipIndex = result.second;
     int shipLength = currentManager->getShips()[shipIndex]->getLength();
@@ -90,13 +86,9 @@ void PlaceShipController::removeShip(ParsedOptions options) {
     handleRemoveShip(coordinate);
 }
 
-GameField * PlaceShipController::getCurrentField() const {
-    return currentField;
-}
+GameField* PlaceShipController::getCurrentField() const { return currentField; }
 
-ShipManager * PlaceShipController::getCurrentManager() const {
-    return currentManager;
-}
+ShipManager* PlaceShipController::getCurrentManager() const { return currentManager; }
 
 void PlaceShipController::placeShipsRandomly() {
     std::random_device random_device;
@@ -110,9 +102,8 @@ void PlaceShipController::placeShipsRandomly() {
     currentField->clear();
 
     std::vector<Ship*> ships = manager->getShips();
-    std::sort(ships.begin(), ships.end(), [](Ship* a, Ship* b) {
-        return a->getLength() > b->getLength();
-    });
+    std::sort(ships.begin(), ships.end(),
+              [](Ship* a, Ship* b) { return a->getLength() > b->getLength(); });
 
     for (auto ship : ships) {
         bool placed = false;
@@ -120,8 +111,10 @@ void PlaceShipController::placeShipsRandomly() {
         int iterations = 0;
 
         while (!placed && iterations <= MAX_ITERATIONS) {
-            const std::pair<int, int> coordinate = std::make_pair(distX(mersenneEngine), distY(mersenneEngine));
-            Direction direct = (distDirection(mersenneEngine) == 0) ? Direction::horizontal : Direction::vertical;
+            const std::pair<int, int> coordinate =
+                    std::make_pair(distX(mersenneEngine), distY(mersenneEngine));
+            Direction direct = (distDirection(mersenneEngine) == 0) ? Direction::horizontal
+                                                                    : Direction::vertical;
             if (currentField->canPlaceShip(coordinate, direct, ship->getLength())) {
                 currentManager->addShip(ship->getLength());
                 currentField->placeShip(ship, coordinate, direct);
@@ -131,7 +124,8 @@ void PlaceShipController::placeShipsRandomly() {
         }
 
         if (iterations > MAX_ITERATIONS) {
-            ViewHelper::errorOut("Were not able to resolve ship placement. Please, try one more time");
+            ViewHelper::errorOut(
+                    "Were not able to resolve ship placement. Please, try one more time");
             currentManager->clear();
             currentField->clear();
             return;

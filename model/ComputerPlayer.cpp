@@ -1,13 +1,13 @@
 #include "ComputerPlayer.h"
-#include "defaults//FieldCoordinateHelper.h"
-#include "Structures.h"
+
 #include <algorithm>
 #include <random>
 #include <stdexcept>
 
-ComputerPlayer::ComputerPlayer(GameField* field)
-    : field(field)
-{
+#include "Structures.h"
+#include "defaults//FieldCoordinateHelper.h"
+
+ComputerPlayer::ComputerPlayer(GameField* field) : field(field) {
     this->emptyCells = std::vector<FieldCoordinate>();
     this->currentShotCells = std::vector<FieldCoordinate>();
 }
@@ -31,25 +31,28 @@ FieldCoordinate ComputerPlayer::getRandomAttackCoordinate() {
 }
 
 FieldCoordinate ComputerPlayer::getRandomNeighbourCoordinate(FieldCoordinate coordinate) {
-    std::vector<FieldCoordinate> potentialNeighbours = {
-        {coordinate.first - 1, coordinate.second},
-        {coordinate.first + 1, coordinate.second},
-        {coordinate.first, coordinate.second - 1},
-        {coordinate.first, coordinate.second + 1}
-    };
+    std::vector<FieldCoordinate> potentialNeighbours = {{coordinate.first - 1, coordinate.second},
+                                                        {coordinate.first + 1, coordinate.second},
+                                                        {coordinate.first, coordinate.second - 1},
+                                                        {coordinate.first, coordinate.second + 1}};
 
     std::vector<FieldCoordinate> finalNeighbours = {};
     for (const auto& neighbour : potentialNeighbours) {
-        bool isInsideField = neighbour.first >= 0 && neighbour.first < field->getWidth() && neighbour.second >= 0 && neighbour.second < field->getHeight();
-        bool isShot = std::find(emptyCells.begin(), emptyCells.end(), neighbour) != emptyCells.end();
+        bool isInsideField = neighbour.first >= 0 && neighbour.first < field->getWidth() &&
+                             neighbour.second >= 0 && neighbour.second < field->getHeight();
+        bool isShot =
+                std::find(emptyCells.begin(), emptyCells.end(), neighbour) != emptyCells.end();
         if (isInsideField && !isShot) {
             finalNeighbours.emplace_back(neighbour);
         }
     }
 
-    std::shuffle(finalNeighbours.begin(), finalNeighbours.end(), std::mt19937(std::random_device()()));
+    std::shuffle(finalNeighbours.begin(), finalNeighbours.end(),
+                 std::mt19937(std::random_device()()));
     if (finalNeighbours.size() == 0) {
-        throw std::out_of_range("No empty neighbours, but the ship is not completely destroyed. \n\t Unreachable state.");
+        throw std::out_of_range(
+                "No empty neighbours, but the ship is not completely destroyed. \n\t Unreachable "
+                "state.");
     }
     return finalNeighbours[0];
 }
@@ -63,7 +66,8 @@ FieldCoordinate ComputerPlayer::getRandomDirectionCoordinate() {
     if (currentShotCells[0].first == currentShotCells[1].first) {
         int maxY = FieldCoordinateHelper::findMaxPairValue(currentShotCells, false);
         int minY = FieldCoordinateHelper::findMinPairValue(currentShotCells, false);
-        if ((forwardValue && maxY < field->getHeight() - 1) || (!forwardValue && minY == 0 && maxY < field->getHeight() - 1)) {
+        if ((forwardValue && maxY < field->getHeight() - 1) ||
+            (!forwardValue && minY == 0 && maxY < field->getHeight() - 1)) {
             return {currentShotCells[0].first, maxY + 1};
         }
         if (minY > 0) {
@@ -72,7 +76,8 @@ FieldCoordinate ComputerPlayer::getRandomDirectionCoordinate() {
     } else {
         int maxX = FieldCoordinateHelper::findMaxPairValue(currentShotCells, true);
         int minX = FieldCoordinateHelper::findMinPairValue(currentShotCells, true);
-        if ((forwardValue && maxX < field->getWidth() - 1) || (!forwardValue && minX == 0 && maxX < field->getWidth() - 1)) {
+        if ((forwardValue && maxX < field->getWidth() - 1) ||
+            (!forwardValue && minX == 0 && maxX < field->getWidth() - 1)) {
             return {maxX + 1, currentShotCells[0].second};
         }
         if (minX > 0) {
@@ -86,15 +91,14 @@ FieldCoordinate ComputerPlayer::getRandomDirectionCoordinate() {
 std::vector<FieldCoordinate> ComputerPlayer::getShotCellsNeighbours() {
     std::vector<FieldCoordinate> result;
     for (auto& cell : currentShotCells) {
-        std::vector<FieldCoordinate> potentialNeighbours = {
-            {cell.first - 1, cell.second},
-            {cell.first + 1, cell.second},
-            {cell.first, cell.second - 1},
-            {cell.first, cell.second + 1}
-        };
+        std::vector<FieldCoordinate> potentialNeighbours = {{cell.first - 1, cell.second},
+                                                            {cell.first + 1, cell.second},
+                                                            {cell.first, cell.second - 1},
+                                                            {cell.first, cell.second + 1}};
 
         for (const auto& neighbour : potentialNeighbours) {
-            bool isInsideField = neighbour.first >= 0 && neighbour.first < field->getWidth() && neighbour.second >= 0 && neighbour.second < field->getHeight();
+            bool isInsideField = neighbour.first >= 0 && neighbour.first < field->getWidth() &&
+                                 neighbour.second >= 0 && neighbour.second < field->getHeight();
             bool isUnique = std::find(result.begin(), result.end(), neighbour) == result.end();
 
             if (isInsideField && isUnique) {
@@ -107,11 +111,10 @@ std::vector<FieldCoordinate> ComputerPlayer::getShotCellsNeighbours() {
 }
 
 bool ComputerPlayer::proceedShot(FieldCoordinate coordinate) {
-    AttackResult isHit = field->attack(coordinate,2);
+    AttackResult isHit = field->attack(coordinate, 2);
     if (isHit == AttackResult::damaged) {
         currentShotCells.push_back(coordinate);
-    }
-    else if (isHit == AttackResult::destroyed) {
+    } else if (isHit == AttackResult::destroyed) {
         currentShotCells.push_back(coordinate);
 
         std::vector<FieldCoordinate> neighbours = getShotCellsNeighbours();
@@ -137,6 +140,4 @@ bool ComputerPlayer::makeAShot() {
     return proceedShot(attackCoordinate);
 }
 
-bool ComputerPlayer::isWin() const {
-    return field->isAllShipsDestroyed();
-}
+bool ComputerPlayer::isWin() const { return field->isAllShipsDestroyed(); }
