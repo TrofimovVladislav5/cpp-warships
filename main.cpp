@@ -1,12 +1,12 @@
 #include <library/defaults/Initials.h>
-#include "input-reader/InputReader.h"
-#include "GameController.h"
-#include "input-reader/command/CommandInputReader.h"
 
-int main(){
+#include "GameController.h"
+
+int main() {
     Initials::consoleOutInitials();
-    InputReader<>* inputReader = new CommandInputReader("../input-command.txt");
-    GameController<CommandInputReader> controller(inputReader);
+
+    GameController controller(new ConsoleInputReader());
+
     controller.run();
 
     return 0;

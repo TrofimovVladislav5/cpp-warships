@@ -1,26 +1,18 @@
 # Prerequisites
 *.d
 
-# Compiled Object files
+# Compiled Files and Libraries
 *.slo
 *.lo
 *.o
 *.obj
-
-# Precompiled Headers
 *.gch
 *.pch
-
-# Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
 *.mod
 *.smod
-
-# Compiled Static libraries
 *.lai
 *.la
 *.a
@@ -31,11 +23,11 @@
 *.out
 *.app
 
+# Local files
+.test
+build
+cmake-build-debug
+
 # Code editors
 .vscode
 .idea
-
-# Build
-build
-build
-cmake-build-debug
