@@ -1,0 +1,1 @@
+clang-format --dry-run --Werror **/*.cpp **/*.h

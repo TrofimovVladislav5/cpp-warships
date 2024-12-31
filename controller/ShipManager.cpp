@@ -3,7 +3,6 @@
 #include <map>
 #include <stdexcept>
 
-
 ShipManager::ShipManager(const std::map<int, int>& shipsSize) : shipsSizes(shipsSize) {
     for (auto& size : shipsSizes) {
         for (int i = 0; i < size.second; i++) {

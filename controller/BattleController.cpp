@@ -1,16 +1,16 @@
 #include "BattleController.h"
+
 #include <random>
 
 #include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 
 BattleController::BattleController(GameStateDTO* dto)
-    : battleIsFinished(false)
-    , player(new Player(dto))
-    , playerView(new GameFieldView(dto->playerField))
-    , opponentView(new GameFieldView(dto->enemyField))
-    , computer(new ComputerPlayer(dto->playerField))
-{
+    : battleIsFinished(false),
+      player(new Player(dto)),
+      playerView(new GameFieldView(dto->playerField)),
+      opponentView(new GameFieldView(dto->enemyField)),
+      computer(new ComputerPlayer(dto->playerField)) {
     skillManagerView = new SkillManagerView(dto->playerSkillManager);
 }
 
@@ -25,8 +25,7 @@ BattleController::~BattleController() {
 void BattleController::applySkill(ParsedOptions options) {
     try {
         player->applySkill(options);
-    }
-    catch (const SkillException& exception) {
+    } catch (const SkillException& exception) {
         exception.displayError();
     }
 
@@ -46,8 +45,10 @@ void BattleController::battle(ParsedOptions options) {
 }
 
 BattleWinner BattleController::getBattleWinner() const {
-    if (player->isWin()) return BattleWinner::User;
-    else if (computer->isWin()) return BattleWinner::Computer;
+    if (player->isWin())
+        return BattleWinner::User;
+    else if (computer->isWin())
+        return BattleWinner::Computer;
 
     return BattleWinner::None;
 }

@@ -1,13 +1,11 @@
 #pragma once
-#include "SkillManagerView.h"
 #include "../model/ComputerPlayer.h"
-#include "../view/GameFieldView.h"
 #include "../model/Player.h"
+#include "../view/GameFieldView.h"
+#include "SkillManagerView.h"
 #include "save/GameSaveCreator.h"
 
-enum BattleWinner {
-    User, Computer, None
-};
+enum BattleWinner { User, Computer, None };
 
 class BattleController {
 private:
@@ -18,6 +16,7 @@ private:
     ComputerPlayer* computer;
     bool battleIsFinished;
     void printBattleState();
+
 public:
     void applySkill(ParsedOptions options);
     void battle(ParsedOptions options);

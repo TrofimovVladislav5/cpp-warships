@@ -43,23 +43,23 @@ This section targets those who wants to better understand the essence behind the
 # Development Pipeline
 In this section you will find future plans for improvement of the project
 
-## Development Experience
-1) Logger wrapping around the app
-2) Try-catch wrappers all around the code
+## Code improvements
+1) Better logging system
+2) Better error handling
+3) Better code documentation
+4) Better view system
+5) Better saves system
+6) Try-catch wrappers all around the code
 
-## Performance Enhancements
-1) Memory leaks fix
-2) Console clearing after each step
-3) Code refactor
+## Features
+1) `InputParser` flag aliases
+2) `InputParser` param default value
+3) `InputParser` better error handling 
+4) Sound system
 
-## Features 
-1) Better save loaders :see_no_evil:
-2) Command pattern wrapper around input parser :see_no_evil:
-3) Execute commands from file :see_no_evil:
-4) Game settings in file :see_no_evil:
-5) Process logger :see_no_evil:
-
-## Bugs
-1) Field view empty line while printing :mending_heart:
-2) List of ships can go below 0 :mending_heart:
-3) Program crashes when trying to load file that was saved in Initialization state :mending_heart:
+## Development
+1) Unit tests
+2) CI/CD pipeline
+3) husky pre-commit hooks
+4) Codecov integration
+5) E2E tests

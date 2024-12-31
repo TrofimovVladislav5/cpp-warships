@@ -5,6 +5,7 @@
 class SubStateContext {
 private:
     InputReader<>* inputReader;
+
 public:
     explicit SubStateContext(GameStateDTO* matchData, InputReader<>* inputReader = nullptr);
     GameStateDTO* matchDTO;

@@ -6,6 +6,7 @@
 
 class StateContext {
     InputReader<>* inputReader;
+
 public:
     explicit StateContext(InputReader<>* inputReader = nullptr);
     ~StateContext() = default;
