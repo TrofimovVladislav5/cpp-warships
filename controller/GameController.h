@@ -4,7 +4,6 @@
 #include "game-states/MenuGameState.h"
 #include "input-reader/InputReader.h"
 #include "input-reader/console/ConsoleInputReader.h"
-#include <type_traits>
 
 template <typename T>
 struct is_reader_derivative {
