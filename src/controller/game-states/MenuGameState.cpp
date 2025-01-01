@@ -7,10 +7,10 @@
 #include "OngoingGameState.h"
 #include "StateMessages.h"
 #include "ViewHelper.h"
-#include "library/TypesHelper.h"
-#include "library/parser-builder/ConfigCommandBuilder.h"
-#include "library/defaults/DefaultParserError.h"
-#include "controller/save/GameSaveCreator.h"
+#include "src/library/TypesHelper.h"
+#include "src/library/parser-builder/ConfigCommandBuilder.h"
+#include "src/library/defaults/DefaultParserError.h"
+#include "src/controller/save/GameSaveCreator.h"
 #include "void/VoidParser.h"
 
 

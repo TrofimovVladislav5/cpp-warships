@@ -1,6 +1,6 @@
 #include "DefaultParserError.h"
 
-#include "library/ViewHelper.h"
+#include "src/library/ViewHelper.h"
 
 void DefaultParserError::CommandNotFoundError(ParsedOptions options) {
     ViewHelper::consoleOut("\nRelated command not found. Please, try again \n");

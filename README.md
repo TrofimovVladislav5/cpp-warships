@@ -56,6 +56,8 @@ In this section you will find future plans for improvement of the project
 2) `InputParser` param default value
 3) `InputParser` better error handling 
 4) Sound system
+5) Saves directory configuration
+6) `.env` file for environment variables
 
 ## Development
 1) Unit tests

@@ -1,5 +1,5 @@
 #include "OngoingGameView.h"
-#include "library/ViewHelper.h"
+#include "src/library/ViewHelper.h"
 #include <vector>
 
 void OngoingGameView::displayAvailableCommands(const GameStateDTO* currentMatchData) {

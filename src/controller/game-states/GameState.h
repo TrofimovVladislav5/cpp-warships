@@ -1,5 +1,5 @@
 #pragma once
-#include "model/StateContext.h"
+#include "src/model/StateContext.h"
 
 class GameState {
 protected:

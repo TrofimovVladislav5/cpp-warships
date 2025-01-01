@@ -1,5 +1,5 @@
 #pragma once
-#include "model/game/GameStateDTO.h"
+#include "src/model/game/GameStateDTO.h"
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;

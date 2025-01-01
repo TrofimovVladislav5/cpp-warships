@@ -1,6 +1,6 @@
 #include "InitiateOngoingGameView.h"
 
-#include "library/ViewHelper.h"
+#include "src/library/ViewHelper.h"
 
 void InitiateOngoingGameView::displayAvailableCommands(const GameStateDTO* currentMatchData) {
     const std::vector<std::string> availableCommands = {

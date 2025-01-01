@@ -1,5 +1,5 @@
 #pragma once
-#include "view/game-states/OngoingGameView.h"
+#include "src/view/game-states/OngoingGameView.h"
 
 class InitiateOngoingGameView : public OngoingGameView {
 public:

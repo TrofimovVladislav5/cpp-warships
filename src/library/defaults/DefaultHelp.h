@@ -1,7 +1,7 @@
 #pragma once
 #include "ViewHelper.h"
-#include "library/parser/ParserCommandInfo.h"
-#include "library/parser/ParserParameter.h"
+#include "src/library/parser/ParserCommandInfo.h"
+#include "src/library/parser/ParserParameter.h"
 
 class DefaultHelp {
 public:

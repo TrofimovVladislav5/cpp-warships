@@ -3,7 +3,7 @@
 
 #include "GameState.h"
 #include "MatchBuilder.h"
-#include "library/parser/Parser.h"
+#include "src/library/parser/Parser.h"
 
 class MenuGameState : public GameState{
 private:

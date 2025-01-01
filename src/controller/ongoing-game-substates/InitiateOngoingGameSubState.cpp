@@ -5,11 +5,11 @@
 #include "StateMessages.h"
 #include "ViewHelper.h"
 #include "exceptions/ShipPlacementException.h"
-#include "library/parser-builder/ConfigCommandBuilder.h"
-#include "library/parser/ParserCommandInfo.h"
-#include "library/defaults/DefaultParserError.h"
-#include "library/TypesHelper.h"
-#include "library/parser-builder/DefaultParameterBuilder.h"
+#include "src/library/parser-builder/ConfigCommandBuilder.h"
+#include "src/library/parser/ParserCommandInfo.h"
+#include "src/library/defaults/DefaultParserError.h"
+#include "src/library/TypesHelper.h"
+#include "src/library/parser-builder/DefaultParameterBuilder.h"
 #include "void/VoidParser.h"
 
 

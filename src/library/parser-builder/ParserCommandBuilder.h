@@ -1,5 +1,5 @@
 #pragma once
-#include "library/parser/ParserCommandInfo.h"
+#include "src/library/parser/ParserCommandInfo.h"
 
 template <typename T>
 class ParserCommandBuilder {
