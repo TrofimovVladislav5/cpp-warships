@@ -1,7 +1,8 @@
-include_directories(./ src/builder src/command src/command/helpers src/void)
+include_directories(./ ./src ./src/builder ./src/command ./src/command/helpers ./src/void)
 
 add_library(input_parser
         # Parser
+        src/Command.h
         src/Parser.h
         src/ParserCommand.h
         src/ParserCommandInfo.h
@@ -24,6 +25,5 @@ if (BUILD_TESTING)
     include(GoogleTest)
     gtest_discover_tests(input_parser_tests)
 endif()
-
 
 target_link_libraries(input_parser PUBLIC cxx_setup)

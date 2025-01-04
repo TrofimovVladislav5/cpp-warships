@@ -10,8 +10,7 @@ endif()
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 # Libraries list
-add_library(cxx_setup INTERFACE cpp_warships/input_parser
-        cpp_warships/saves/tests/main.cpp)
+add_library(cxx_setup INTERFACE cpp_warships/utilities)
 
 # General compiler options
 if (MSVC)
@@ -21,7 +20,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 endif()
 
 target_compile_features(cxx_setup
-        INTERFACE cxx_std_17)
+        INTERFACE cxx_std_20)
 target_include_directories(cxx_setup
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 

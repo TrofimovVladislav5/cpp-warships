@@ -1,14 +1,8 @@
-#include <iostream>
-#include <cpp_template/tools/tools.h>
-#include <cpp_template/tools/named_tools.h>
+#include <cpp_warships/utilities/src/ViewHelper.h>
 
-using namespace cpp_structure::tools;
+using namespace cpp_warships::utilities;
 
 int main() {
-  PrintHello();
-  std::cout << std::endl;
-
-  const NamedTools tools("Nikita");
-  tools.printHello();
+  ViewHelper::consoleOut("Hello, World!");
   return 0;
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include <map>
-#include <regex>
 
 #include "DefaultHelp.h"
 #include "ParserCommandInfo.h"
