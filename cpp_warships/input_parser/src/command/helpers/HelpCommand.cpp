@@ -1,5 +1,9 @@
 #include "HelpCommand.h"
+#include "../../void/helpers/DefaultHelp.h"
 
+#include <cpp_warships/utilities/src/ViewHelper.h>
+
+using namespace cpp_warships::utilities;
 
 HelpCommand::HelpCommand(SchemeMap<ParserCommand*> scheme)
     : ParserCommand()

@@ -1,10 +1,13 @@
 #pragma once
 #include <map>
 
-#include "DefaultHelp.h"
+#include <cpp_warships/utilities/src/ViewHelper.h>
+#include <cpp_warships/utilities/src/StringHelper.h>
+#include <cpp_warships/utilities/src/TypesHelper.h>
+
 #include "ParserCommandInfo.h"
-#include "StringHelper.h"
-#include "TypesHelper.h"
+
+using namespace cpp_warships::utilities;
 
 template <typename T>
 using SchemeMap = std::map<std::string, ParserCommandInfo<T>>;

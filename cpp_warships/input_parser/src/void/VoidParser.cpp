@@ -1,8 +1,13 @@
 #include "VoidParser.h"
 
-#include "ConfigCommandBuilder.h"
-#include "ParserCommandInfo.h"
+#include "../builder/ConfigCommandBuilder.h"
+#include "../ParserCommandInfo.h"
+#include "helpers/DefaultHelp.h"
 
+#include <cpp_warships/utilities/src/ViewHelper.h>
+#include <cpp_warships/utilities/src/ViewHelper.h>
+
+using namespace cpp_warships::utilities;
 
 void VoidParser::printCommandsHelp(ParsedOptions options) {
     ViewHelper::consoleOut("This is the list of supported commands:");
@@ -23,8 +28,9 @@ VoidParser::VoidParser(const SchemeMap<void> &scheme)
 {}
 
 VoidParser::VoidParser(
-    const SchemeMap<void> &scheme, const ParseCallback<void> &displayError,
-    const SchemeHelpCallback<void> &printHelp
+        const SchemeMap<void> &scheme,
+        const ParseCallback<void> &displayError,
+        const SchemeHelpCallback<void> &printHelp
 )
     : Parser<>(scheme, displayError, printHelp)
 {

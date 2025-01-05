@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../ParserCommand.h"
-#include "Parser.h"
+#include "../Parser.h"
 
 using ParseResult = std::pair<ParseCallback<ParserCommand*>, ParsedOptions>;
 

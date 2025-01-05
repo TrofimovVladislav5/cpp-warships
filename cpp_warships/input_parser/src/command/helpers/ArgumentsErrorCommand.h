@@ -1,7 +1,7 @@
 #pragma once
 #include <utility>
 
-#include "ParserCommand.h"
+#include "../../ParserCommand.h"
 
 class ArgumentsErrorCommand: public ParserCommand {
 private:

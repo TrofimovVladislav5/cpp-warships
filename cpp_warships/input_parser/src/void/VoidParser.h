@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 
-#include "Parser.h"
+#include "../Parser.h"
 
 class VoidParser : Parser<> {
 private:

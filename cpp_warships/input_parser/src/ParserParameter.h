@@ -27,7 +27,7 @@ public:
     }
 
     [[nodiscard]] bool getIsFlagPresent(const std::string &flag) const {
-        for (int i = 0; i < this->flags.size(); i++) {
+        for (int i = 0; i < static_cast<int>(this->flags.size()); i++) {
             if (this->flags[i] == flag) {
                 return true;
             }

@@ -1,6 +1,6 @@
 #pragma once
 #include "ParserParameterBuilder.h"
-#include "src/library/parser/ParserParameter.h"
+#include "../ParserParameter.h"
 
 class DefaultParameterBuilder : public ParserParameterBuilder {
 public:

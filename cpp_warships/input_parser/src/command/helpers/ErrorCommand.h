@@ -1,6 +1,6 @@
 #pragma once
-#include "Parser.h"
-#include "ParserCommand.h"
+#include "../../Parser.h"
+#include "../../ParserCommand.h"
 
 
 class ErrorCommand : public ParserCommand {

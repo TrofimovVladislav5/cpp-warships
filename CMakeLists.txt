@@ -10,7 +10,7 @@ endif()
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 # Libraries list
-add_library(cxx_setup INTERFACE cpp_warships/utilities)
+add_library(cxx_setup INTERFACE cpp_warships/utilities cpp_warships/input_parser)
 
 # General compiler options
 if (MSVC)
