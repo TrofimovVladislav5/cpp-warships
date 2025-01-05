@@ -1,30 +1,30 @@
-include_directories(./ ./src ./src/builder ./src/command ./src/command/helpers ./src/void ./src/void/helpers)
-
+# Compile files
 add_library(input_parser
         # Parser
-        src/Command.h
-        src/Parser.h
-        src/ParserCommand.h
-        src/ParserCommandInfo.h
-        src/ParserParameter.h
+        include/command/Command.h
+        include/model/Parser.h
+        include/command/ParserCommand.h
+        include/model/ParserCommandInfo.h
+        include/model/ParserParameter.h
         # Void Parser Implementation
-        src/void/VoidParser.h src/void/VoidParser.cpp
-        src/void/helpers/DefaultHelp.h src/void/helpers/DefaultHelp.cpp
-        src/void/helpers/DefaultParserError.h src/void/helpers/DefaultParserError.cpp
+        include/VoidParser.h src/VoidParser.cpp
+        include/DefaultHelp.h src/DefaultHelp.cpp
+        include/DefaultParserError.h src/DefaultParserError.cpp
         # Command Parser Implementation
-        src/command/CommandParser.h src/command/CommandParser.cpp
-        src/command/helpers/ErrorCommand.h src/command/helpers/ErrorCommand.cpp
-        src/command/helpers/HelpCommand.h src/command/helpers/HelpCommand.cpp
-        src/command/helpers/ArgumentsErrorCommand.h src/command/helpers/ArgumentsErrorCommand.cpp
+        include/CommandParser.h src/CommandParser.cpp
+        include/command/ErrorCommand.h src/command/ErrorCommand.cpp
+        include/command/HelpCommand.h src/command/HelpCommand.cpp
+        include/command/ArgumentsErrorCommand.h src/command/ArgumentsErrorCommand.cpp
         # Builder
-        src/builder/ConfigCommandBuilder.h
-        src/builder/ParserCommandBuilder.h
-        src/builder/DefaultParameterBuilder.h
-        src/builder/ParserParameterBuilder.h
-        src/builder/CommandBuildDirector.h
-        src/builder/ParameterBuildDirector.h
-        src/builder/ParserBuilderDirector.h)
+        include/builder/ConfigCommandBuilder.h
+        include/builder/ParserCommandBuilder.h
+        include/builder/DefaultParameterBuilder.h
+        include/builder/ParserParameterBuilder.h
+        include/builder/CommandBuildDirector.h
+        include/builder/ParameterBuildDirector.h
+        include/builder/ParserBuilderDirector.h)
 
+# Tests setup
 if (BUILD_TESTING)
     add_executable(input_parser_tests tests/main.cpp)
     target_link_libraries(input_parser_tests PRIVATE GTest::gtest_main)
@@ -32,4 +32,11 @@ if (BUILD_TESTING)
     gtest_discover_tests(input_parser_tests)
 endif()
 
+# Expose settings
+target_include_directories(input_parser
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+# Link dependencies
 target_link_libraries(input_parser PUBLIC cxx_setup utilities)

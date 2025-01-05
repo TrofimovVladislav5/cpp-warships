@@ -1,9 +1,9 @@
 #include <cpp_warships/utilities/src/ViewHelper.h>
-#include <cpp_warships/input_parser/src/void/VoidParser.h>
-#include <cpp_warships/input_parser/src/builder/ConfigCommandBuilder.h>
-#include <cpp_warships/input_parser/src/builder/DefaultParameterBuilder.h>
+#include <cpp_warships/input_parser/include/VoidParser.h>
+#include <cpp_warships/input_parser/include/builder/ConfigCommandBuilder.h>
+#include <cpp_warships/input_parser/include/builder/DefaultParameterBuilder.h>
 
-using namespace cpp_warships::utilities;
+using namespace cpp_warships::input_parser;
 
 void handleLoad(ParsedOptions options) {
     ViewHelper::consoleOut("Load");

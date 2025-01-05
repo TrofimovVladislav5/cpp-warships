@@ -1,2 +1,2 @@
-add_executable(print_hello print_hello.cpp)
-target_link_libraries(print_hello PRIVATE utilities input_parser cxx_setup)
+add_executable(parser_showcase parser_showcase.cpp)
+target_link_libraries(parser_showcase PRIVATE utilities input_parser cxx_setup)
