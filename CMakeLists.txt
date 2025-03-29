@@ -9,6 +9,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
+# Enable testing depending on the build type
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     include(CTest)
     message(STATUS "Including tests into final build")

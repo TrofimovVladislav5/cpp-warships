@@ -5,7 +5,7 @@ C_COMPILER ?= gcc
 BUILD_TYPE ?= Release
 CLEAN ?= 0
 
-build:
+compile:
 	if test "$(CLEAN)" -eq "1" && test -d "$(BUILD_DIR)"; then rm -rf "$(BUILD_DIR)"; fi
 	cmake -B "$(BUILD_DIR)" -S "$(SOURCE_DIR)" \
 			-DCMAKE_CXX_COMPILER="$(CPP_COMPILER)" \
@@ -13,7 +13,7 @@ build:
 			-DCMAKE_BUILD_TYPE="$(BUILD_TYPE)"
 	cmake --build "$(BUILD_DIR)" --config "$(BUILD_TYPE)"
 rebuild:
-	$(MAKE) build CLEAN=1
+	$(MAKE) compile CLEAN=1
 rebuild-debug:
 	$(MAKE) rebuild BUILD_TYPE=Debug
 rebuild-release:
