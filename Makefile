@@ -5,13 +5,19 @@ C_COMPILER ?= gcc
 BUILD_TYPE ?= Release
 CLEAN ?= 0
 
-rebuild:
-	if test "$(CLEAN)" -eq "1"; then rm -rf "$(BUILD_DIR)"; fi
+build:
+	if test "$(CLEAN)" -eq "1" && test -d "$(BUILD_DIR)"; then rm -rf "$(BUILD_DIR)"; fi
 	cmake -B "$(BUILD_DIR)" -S "$(SOURCE_DIR)" \
- 		-DCMAKE_CXX_COMPILER="$(CPP_COMPILER)" \
- 		-DCMAKE_C_COMPILER="$(C_COMPILER)" \
- 		-DCMAKE_BUILD_TYPE="$(BUILD_TYPE)"
+			-DCMAKE_CXX_COMPILER="$(CPP_COMPILER)" \
+			-DCMAKE_C_COMPILER="$(C_COMPILER)" \
+			-DCMAKE_BUILD_TYPE="$(BUILD_TYPE)"
 	cmake --build "$(BUILD_DIR)" --config "$(BUILD_TYPE)"
+rebuild:
+	$(MAKE) build CLEAN=1
+rebuild-debug:
+	$(MAKE) rebuild BUILD_TYPE=Debug
+rebuild-release:
+	$(MAKE) rebuild BUILD_TYPE=Release
 
 test:
 	if ! test -d "$(BUILD_DIR)"; then "$(MAKE)" rebuild; fi

@@ -9,6 +9,14 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    include(CTest)
+    message(STATUS "Including tests into final build")
+else()
+    set (BUILD_TESTING OFF CACHE BOOL "Enable testing" FORCE)
+    message(STATUS "Tests are not available in Release mode")
+endif()
+
 # Libraries list
 add_library(cxx_setup INTERFACE cpp_warships/utilities cpp_warships/input_parser)
 
