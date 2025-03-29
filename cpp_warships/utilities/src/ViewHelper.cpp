@@ -1,5 +1,5 @@
-#include "ViewHelper.h"
-#include "StringHelper.h"
+#include "../include/ViewHelper.h"
+#include "../include/StringHelper.h"
 
 #include <functional>
 #include <iostream>

@@ -18,7 +18,6 @@ if (MSVC)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(cxx_setup INTERFACE -Wall -Wextra -Wpedantic)
 endif()
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 target_compile_features(cxx_setup
         INTERFACE cxx_std_20)

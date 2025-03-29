@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cpp_warships/utilities/include/TypesHelper.h>
+
 #include "command/ParserCommand.h"
 #include "model/Parser.h"
 

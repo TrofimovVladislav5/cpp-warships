@@ -1,6 +1,6 @@
 #include "../include/DefaultHelp.h"
-#include <cpp_warships/utilities/src/ViewHelper.h>
 
+#include <cpp_warships/utilities/include/ViewHelper.h>
 #include <iostream>
 
 namespace cpp_warships::input_parser {

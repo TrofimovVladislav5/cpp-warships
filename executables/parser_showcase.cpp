@@ -1,4 +1,4 @@
-#include <cpp_warships/utilities/src/ViewHelper.h>
+#include <cpp_warships/utilities/include/ViewHelper.h>
 #include <cpp_warships/input_parser/include/VoidParser.h>
 #include <cpp_warships/input_parser/include/builder/ConfigCommandBuilder.h>
 #include <cpp_warships/input_parser/include/builder/DefaultParameterBuilder.h>
@@ -26,7 +26,6 @@ void handleConfirm(ParsedOptions options) {
 }
 
 int main() {
-    ViewHelper::consoleOut("Hello, World!");
     ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
 
@@ -92,10 +91,11 @@ int main() {
         }
     };
 
-    std::string input;
-    std::getline(std::cin, input);
-    VoidParser parser(inputScheme);
-    parser.executedParse(input);
-
-    return 0;
+    while (true) {
+        std::string input;
+        std::getline(std::cin, input);
+        VoidParser parser(inputScheme);
+        parser.executedParse(input);
+        std::cout << "Enter new command: ";
+    }
 }

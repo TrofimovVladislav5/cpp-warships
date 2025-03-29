@@ -1,6 +1,6 @@
 #include "../include/DefaultParserError.h"
 
-#include <cpp_warships/utilities/src/ViewHelper.h>
+#include <cpp_warships/utilities/include/ViewHelper.h>
 
 
 namespace cpp_warships::input_parser {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cpp_warships/utilities/src/ViewHelper.h>
+#include <cpp_warships/utilities/include/ViewHelper.h>
 #include "model/ParserCommandInfo.h"
 #include "model/ParserParameter.h"
 #include <iostream>

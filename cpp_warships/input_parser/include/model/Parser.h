@@ -1,10 +1,7 @@
 #pragma once
 #include <map>
 
-#include <cpp_warships/utilities/src/ViewHelper.h>
-#include <cpp_warships/utilities/src/StringHelper.h>
-#include <cpp_warships/utilities/src/TypesHelper.h>
-
+#include <cpp_warships/utilities/include/StringHelper.h>
 #include "ParserCommandInfo.h"
 
 
@@ -109,6 +106,7 @@ namespace cpp_warships::input_parser {
 
         explicit Parser(SchemeMap<T> scheme)
             : scheme(std::move(scheme))
+            , displayError(nullptr)
         {}
 
         explicit Parser(

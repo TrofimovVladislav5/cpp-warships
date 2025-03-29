@@ -2,13 +2,13 @@ include_directories(./ src/)
 
 add_library(utilities
         # Settings
-        src/Initials.h
+        include/Initials.h
         # Helpers
-        src/StateMessages.cpp src/StateMessages.h
-        src/FieldCoordinateHelper.cpp src/FieldCoordinateHelper.h
-        src/StringHelper.cpp src/StringHelper.h
-        src/TypesHelper.cpp src/TypesHelper.h
-        src/ViewHelper.cpp src/ViewHelper.h)
+        src/StateMessages.cpp include/StateMessages.h
+        src/FieldCoordinateHelper.cpp include/FieldCoordinateHelper.h
+        src/StringHelper.cpp include/StringHelper.h
+        src/TypesHelper.cpp include/TypesHelper.h
+        src/ViewHelper.cpp include/ViewHelper.h)
 
 if (BUILD_TESTING)
     add_executable(utilities_tests tests/main.cpp)
@@ -16,5 +16,11 @@ if (BUILD_TESTING)
     include(GoogleTest)
     gtest_discover_tests(utilities_tests)
 endif()
+
+# Expose settings
+target_include_directories(utilities
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
 target_link_libraries(utilities PUBLIC cxx_setup)

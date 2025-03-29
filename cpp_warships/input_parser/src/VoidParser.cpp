@@ -4,8 +4,8 @@
 #include "../include/VoidParser.h"
 #include "../include/DefaultHelp.h"
 
-#include <cpp_warships/utilities/src/ViewHelper.h>
-#include <cpp_warships/utilities/src/ViewHelper.h>
+#include <cpp_warships/utilities/include/TypesHelper.h>
+#include <cpp_warships/utilities/include/ViewHelper.h>
 
 
 namespace cpp_warships::input_parser {
@@ -24,7 +24,7 @@ namespace cpp_warships::input_parser {
     }
 
     VoidParser::VoidParser(const SchemeMap<void> &scheme)
-        : Parser<void>(scheme)
+        : VoidParser(scheme, nullptr, nullptr)
     {}
 
     VoidParser::VoidParser(
@@ -32,7 +32,7 @@ namespace cpp_warships::input_parser {
             const ParseCallback<void> &displayError,
             const SchemeHelpCallback<void> &printHelp
     )
-        : Parser<>(scheme, displayError, printHelp)
+        : Parser<void>(scheme, displayError, printHelp)
     {
         if (scheme.find("help") == scheme.end()) {
             ConfigCommandBuilder<void> commandBuilder;

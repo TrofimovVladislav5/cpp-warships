@@ -1,4 +1,4 @@
-#include "TypesHelper.h"
+#include "../include/TypesHelper.h"
 
 
 std::pair<int, int> TypesHelper::convertToPair(const std::string& input) {

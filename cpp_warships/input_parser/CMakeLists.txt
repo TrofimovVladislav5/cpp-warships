@@ -34,9 +34,9 @@ endif()
 
 # Expose settings
 target_include_directories(input_parser
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 # Link dependencies
-target_link_libraries(input_parser PUBLIC cxx_setup utilities)
+target_link_libraries(input_parser PUBLIC utilities cxx_setup)

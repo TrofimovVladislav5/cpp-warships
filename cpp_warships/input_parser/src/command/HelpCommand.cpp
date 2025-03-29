@@ -1,7 +1,7 @@
 #include "../../include/command/HelpCommand.h"
 #include "../../include/DefaultHelp.h"
 
-#include <cpp_warships/utilities/src/ViewHelper.h>
+#include <cpp_warships/utilities/include/ViewHelper.h>
 
 namespace cpp_warships::input_parser {
     HelpCommand::HelpCommand(SchemeMap<ParserCommand*> scheme)

@@ -1,6 +1,6 @@
-#include "StateMessages.h"
+#include "../include/StateMessages.h"
 
-#include "ViewHelper.h"
+#include "../include/ViewHelper.h"
 
 
 void StateMessages::displayGreetingMessage(const std::string &title) {
