@@ -1,2 +1,2 @@
-add_executable(parser_showcase parser_showcase.cpp)
+add_executable(parser_showcase command_parser.cpp)
 target_link_libraries(parser_showcase PRIVATE utilities input_parser cxx_setup)

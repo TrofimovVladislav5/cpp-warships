@@ -1,3 +1,4 @@
+#include <CommandParser.h>
 #include <cpp_warships/utilities/include/ViewHelper.h>
 #include <cpp_warships/input_parser/include/VoidParser.h>
 #include <cpp_warships/input_parser/include/builder/ConfigCommandBuilder.h>
@@ -5,35 +6,46 @@
 
 using namespace cpp_warships::input_parser;
 
-void handleLoad(ParsedOptions options) {
-    ViewHelper::consoleOut("Load");
-}
+class ParserCommandsHandler {
+private:
+    bool isExited = false;
+public:
+    void handleExit(ParsedOptions options) {
+        ViewHelper::consoleOut("Leaving");
+        isExited = true;
+    }
 
-void handleNew(ParsedOptions options) {
-    ViewHelper::consoleOut("New");
-}
+    void handleNew(ParsedOptions options) {
+        ViewHelper::consoleOut("New");
+    }
 
-void handleInfo(ParsedOptions options) {
-    ViewHelper::consoleOut("Info");
-}
+    void handleInfo(ParsedOptions options) {
+        ViewHelper::consoleOut("Info");
+    }
 
-void handleList(ParsedOptions options) {
-    ViewHelper::consoleOut("List");
-}
+    void handleList(ParsedOptions options) {
+        ViewHelper::consoleOut("List");
+    }
 
-void handleConfirm(ParsedOptions options) {
-    ViewHelper::consoleOut("Confirm");
-}
+    void handleLoad(ParsedOptions options) {
+        ViewHelper::consoleOut("Load from " + options["filename"]);
+    }
+
+    bool getExited() {
+        return isExited;
+    }
+};
 
 int main() {
     ConfigCommandBuilder<void> commandBuilder;
     DefaultParameterBuilder parameterBuilder;
+    ParserCommandsHandler handler;
 
     SchemeMap<void> inputScheme = {
         {"load", ParserCommandInfo(
             commandBuilder
-                .setCallback(handleLoad)
-                .setDescription("Load a game from a file")
+                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleLoad, &handler))
+                .setDescription("Load game from file")
                 .addParameter(
                     parameterBuilder
                         .addFlag("--filename")
@@ -47,7 +59,7 @@ int main() {
         },
         {"new", ParserCommandInfo(
             commandBuilder
-                .setCallback(handleNew)
+                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleNew, &handler))
                 .setDescription("Start new game from scratch")
                 .addParameter(
                     parameterBuilder
@@ -62,14 +74,14 @@ int main() {
         },
         {"info", ParserCommandInfo(
             commandBuilder
-                .setCallback(handleInfo)
+                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleInfo, &handler))
                 .setDescription("Print the latest screenshot from currently handled save")
                 .buildAndReset()
             )
         },
         {"list", ParserCommandInfo(
             commandBuilder
-                .setCallback(handleList)
+                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleList, &handler))
                 .setDescription("List all available saves")
                 .addParameter(
                     parameterBuilder
@@ -82,20 +94,20 @@ int main() {
                 .buildAndReset()
             )
         },
-        {"confirm", ParserCommandInfo(
+        {"exit", ParserCommandInfo(
             commandBuilder
-                .setCallback(handleConfirm)
-                .setDescription("Confirm the initialization phase and start the game")
+                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleExit, &handler))
+                .setDescription("Exit the program")
                 .buildAndReset()
             )
         }
     };
 
-    while (true) {
+    while (!handler.getExited()) {
+        std::cout << "Enter new command (help for list of commands): ";
         std::string input;
         std::getline(std::cin, input);
         VoidParser parser(inputScheme);
         parser.executedParse(input);
-        std::cout << "Enter new command: ";
     }
 }
