@@ -46,6 +46,20 @@ the project structure and module relations
   └── readme.md                     # Project README file
 ```
 
+## TODO
+- [ ] Finish clean structure
+- [ ] Refactor Input Parser
+  - [ ] Templates for returned type and taken arguments
+  - [ ] Omit CommandParser for its overcomplexity
+  - [ ] Write tests
+- [ ] Refactor Game Saves
+  - [ ] Better abstraction to support different save handlers
+  - [ ] Binary game saves
+  - [ ] Write tests
+- [ ] Implement local multiplayer
+- [ ] Reorganise core architecture
+- [ ] Write documentation
+
 ## Examples
 The example of a working project with this template structure
 ### AI Warships Game
