@@ -2,7 +2,7 @@
 #include <string>
 
 TEST(Group1, Test1) {
-    EXPECT_EQ("Utility Tests", "Utility Tests");
+    EXPECT_EQ("Game Save Tests", "Game Save Tests");
 }
 
 TEST(Group1, Test2) {

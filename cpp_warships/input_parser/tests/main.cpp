@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
+#include <string>
 
 TEST(Group1, Test1) {
-  EXPECT_EQ(3, 1 + 2);
+  EXPECT_EQ("Input Parser Tests", "Input Parser Tests");
 }
 
 TEST(Group1, Test2) {

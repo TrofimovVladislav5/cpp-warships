@@ -20,5 +20,5 @@ rebuild-release:
 	$(MAKE) rebuild BUILD_TYPE=Release
 
 test:
-	if ! test -d "$(BUILD_DIR)"; then "$(MAKE)" rebuild; fi
+	if ! test -d "$(BUILD_DIR)"; then "$(MAKE)" rebuild-debug; fi
 	GTEST_COLOR=1 ctest --test-dir "$(BUILD_DIR)" --build-config "$(BUILD_TYPE)" --output-on-failure
