@@ -14,8 +14,8 @@ add_library(game_saves
         include/helpers/serializers/JsonStringSerializer.h
         include/helpers/type_converters/StringTypeConverter.h
         # Example Classes
-        example/TestClass.h
-        example/ImplicitTestClass.h
+        include/example/TestClass.h
+        include/example/ImplicitTestClass.h
 )
 
 # Tests setup

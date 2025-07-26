@@ -68,11 +68,7 @@ namespace cpp_warships::game_saves::examples {
                 JsonStringSerializer::setFieldValue<int>(&testClass->intPrivateField, data, "intPrivateField", StringTypeConverter::stringToInt);
                 JsonStringSerializer::setFieldValue(&testClass->stringPrivateField, data, "stringPrivateField");
 
-                if (const auto field = JsonStringSerializer::extractFieldValue(
-                    data,
-                    "implicitClass",
-                    true
-                )) {
+                if (const auto field = JsonStringSerializer::extractFieldValue(data, "implicitClass", true)) {
                     testClass->implicitClass = std::get<0>(childrenSerializers).deserialize(*field);
                     delete field;
                 }

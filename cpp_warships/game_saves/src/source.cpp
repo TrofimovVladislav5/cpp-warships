@@ -7,3 +7,6 @@
 #include "../include/exceptions/DeserializationException.h"
 #include "../include/exceptions/SerializationException.h"
 #include "../include/exceptions/InterpretationException.h"
+
+#include "../include/example/ImplicitTestClass.h"
+#include "../include/example/TestClass.h"

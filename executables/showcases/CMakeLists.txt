@@ -1,0 +1,6 @@
+add_executable(parser_showcase showcases/command_parser.cpp)
+add_executable(parser_showcase showcases/void_parser.cpp)
+target_link_libraries(parser_showcase PRIVATE utilities input_parser cxx_setup)
+
+add_executable(serialization_showcase showcases/serialization.cpp)
+target_link_libraries(serialization_showcase PRIVATE utilities game_saves cxx_setup)

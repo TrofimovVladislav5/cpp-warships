@@ -1,8 +1,9 @@
 #include <string>
 #include <iostream>
 
-#include "example/TestClass.h"
-#include "include/SerializerAggregator.h"
+#include <cpp_warships/game_saves/include/example/TestClass.h>
+#include <cpp_warships/game_saves/include/example/ImplicitTestClass.h>
+#include <cpp_warships/game_saves/include/SerializerAggregator.h>
 
 using namespace cpp_warships::game_saves;
 
