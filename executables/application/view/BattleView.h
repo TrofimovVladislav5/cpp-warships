@@ -4,13 +4,16 @@
 #include "SkillManagerView.h"
 #include "../model/game/GameStateDTO.h"
 
-class BattleView {
-private:
-    GameFieldView playerField;
-    GameFieldView enemyField;
-    SkillManagerView skillManager;
+namespace cpp_warships::application {
 
-public:
-    explicit BattleView(GameStateDTO* matchDto);
-    void printBattleState();
-};
+    class BattleView {
+    private:
+        GameFieldView playerField;
+        GameFieldView enemyField;
+        SkillManagerView skillManager;
+
+    public:
+        explicit BattleView(GameStateDTO* matchDto);
+        void printBattleState();
+    };
+} // namespace cpp_warships::application

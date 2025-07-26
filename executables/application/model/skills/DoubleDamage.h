@@ -1,12 +1,16 @@
 #pragma once
-#include "../game/MatchSettings.h"
+
 #include "Skill.h"
+#include "../game/MatchSettings.h"
 
-class DoubleDamage : public ISkill {
-private:
-    MatchSettings* settings;
+namespace cpp_warships::application {
 
-public:
-    explicit DoubleDamage(MatchSettings* settings);
-    void apply() override;
-};
+    class DoubleDamage : public ISkill {
+    private:
+        MatchSettings* settings;
+
+    public:
+        explicit DoubleDamage(MatchSettings* settings);
+        void apply() override;
+    };
+} // namespace cpp_warships::application

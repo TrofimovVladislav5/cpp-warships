@@ -3,11 +3,13 @@
 
 #include "controller/GameController.h"
 
+using namespace cpp_warships::application;
+
 int main() {
     Initials::consoleOutInitials();
 
     const std::string filename = "../test.txt";
-    GameController controller(new cpp_warships::input_reader::config_reader::ConfigInputReader(filename));
+    GameController controller(new input_reader::config_reader::ConfigInputReader(filename));
 
     controller.run();
 

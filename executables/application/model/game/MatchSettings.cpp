@@ -2,16 +2,19 @@
 
 #include "../../controller/ShipManager.h"
 
-MatchSettings::MatchSettings(std::map<int, int> shipSizesDictionary, int fieldSize)
-    : fieldSize(fieldSize)
-    , damageCount(1)
-    , shipSizesDictionary(std::move(shipSizesDictionary))
-{}
+namespace cpp_warships::application {
 
-int MatchSettings::getFieldSize() const {
-    return fieldSize;
-}
+    MatchSettings::MatchSettings(std::map<int, int> shipSizesDictionary, int fieldSize)
+        : fieldSize(fieldSize)
+        , damageCount(1)
+        , shipSizesDictionary(std::move(shipSizesDictionary))
+    {}
 
-std::map<int, int> MatchSettings::getShipsCount() const {
-    return shipSizesDictionary;
-}
+    int MatchSettings::getFieldSize() const {
+        return fieldSize;
+    }
+
+    std::map<int, int> MatchSettings::getShipsCount() const {
+        return shipSizesDictionary;
+    }
+} // namespace cpp_warships::application

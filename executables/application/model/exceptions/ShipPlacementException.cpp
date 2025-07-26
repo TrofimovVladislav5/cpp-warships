@@ -2,8 +2,11 @@
 
 #include "ViewHelper.h"
 
-ShipPlacementException::ShipPlacementException(const std::string& msg) : message(msg) {}
+namespace cpp_warships::application {
 
-void ShipPlacementException::displayError() const {
-    ViewHelper::errorOut("Ship placement Error: " + message);
-}
+    ShipPlacementException::ShipPlacementException(const std::string& msg) : message(msg) {}
+
+    void ShipPlacementException::displayError() const {
+        ViewHelper::errorOut("Ship placement Error: " + message);
+    }
+} // namespace cpp_warships::application

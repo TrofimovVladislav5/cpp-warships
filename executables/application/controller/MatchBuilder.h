@@ -1,31 +1,35 @@
 #pragma once
+
 #include <functional>
 #include <utility>
 
-#include "game-states/GameState.h"
+#include "game_states/GameState.h"
 
-struct Settings {
-    Settings(std::map<int, int> shipsCount, int fieldSize)
-        : shipsCount(std::move(shipsCount)), fieldSize(fieldSize) {}
+namespace cpp_warships::application {
 
-    std::map<int, int> shipsCount;
-    int fieldSize;
-};
+    struct Settings {
+        Settings(std::map<int, int> shipsCount, int fieldSize)
+            : shipsCount(std::move(shipsCount)), fieldSize(fieldSize) {}
 
-class MatchBuilder {
-private:
-    const Settings defaultSettings = {{{1, 4}, {2, 3}, {3, 2}, {4, 1}}, 10};
-    bool isLoaded;
-    bool isLoadedFromTemplate;
-    GameStateDTO* currentData;
-    cpp_warships::input_reader::InputReader<>* reader;
-    OngoingGameSubState* initializeNewMatch();
-    OngoingGameSubState* loadSavedMatch();
+        std::map<int, int> shipsCount;
+        int fieldSize;
+    };
 
-public:
-    explicit MatchBuilder(cpp_warships::input_reader::InputReader<>* reader);
-    void newGame(bool fromTemplate = true);
-    bool loadSave(const std::string& filename);
-    void printBattleScreenshot();
-    std::function<OngoingGameSubState*()> getStateBuilder();
-};
+    class MatchBuilder {
+    private:
+        const Settings defaultSettings = {{{1, 4}, {2, 3}, {3, 2}, {4, 1}}, 10};
+        bool isLoaded;
+        bool isLoadedFromTemplate;
+        GameStateDTO* currentData;
+        input_reader::InputReader<>* reader;
+        OngoingGameSubState* initializeNewMatch();
+        OngoingGameSubState* loadSavedMatch();
+
+    public:
+        explicit MatchBuilder(input_reader::InputReader<>* reader);
+        void newGame(bool fromTemplate = true);
+        bool loadSave(const std::string& filename);
+        void printBattleScreenshot();
+        std::function<OngoingGameSubState*()> getStateBuilder();
+    };
+} // namespace cpp_warships::application

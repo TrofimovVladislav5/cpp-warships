@@ -7,16 +7,19 @@
 #include "game/GameStateDTO.h"
 #include "skills/SkillManager.h"
 
-class Player {
-private:
-    GameField* opponentField;
-    AttackHandler* playerAttackHandler;
-    SkillManager* skillsManager;
+namespace cpp_warships::application {
 
-public:
-    explicit Player(GameStateDTO* dto);
-    ~Player();
-    bool isWin() const;
-    bool makeAShot(cpp_warships::input_parser::ParsedOptions options);
-    void applySkill(cpp_warships::input_parser::ParsedOptions options);
-};
+    class Player {
+    private:
+        GameField* opponentField;
+        AttackHandler* playerAttackHandler;
+        SkillManager* skillsManager;
+
+    public:
+        explicit Player(GameStateDTO* dto);
+        ~Player();
+        bool isWin() const;
+        bool makeAShot(input_parser::ParsedOptions options);
+        void applySkill(input_parser::ParsedOptions options);
+    };
+} // namespace cpp_warships::application

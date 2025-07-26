@@ -1,21 +1,25 @@
 #pragma once
+
 #include "Skill.h"
 
-class SkillFactory {
-public:
-    virtual ISkill* createSkill() = 0;
-    virtual ~SkillFactory() = default;
-};
+namespace cpp_warships::application {
 
-template <typename SkillType, typename... Args>
-class ConcreteSkillFactory final : public SkillFactory {
-private:
-    std::tuple<Args...> args;
+    class SkillFactory {
+    public:
+        virtual ISkill* createSkill() = 0;
+        virtual ~SkillFactory() = default;
+    };
 
-public:
-    explicit ConcreteSkillFactory(Args... args) : args(std::make_tuple(args...)) {}
+    template <typename SkillType, typename... Args>
+    class ConcreteSkillFactory final : public SkillFactory {
+    private:
+        std::tuple<Args...> args;
 
-    ISkill* createSkill() override {
-        return std::apply([](Args... args) { return new SkillType(args...); }, args);
-    }
-};
+    public:
+        explicit ConcreteSkillFactory(Args... args) : args(std::make_tuple(args...)) {}
+
+        ISkill* createSkill() override {
+            return std::apply([](Args... args) { return new SkillType(args...); }, args);
+        }
+    };
+} // namespace cpp_warships::application

@@ -3,12 +3,15 @@
 #include "Skill.h"
 #include "../game/GameField.h"
 
-class ShipManager;
+namespace cpp_warships::application {
 
-class ShootingRandomlySkill : public ISkill  {
-private:
-     GameField* enemyField;
-public:
-     explicit ShootingRandomlySkill(GameField* enemyField);
-     void apply() override;
-};
+     class ShipManager;
+
+     class ShootingRandomlySkill : public ISkill  {
+     private:
+          GameField* enemyField;
+     public:
+          explicit ShootingRandomlySkill(GameField* enemyField);
+          void apply() override;
+     };
+} // namespace cpp_warships::application

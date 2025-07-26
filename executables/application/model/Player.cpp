@@ -1,47 +1,50 @@
 #include "Player.h"
 
+#include <cpp_warships/utilities/include/TypesHelper.h>
+
 #include "Structures.h"
-#include "TypesHelper.h"
 #include "exceptions/BattleException.h"
 #include "exceptions/SkillException.h"
 #include "game/GameStateDTO.h"
 
-Player::Player(GameStateDTO* dto)
-    : opponentField(dto->enemyField),
-      playerAttackHandler(new AttackHandler(opponentField, dto->settings)),
-      skillsManager(dto->playerSkillManager) {}
+namespace cpp_warships::application {
 
-Player::~Player() {
-    delete playerAttackHandler;
-    delete skillsManager;
-    delete opponentField;
-}
+    Player::Player(GameStateDTO* dto)
+        : opponentField(dto->enemyField),
+          playerAttackHandler(new AttackHandler(opponentField, dto->settings)),
+          skillsManager(dto->playerSkillManager) {}
 
-void Player::applySkill(cpp_warships::input_parser::ParsedOptions options) {
-    try {
-        skillsManager->applySkill();
-    } catch (const SkillException& exception) {
-        exception.displayError();
+    Player::~Player() {
+        delete playerAttackHandler;
+        delete skillsManager;
+        delete opponentField;
     }
-}
 
-bool Player::isWin() const {
-    // return true; TODO: REMOVE WHEN PROTECTION ENDED
-    return opponentField->isAllShipsDestroyed();
-}
-
-bool Player::makeAShot(cpp_warships::input_parser::ParsedOptions options) {
-    std::pair<int, int> attackCell = TypesHelper::cell(options["cell"]);
-    AttackResult currentAttack = playerAttackHandler->attack(attackCell);
-    if (currentAttack == AttackResult::outOfBounds) {
-        throw BattleException("Invalid cell coordinates");
-    }
-    if (currentAttack != AttackResult::miss) {
-        if (currentAttack == AttackResult::destroyed) {
-            skillsManager->addSkill();
+    void Player::applySkill(input_parser::ParsedOptions options) {
+        try {
+            skillsManager->applySkill();
+        } catch (const SkillException& exception) {
+            exception.displayError();
         }
-        return true;
     }
 
-    return false;
-}
+    bool Player::isWin() const {
+        return opponentField->isAllShipsDestroyed();
+    }
+
+    bool Player::makeAShot(input_parser::ParsedOptions options) {
+        std::pair<int, int> attackCell = TypesHelper::cell(options["cell"]);
+        AttackResult currentAttack = playerAttackHandler->attack(attackCell);
+        if (currentAttack == AttackResult::outOfBounds) {
+            throw BattleException("Invalid cell coordinates");
+        }
+        if (currentAttack != AttackResult::miss) {
+            if (currentAttack == AttackResult::destroyed) {
+                skillsManager->addSkill();
+            }
+            return true;
+        }
+
+        return false;
+    }
+} // namespace cpp_warships::application

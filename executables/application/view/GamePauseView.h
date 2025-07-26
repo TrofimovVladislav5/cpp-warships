@@ -1,11 +1,15 @@
 #pragma once
+
 #include <string>
 
-class GamePauseView {
-private:
-    int rawLength;
+namespace cpp_warships::application {
 
-public:
-    explicit GamePauseView(int rawLength);
-    void printImportantMessage(const std::string &message) const;
-};
+    class GamePauseView {
+    private:
+        int rawLength;
+
+    public:
+        explicit GamePauseView(int rawLength);
+        void printImportantMessage(const std::string &message) const;
+    };
+} // namespace cpp_warships::application

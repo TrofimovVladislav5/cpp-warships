@@ -4,11 +4,14 @@
 #include "../game/MatchSettings.h"
 #include "Skill.h"
 
-class Scanner : public ISkill {
-private:
-    GameField* opponentField;
+namespace cpp_warships::application {
 
-public:
-    explicit Scanner(GameField* opponentField);
-    void apply() override;
-};
+    class Scanner : public ISkill {
+    private:
+        GameField* opponentField;
+
+    public:
+        explicit Scanner(GameField* opponentField);
+        void apply() override;
+    };
+} // namespace cpp_warships::application

@@ -1,11 +1,15 @@
 #pragma once
+
 #include <string>
 
-class SkillException : public std::exception {
-private:
-    std::string message;
+namespace cpp_warships::application {
 
-public:
-    explicit SkillException(const std::string& msg);
-    void displayError() const;
-};
+    class SkillException : public std::exception {
+    private:
+        std::string message;
+
+    public:
+        explicit SkillException(const std::string& msg);
+        void displayError() const;
+    };
+} // namespace cpp_warships::application

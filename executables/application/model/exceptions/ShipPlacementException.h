@@ -1,12 +1,16 @@
 #pragma once
+
 #include <stdexcept>
 #include <string>
 
-class ShipPlacementException : std::exception {
-private:
-    std::string message;
+namespace cpp_warships::application {
 
-public:
-    explicit ShipPlacementException(const std::string& msg);
-    void displayError() const;
-};
+    class ShipPlacementException : std::exception {
+    private:
+        std::string message;
+
+    public:
+        explicit ShipPlacementException(const std::string& msg);
+        void displayError() const;
+    };
+} // namespace cpp_warships::application

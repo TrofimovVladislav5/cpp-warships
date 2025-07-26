@@ -1,7 +1,12 @@
 #include "BattleException.h"
 
-#include "ViewHelper.h"
+#include <cpp_warships/utilities/include/ViewHelper.h>
 
-BattleException::BattleException(const std::string& msg) : message(msg) {}
+namespace cpp_warships::application {
 
-void BattleException::displayError() const { ViewHelper::errorOut("Battle Error: " + message); }
+    BattleException::BattleException(const std::string& msg) : message(msg) {}
+
+    void BattleException::displayError() const {
+        ViewHelper::errorOut("Battle Error: " + message);
+    }
+} // namespace cpp_warships::application

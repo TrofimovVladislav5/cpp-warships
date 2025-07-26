@@ -1,6 +1,8 @@
 #include "SubStateContext.h"
 
-SubStateContext::SubStateContext(GameStateDTO *matchData, cpp_warships::input_reader::InputReader<> *inputReader)
-    : inputReader(inputReader), matchDTO(matchData) {}
+namespace cpp_warships::application {
+    SubStateContext::SubStateContext(GameStateDTO *matchData, input_reader::InputReader<> *inputReader)
+        : inputReader(inputReader), matchDTO(matchData) {}
 
-cpp_warships::input_reader::InputReader<> *SubStateContext::getInputReader() const { return inputReader; }
+    input_reader::InputReader<> *SubStateContext::getInputReader() const { return inputReader; }
+} // namespace cpp_warships::application

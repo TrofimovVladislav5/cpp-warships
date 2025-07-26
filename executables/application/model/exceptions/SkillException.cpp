@@ -1,7 +1,10 @@
 #include "SkillException.h"
 
-#include "ViewHelper.h"
+#include <cpp_warships/utilities/include/ViewHelper.h>
 
-SkillException::SkillException(const std::string& msg) : message(msg) {}
+namespace cpp_warships::application {
 
-void SkillException::displayError() const { ViewHelper::errorOut("Skill Error: " + message); }
+    SkillException::SkillException(const std::string& msg) : message(msg) {}
+
+    void SkillException::displayError() const { ViewHelper::errorOut("Skill Error: " + message); }
+} // namespace cpp_warships::application
