@@ -1,118 +1,62 @@
 # Compile files
 add_executable(cpp_warships main.cpp
-        controller/game_states/MenuGameState.cpp
-        controller/game_states/MenuGameState.h
-        controller/game_states/GameState.cpp
-        controller/game_states/GameState.h
-        controller/game_states/OngoingGameState.cpp
-        controller/game_states/OngoingGameState.h
-        controller/game_states/ShutdownGameState.cpp
-        controller/game_states/ShutdownGameState.h
-        controller/BattleController.cpp
-        controller/BattleController.h
-        controller/ongoing_game_substates/BattleOngoingGameSubState.cpp
-        controller/ongoing_game_substates/BattleOngoingGameSubState.h
-        controller/ongoing_game_substates/FinishOngoingGameSubState.cpp
-        controller/ongoing_game_substates/FinishOngoingGameSubState.h
-        controller/ongoing_game_substates/InitiateOngoingGameSubState.cpp
-        controller/ongoing_game_substates/InitiateOngoingGameSubState.h
-        controller/ongoing_game_substates/NewMatchSettingsSubState.cpp
-        controller/ongoing_game_substates/NewMatchSettingsSubState.h
-        controller/ongoing_game_substates/PauseOngoingGameSubState.cpp
-        controller/ongoing_game_substates/PauseOngoingGameSubState.h
-        controller/PlaceShipController.cpp
-        controller/PlaceShipController.h
-        controller/MatchSettingsController.cpp
-        controller/MatchSettingsController.h
-        controller/GameController.h
-        model/game/GameField.cpp
-        model/game/GameField.h
-        model/game/GameStateDTO.cpp
-        model/game/GameStateDTO.h
-        model/game/MatchSettings.cpp
-        model/game/MatchSettings.h
-        model/Player.cpp
-        model/Player.h
-        model/game/Segment.cpp
-        model/game/Segment.h
-        model/game/Ship.cpp
-        model/game/Ship.h
-        controller/ShipManager.cpp
-        controller/ShipManager.h
-        model/StateContext.cpp
-        model/StateContext.h
-        model/Structures.cpp
-        model/Structures.h
-        view/game_states/GameView.cpp
-        view/game_states/GameView.h
-        view/game_states/OngoingGameView.cpp
-        view/game_states/OngoingGameView.h
-        view/game_states/ShutdownGameView.cpp
-        view/game_states/ShutdownGameView.h
-        view/game_substates/InitiateOngoingGameView.cpp
-        view/game_substates/InitiateOngoingGameView.h
-        view/GameFieldView.cpp
-        view/GameFieldView.h
-        model/skills/DoubleDamage.h
-        model/skills/DoubleDamage.cpp
-        model/skills/Scanner.cpp
-        model/skills/Scanner.h
-        model/skills/ShootingRandomlySkill.cpp
-        model/skills/ShootingRandomlySkill.h
-        model/skills/SkillManager.h
-        model/skills/SkillManager.cpp
-        model/skills/SkillFactory.h
-        model/skills/Skill.h
-        model/skills/Skill.cpp
-        model/exceptions/ShipPlacementException.h
-        model/exceptions/ShipPlacementException.cpp
-        model/exceptions/SkillException.h
-        model/exceptions/SkillException.cpp
-        model/exceptions/BattleException.h
-        model/exceptions/BattleException.cpp
-        model/ComputerPlayer.h
-        model/ComputerPlayer.cpp
-        controller/ongoing_game_substates/OngoingGameSubState.cpp
-        controller/ongoing_game_substates/OngoingGameSubState.h
-        model/SubStateContext.cpp
-        model/SubStateContext.h
-        controller/ongoing_game_substates/NewMatchSettingsSubState.h
-        view/FieldCellView.cpp
-        view/FieldCellView.h
-        view/PlaceShipControllerView.cpp
-        view/PlaceShipControllerView.h
-        model/PlayerFieldState.cpp
-        model/PlayerFieldState.h
-        controller/AttackHandler.cpp
-        controller/AttackHandler.h
-        view/SkillManagerView.cpp
-        view/SkillManagerView.h
-        model/save/Serializer.h
-        controller/save/GameSaveCreator.h
-        controller/save/GameSaveCreator.cpp
-        controller/save/SerializerManager.cpp
-        controller/save/SerializerManager.h
-        model/save/SerializerGameField.h
-        model/save/SerializerGameField.cpp
-        model/save/Serializer.cpp
-        model/save/SerializerMatchSettings.h
-        model/save/SerializerMatchSettings.cpp
-        controller/save/SerializerSkillManager.h
-        model/save/SerializerSimplifyObjects.h
-        model/save/SerializerSimplifyObjects.cpp
-        controller/save/SerializerSkillManager.cpp
-        model/save/SerializerFactory.h
-        controller/save/JsonFileHandler.h
-        controller/save/JsonFileHandler.cpp
-        view/ShipManagerView.cpp
-        controller/MatchBuilder.cpp
-        controller/MatchBuilder.h
-        view/GamePauseView.cpp
-        view/GamePauseView.h
-        view/BattleView.cpp
-        view/BattleView.h
-        controller/game_states/TransitGameState.cpp
-        controller/game_states/TransitGameState.h
+        include/AttackHandler.h src/AttackHandler.cpp
+        include/BattleController.h src/BattleController.cpp
+        include/BattleView.h src/BattleView.cpp
+        include/ComputerPlayer.h src/ComputerPlayer.cpp
+        include/FieldCellView.h src/FieldCellView.cpp
+        include/GameController.h
+        include/GameField.h src/GameField.cpp
+        include/GameFieldView.h src/GameFieldView.cpp
+        include/GamePauseView.h src/GamePauseView.cpp
+        include/MatchSettings.h src/MatchSettings.cpp
+        include/MatchSettingsController.h src/MatchSettingsController.cpp
+        include/PlaceShipController.h src/PlaceShipController.cpp
+        include/PlaceShipControllerView.h src/PlaceShipControllerView.cpp
+        include/Player.h src/Player.cpp
+        include/PlayerFieldState.h src/PlayerFieldState.cpp
+        include/Segment.h src/Segment.cpp
+        include/Ship.h src/Ship.cpp
+        include/ShipManager.h src/ShipManager.cpp
+        include/ShipManagerView.h src/ShipManagerView.cpp
+        include/Structures.h src/Structures.cpp
+        include/exceptions/BattleException.h src/exceptions/BattleException.cpp
+        include/exceptions/ShipPlacementException.h src/exceptions/ShipPlacementException.cpp
+        # Player Skills
+        include/player_skills/DoubleDamage.h src/player_skills/DoubleDamage.cpp
+        include/player_skills/Scanner.h src/player_skills/Scanner.cpp
+        include/player_skills/ShootingRandomlySkill.h src/player_skills/ShootingRandomlySkill.cpp
+        include/player_skills/Skill.h src/player_skills/Skill.cpp
+        include/player_skills/SkillFactory.h
+        include/player_skills/SkillManager.h src/player_skills/SkillManager.cpp
+        include/player_skills/SkillManagerView.h src/player_skills/SkillManagerView.cpp
+        include/player_skills/exceptions/SkillException.h src/player_skills/exceptions/SkillException.cpp
+        # Save System
+        include/GameSaveCreator.h src/GameSaveCreator.cpp
+        include/save_system/JsonFileHandler.h src/save_system/JsonFileHandler.cpp
+        include/save_system/Serializer.h src/save_system/Serializer.cpp
+        include/save_system/SerializerFactory.h
+        include/save_system/SerializerGameField.h src/save_system/SerializerGameField.cpp
+        include/save_system/SerializerManager.h src/save_system/SerializerManager.cpp
+        include/save_system/SerializerMatchSettings.h src/save_system/SerializerMatchSettings.cpp
+        include/save_system/SerializerSimplifyObjects.h src/save_system/SerializerSimplifyObjects.cpp
+        include/save_system/SerializerSkillManager.h src/save_system/SerializerSkillManager.cpp
+        # State Machine
+        include/state_machine/GameState.h src/state_machine/GameState.cpp
+        include/GameStateDTO.h src/GameStateDTO.cpp
+        include/state_machine/MatchBuilder.h src/state_machine/MatchBuilder.cpp
+        include/state_machine/states/MenuGameState.h src/state_machine/states/MenuGameState.cpp
+        include/state_machine/states/OngoingGameState.h src/state_machine/states/OngoingGameState.cpp
+        include/state_machine/states/ShutdownGameState.h src/state_machine/states/ShutdownGameState.cpp
+        include/state_machine/states/StateContext.h src/state_machine/states/StateContext.cpp
+        include/state_machine/states/TransitGameState.h src/state_machine/states/TransitGameState.cpp
+        include/state_machine/substates/BattleOngoingGameSubState.h src/state_machine/substates/BattleOngoingGameSubState.cpp
+        include/state_machine/substates/FinishOngoingGameSubState.h src/state_machine/substates/FinishOngoingGameSubState.cpp
+        include/state_machine/substates/InitiateOngoingGameSubState.h src/state_machine/substates/InitiateOngoingGameSubState.cpp
+        include/state_machine/substates/NewMatchSettingsSubState.h src/state_machine/substates/NewMatchSettingsSubState.cpp
+        include/state_machine/substates/OngoingGameSubState.h src/state_machine/substates/OngoingGameSubState.cpp
+        include/state_machine/substates/PauseOngoingGameSubState.h src/state_machine/substates/PauseOngoingGameSubState.cpp
+        include/state_machine/substates/SubStateContext.h src/state_machine/substates/SubStateContext.cpp
 )
 
 # Link dependencies

@@ -59,6 +59,8 @@ the project structure and module relations
 - [ ] Implement local multiplayer
 - [ ] Reorganise core architecture
 - [ ] Write documentation
+- [ ] Error on second round of the game
+- [ ] Error when double damage is always active
 
 ## Examples
 The example of a working project with this template structure
