@@ -30,8 +30,6 @@ namespace cpp_warships::application {
                 initialCoordinate.second < 0 || initialCoordinate.second >= settings->getFieldSize()) {
                 return AttackResult::outOfBounds;
             }
-            std::cout << "Damage count: " << settings->getDamageCount() << std::endl;
-            std::cout << "Damage dealt: " << damageCount << std::endl;
             result = enemyField->attack(initialCoordinate, damageCount);
 
             if (settings->getIsDoubleDamage()) {

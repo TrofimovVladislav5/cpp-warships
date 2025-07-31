@@ -46,9 +46,9 @@ namespace cpp_warships::application {
 
     void MatchBuilder::newGame(bool fromTemplate) {
         try {
-            MatchSettings matchSettings(defaultSettings.shipsCount, defaultSettings.fieldSize);
+            auto matchSettings = new MatchSettings(defaultSettings.shipsCount, defaultSettings.fieldSize);
 
-            currentData = new GameStateDTO(&matchSettings);
+            currentData = new GameStateDTO(matchSettings);
             isLoaded = false;
             isLoadedFromTemplate = fromTemplate;
         } catch (std::exception& e) {

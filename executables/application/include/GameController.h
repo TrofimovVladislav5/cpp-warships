@@ -53,9 +53,7 @@ namespace cpp_warships::application {
                 !stateContext.currentMatchData ||
                 (stateContext.currentMatchData && !stateContext.currentMatchData->isFinished)
             ) {
-                GameState *newState = currentState->transitToState();
-
-                if (newState) {
+                if (auto newState = (GameState *)currentState->transitToState()) {
                     currentState->closeState();
                     currentState = newState;
                     currentState->openState();
