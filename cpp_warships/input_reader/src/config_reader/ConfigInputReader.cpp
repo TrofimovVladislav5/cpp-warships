@@ -8,9 +8,9 @@
 namespace cpp_warships::input_reader::config_reader {
 
     ConfigInputReader::ConfigInputReader(const std::string &filename)
-        : linesExecuted(0)
-        , fileContents({})
+        : fileContents({})
         , shadowReader(new console_reader::ConsoleInputReader())
+        , linesExecuted(0)
     {
         std::ifstream file(filename);
 
@@ -34,7 +34,7 @@ namespace cpp_warships::input_reader::config_reader {
             ? shadowReader->readCommand()
             : this->fileContents[linesExecuted++];
 
-        linesExecuted = std::min(linesExecuted, static_cast<int>(this->fileContents.size()));
+        linesExecuted = std::min(linesExecuted, this->fileContents.size());
 
         return command;
     }

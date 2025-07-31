@@ -1,14 +1,17 @@
 #pragma once
 
-#include "../include/ISerializer.h"
-#include "../include/ISerializable.h"
-#include "../include/helpers/serializers/JsonStringSerializer.h"
+#include <string>
+#include <iostream>
+
+#include "../ISerializer.h"
+#include "../ISerializable.h"
+#include "../helpers/serializers/JsonStringSerializer.h"
 
 namespace cpp_warships::game_saves::examples {
     using namespace helpers::serializers;
 
     // Test class serializer TName definition.
-    inline extern  char ImplicitTestClassTypeName[] = "ImplicitTestClass";
+    inline char ImplicitTestClassTypeName[] = "ImplicitTestClass";
 
     // Forward declaration of ImplicitTestClass and ImplicitTestClassStringSerializer to avoid circular dependency.
     class ImplicitTestClassStringSerializer;

@@ -13,7 +13,7 @@
 
 namespace cpp_warships::application {
 
-    void PauseOngoingGameSubState::handleResume(input_parser::ParsedOptions options) {
+    void PauseOngoingGameSubState::handleResume(input_parser::ParsedOptions _) {
         try {
             loadedSubState = new BattleOngoingGameSubState(context);
         } catch (std::exception &e) {

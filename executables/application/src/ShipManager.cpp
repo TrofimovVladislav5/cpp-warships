@@ -21,9 +21,10 @@ namespace cpp_warships::application {
     }
 
     Ship* ShipManager::operator[](int index) {
-        if (index < 0 || index >= ships.size()) {
+        if (index < 0 || static_cast<size_t>(index) >= ships.size()) {
             throw std::out_of_range("Invalid index error");
         }
+
         return ships[index];
     }
 
@@ -33,7 +34,7 @@ namespace cpp_warships::application {
     }
 
     void ShipManager::removeShipNumber(int indexRemoving) {
-        if (indexRemoving < 0 || indexRemoving >= ships.size()) {
+        if (indexRemoving < 0 || static_cast<size_t>(indexRemoving) >= ships.size()) {
             throw std::out_of_range("Invalid Index for removing ship");
         }
         ships.erase(ships.begin() + indexRemoving);
@@ -46,5 +47,7 @@ namespace cpp_warships::application {
     std::map<int, int> ShipManager::getShipsSizes() const { return shipsSizes; }
 
     ShipManager::ShipManager(const std::map<int, int>& shipsSizes, std::vector<Ship*> ships)
-        : shipsSizes(shipsSizes), ships(ships) {}
+        : ships(ships)
+        , shipsSizes(shipsSizes)
+    {}
 } // namespace cpp_warships::application

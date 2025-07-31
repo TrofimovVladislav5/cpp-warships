@@ -20,7 +20,7 @@ namespace cpp_warships::application {
         delete opponentField;
     }
 
-    void Player::applySkill(input_parser::ParsedOptions options) {
+    void Player::applySkill(input_parser::ParsedOptions _) {
         try {
             skillsManager->applySkill();
         } catch (const SkillException& exception) {

@@ -26,7 +26,7 @@ namespace cpp_warships::input_parser {
                 ViewHelper::consoleOut("└── params:", 1);
             }
 
-            for (int i = 0; i < params.size(); i++) {
+            for (int i = 0; i < static_cast<int>(params.size()); i++) {
                 ViewHelper::consoleOut("Param (" + std::to_string(i + 1) + ")", 2);
                 printParam(params[i]);
             }

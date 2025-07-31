@@ -37,7 +37,7 @@ namespace cpp_warships::input_parser {
         }
 
         bool findOption(const std::string &flag, const ParserCommandInfo<T>& command, ParserParameter& result) {
-            for (int i = 0; i < command.getParams().size(); i++) {
+            for (size_t i = 0; i < command.getParams().size(); i++) {
                 ParserParameter param = command.getParams()[i];
                 if (param.getIsFlagPresent(flag)) {
                     result = param;
@@ -58,7 +58,7 @@ namespace cpp_warships::input_parser {
                 std::vector<std::string> flags = param.getFlags();
                 bool isNecessary = param.getNecessary();
 
-                for (int j = 0; j < flags.size(); j++) {
+                for (size_t j = 0; j < flags.size(); j++) {
                     increaseAmountOnHashMap(flags[j], allFlags);
                     if (isNecessary) increaseAmountOnHashMap(flags[j], necessaryFlags);
                 }
@@ -84,12 +84,14 @@ namespace cpp_warships::input_parser {
             bool isValid = true;
             ParsedOptions validParamValues;
 
-            for (int i = 0; i < inputChunks.size(); i++) {
+            for (size_t i = 0; i < inputChunks.size(); i++) {
                 const std::string& chunk = inputChunks[i];
                 if (chunk.substr(0, 2) == "--") {
                     ParserParameter option;
                     if (findOption(chunk, command, option)) {
-                        std::string optionValue = i == inputChunks.size() - 1 ? "" : inputChunks[i + 1];
+                        std::string optionValue = i == inputChunks.size() - 1
+                            ? ""
+                               : inputChunks[i + 1];
                         std::pair<bool, std::string> validationResult = option.validate(optionValue);
                         isValid = isValid && validationResult.first;
                         if (isValid) validParamValues.emplace(chunk.substr(2), validationResult.second);
@@ -109,10 +111,12 @@ namespace cpp_warships::input_parser {
             , displayError(nullptr)
         {}
 
+        // Constructor made for compatibility purposes.
+        // Help callback parameter is not used in this implementation.
         explicit Parser(
             SchemeMap<T> scheme,
             ParseCallback<void> displayError,
-            const SchemeHelpCallback<void>& printHelp = nullptr
+            const SchemeHelpCallback<void>& _ = nullptr
         )
             : scheme(std::move(scheme))
             , displayError(std::move(displayError))

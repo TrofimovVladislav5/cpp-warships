@@ -3,31 +3,31 @@
 namespace cpp_warships::application {
 
     GameStateDTO::GameStateDTO()
-        : playerManager(nullptr)
+        : lastSubState("")
+        , playerManager(nullptr)
+        , playerSkillManager(nullptr)
         , playerField(nullptr)
         , enemyManager(nullptr)
         , enemyField(nullptr)
-        , settings(nullptr)
         , shipsSizes({})
+        , settings(nullptr)
+        , isFinished(false)
         , fieldSize(0)
         , roundNumber(0)
-        , lastSubState("")
-        , playerSkillManager(nullptr)
-        , isFinished(false)
     {}
 
     GameStateDTO::GameStateDTO(MatchSettings* settings)
-        : playerManager(new ShipManager(settings->getShipsCount()))
+        : lastSubState("")
+        , playerManager(new ShipManager(settings->getShipsCount()))
+        , playerSkillManager(nullptr)
         , playerField(new GameField(settings->getFieldSize(), settings->getFieldSize()))
         , enemyManager(new ShipManager(settings->getShipsCount()))
         , enemyField(new GameField(settings->getFieldSize(), settings->getFieldSize()))
-        , settings(settings)
         , shipsSizes(settings->getShipsCount())
+        , settings(settings)
+        , isFinished(false)
         , fieldSize(settings->getFieldSize())
         , roundNumber(1)
-        , lastSubState("")
-        , playerSkillManager(nullptr)
-        , isFinished(false)
     {}
 
     GameStateDTO::~GameStateDTO() {

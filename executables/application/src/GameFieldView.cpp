@@ -44,18 +44,18 @@ namespace cpp_warships::application {
     }
 
     void GameFieldView::printFieldLine(std::vector<FieldCellView>& cells, bool isLast) {
-        for (int i = 0; i < cells.size(); i++) {
+        for (size_t i = 0; i < cells.size(); i++) {
             std::cout << cells[i].getTopEdge(true, i == cells.size() - 1);
         }
 
         std::cout << std::endl;
-        for (int i = 0; i < cells.size(); i++) {
+        for (size_t i = 0; i < cells.size(); i++) {
             std::cout << cells[i].getMiddleLayer(true, i == cells.size() - 1);
         }
 
         std::cout << std::endl;
         if (isLast) {
-            for (int i = 0; i < cells.size(); i++) {
+            for (size_t i = 0; i < cells.size(); i++) {
                 std::cout << cells[i].getBottomEdge(true, i == cells.size() - 1);
             }
             std::cout << std::endl;

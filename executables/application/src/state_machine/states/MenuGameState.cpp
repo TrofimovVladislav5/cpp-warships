@@ -30,11 +30,11 @@ namespace cpp_warships::application {
         ViewHelper::consoleOut("Successfully initialized new game (to confirm use 'confirm' command)");
     }
 
-    void MenuGameState::handleConfirm(input_parser::ParsedOptions options) {
+    void MenuGameState::handleConfirm(input_parser::ParsedOptions _) {
         isRunning = true;
     }
 
-    void MenuGameState::handleInfo(input_parser::ParsedOptions options) {
+    void MenuGameState::handleInfo(input_parser::ParsedOptions _) {
         matchBuilder.printBattleScreenshot();
     }
 
@@ -51,7 +51,7 @@ namespace cpp_warships::application {
 
     MenuGameState::MenuGameState(StateContext& context)
         : GameState(context)
-        , matchBuilder({ context.getInputReader() })
+        , matchBuilder(context.getInputReader())
         , isRunning(false)
     {
         input_parser::ConfigCommandBuilder<void> commandBuilder;

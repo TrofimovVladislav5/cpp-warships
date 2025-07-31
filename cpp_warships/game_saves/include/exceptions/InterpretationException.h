@@ -11,6 +11,7 @@ namespace cpp_warships::game_saves::exceptions {
     class InterpretationException : public std::exception {
     private:
         std::string message;
+        std::string errorMessage;
 
     public:
         /**
@@ -19,6 +20,7 @@ namespace cpp_warships::game_saves::exceptions {
          */
         explicit InterpretationException(const std::string& message)
             : message(message)
+            , errorMessage("InterpretationException: " + message)
         {}
 
         /**
@@ -26,7 +28,7 @@ namespace cpp_warships::game_saves::exceptions {
          * @return The error message.
          */
         [[nodiscard]] const char* what() const noexcept override {
-            return ("InterpretationException: " + message).c_str();
+            return errorMessage.c_str();
         }
     };
 

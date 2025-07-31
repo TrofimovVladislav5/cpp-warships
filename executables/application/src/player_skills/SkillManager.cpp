@@ -15,8 +15,8 @@
 namespace cpp_warships::application {
 
     SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings)
-        : currentSkill(nullptr)
-        , skills({})
+        : skills({})
+        , currentSkill(nullptr)
     {
         factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
         factory["DoubleDamage"] =  new ConcreteSkillFactory<DoubleDamage, MatchSettings*>(settings);

@@ -3,7 +3,9 @@
 namespace cpp_warships::application {
 
     StateContext::StateContext(input_reader::InputReader<>* inputReader)
-        : currentMatchData(nullptr), initialGameSubState(nullptr), inputReader(inputReader) {}
+        : inputReader(inputReader)
+        , currentMatchData(nullptr)
+        , initialGameSubState(nullptr) {}
 
     input_reader::InputReader<>* StateContext::getInputReader() const { return inputReader; }
 } // namespace cpp_warships::application

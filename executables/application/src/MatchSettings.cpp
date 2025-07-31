@@ -7,9 +7,9 @@
 namespace cpp_warships::application {
 
     MatchSettings::MatchSettings(std::map<int, int> shipSizesDictionary, int fieldSize)
-        : fieldSize(fieldSize)
+        : shipSizesDictionary(std::move(shipSizesDictionary))
+        , fieldSize(fieldSize)
         , damageCount(1)
-        , shipSizesDictionary(std::move(shipSizesDictionary))
         , isActiveDoubleDamage(false)
     {
         std::cout << "Match settings created with damage count: " << std::to_string(damageCount) << std::endl;

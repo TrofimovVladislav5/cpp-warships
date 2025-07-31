@@ -31,7 +31,7 @@ namespace cpp_warships::application {
         return new BattleOngoingGameSubState(context);
     }
 
-    void BattleOngoingGameSubState::handlePause(input_parser::ParsedOptions options) {
+    void BattleOngoingGameSubState::handlePause(input_parser::ParsedOptions _) {
         isPaused = true;
     }
 

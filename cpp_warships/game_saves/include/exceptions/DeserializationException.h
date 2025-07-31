@@ -10,7 +10,8 @@ namespace cpp_warships::game_saves::exceptions {
     class DeserializationException : public std::exception {
     private:
         std::string message;
-        std::string object_type;
+        std::string objectType;
+        std::string errorMessage;
 
     public:
         /**
@@ -20,7 +21,8 @@ namespace cpp_warships::game_saves::exceptions {
          */
         explicit DeserializationException(const std::string& type, const std::string& message)
             : message(message)
-            , object_type(type)
+            , objectType(type)
+            , errorMessage(objectType + " deserialization error: " + message)
         {}
 
         /**
@@ -28,7 +30,7 @@ namespace cpp_warships::game_saves::exceptions {
          * @return The error message.
          */
         [[nodiscard]] const char* what() const noexcept override {
-            return (object_type + " deserialization error: " + message).c_str();
+            return errorMessage.c_str();
         }
     };
 

@@ -12,11 +12,11 @@
 
 namespace cpp_warships::application {
 
-    void TransitGameState::handleExit(input_parser::ParsedOptions options) {
+    void TransitGameState::handleExit(input_parser::ParsedOptions _) {
         latestCommand = "exit";
     }
 
-    void TransitGameState::handleMenu(input_parser::ParsedOptions options) {
+    void TransitGameState::handleMenu(input_parser::ParsedOptions _) {
         latestCommand = "menu";
     }
 

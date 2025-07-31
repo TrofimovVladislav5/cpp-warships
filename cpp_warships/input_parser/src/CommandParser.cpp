@@ -6,23 +6,23 @@
 #include "../include/command/HelpCommand.h"
 
 namespace cpp_warships::input_parser {
-    ParserCommand* CommandParser::printCommandsHelp(ParsedOptions options) {
+    ParserCommand* CommandParser::printCommandsHelp(ParsedOptions _) {
         return new HelpCommand(this->scheme);
     }
 
-    ParserCommand* CommandParser::printCommandsError(ParsedOptions options) {
+    ParserCommand* CommandParser::printCommandsError(ParsedOptions _) {
         return new ErrorCommand(this->displayError);
     }
 
     ParserCommand* CommandParser::printArgumentsError(
         ParserCommandInfo<ParserCommand *> command,
-        ParsedOptions options
+        ParsedOptions _
     ) {
         return new ArgumentsErrorCommand(command);
     }
 
     CommandParser::CommandParser(const SchemeMap<ParserCommand*> &scheme)
-            : Parser<ParserCommand*>(scheme)
+            : Parser(scheme)
     {}
 
     CommandParser::CommandParser(
@@ -30,9 +30,9 @@ namespace cpp_warships::input_parser {
         const ParseCallback<void> &displayError,
         const SchemeHelpCallback<void> &printHelp
     )
-        : Parser<ParserCommand*>(scheme, displayError)
+        : Parser(scheme, displayError)
     {
-        if (scheme.find("help") == scheme.end()) {
+        if (!scheme.contains("help")) {
             ConfigCommandBuilder<ParserCommand*> commandBuilder;
             ParserCommandInfo<ParserCommand*>* helpInfo;
 

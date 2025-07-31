@@ -8,11 +8,12 @@
 namespace cpp_warships::application {
 
     BattleController::BattleController(GameStateDTO* dto)
-        : battleIsFinished(false),
-          player(new Player(dto)),
-          playerView(new GameFieldView(dto->playerField)),
-          opponentView(new GameFieldView(dto->enemyField)),
-          computer(new ComputerPlayer(dto->playerField)) {
+        : playerView(new GameFieldView(dto->playerField))
+        , opponentView(new GameFieldView(dto->enemyField))
+        , player(new Player(dto))
+        , computer(new ComputerPlayer(dto->playerField))
+        , battleIsFinished(false)
+    {
         skillManagerView = new SkillManagerView(dto->playerSkillManager);
     }
 

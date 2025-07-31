@@ -16,11 +16,11 @@
 
 namespace cpp_warships::application {
 
-    void InitiateOngoingGameSubState::handleShipsShuffle(input_parser::ParsedOptions options) {
+    void InitiateOngoingGameSubState::handleShipsShuffle(input_parser::ParsedOptions _) {
         playerPlaceController->placeShipsRandomly();
     }
 
-    void InitiateOngoingGameSubState::handleConfirm(input_parser::ParsedOptions options) {
+    void InitiateOngoingGameSubState::handleConfirm(input_parser::ParsedOptions _) {
         if (playerPlaceController->allShipsPlaced()) {
             confirmed = true;
         } else {
@@ -28,7 +28,7 @@ namespace cpp_warships::application {
         }
     }
 
-    void InitiateOngoingGameSubState::handlePause(input_parser::ParsedOptions options) {
+    void InitiateOngoingGameSubState::handlePause(input_parser::ParsedOptions _) {
         latestCommand = "pause";
     }
 

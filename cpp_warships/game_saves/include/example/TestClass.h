@@ -1,17 +1,17 @@
 #pragma once
 
 #include "ImplicitTestClass.h"
-#include "../include/ISerializer.h"
-#include "../include/ISerializable.h"
-#include "../include/helpers/serializers/JsonStringSerializer.h"
-#include "../include/helpers/type_converters/StringTypeConverter.h"
+#include "../ISerializer.h"
+#include "../ISerializable.h"
+#include "../helpers/serializers/JsonStringSerializer.h"
+#include "../helpers/type_converters/StringTypeConverter.h"
 
 namespace cpp_warships::game_saves::examples {
     using namespace helpers::serializers;
     using namespace helpers::type_converters;
 
     // Test class serializer TName definition.
-    inline extern  char TestClassTypeName[] = "TestClass";
+    inline char TestClassTypeName[] = "TestClass";
 
     // Forward declaration of TestClass and TestClassStringSerializer to avoid circular dependency.
     class TestClassStringSerializer;
@@ -72,9 +72,11 @@ namespace cpp_warships::game_saves::examples {
                     testClass->implicitClass = std::get<0>(childrenSerializers).deserialize(*field);
                     delete field;
                 }
-            } catch ( std::exception& e) {
+            } catch (std::exception& e) {
+                std::cerr << "Deserialization interrupted: \n\t" << e.what() << std::endl;
+
                 delete testClass;
-                throw;
+                throw e;
             }
 
             return *testClass;

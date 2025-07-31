@@ -9,7 +9,6 @@ namespace cpp_warships::application {
     private:
         input_parser::SchemeMap<void> inputScheme;
         MatchSettingsController* controller;
-        bool isConfirmed = false;
         MatchSettings* currentSettings;
         void handleMatchSettings(input_parser::ParsedOptions options);
 

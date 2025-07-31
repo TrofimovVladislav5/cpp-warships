@@ -21,7 +21,7 @@ namespace cpp_warships::application {
     int Ship::getLength() const { return segments.size(); }
 
     int Ship::getSegmentHitPoints(int index) const {
-        if (index < 0 || index >= segments.size()) {
+        if (index < 0 || static_cast<size_t>(index) >= segments.size()) {
             throw std::out_of_range("Invalid index error segment");
         }
         return segments[index]->getHitPoints();
@@ -30,7 +30,7 @@ namespace cpp_warships::application {
     int Ship::getMaxSegmentHealth() const { return maxSegmentHealth; }
 
     bool Ship::takeDamage(int indexSegment, int damageCount) {
-        if (indexSegment < 0 || indexSegment >= segments.size()) {
+        if (indexSegment < 0 || static_cast<size_t>(indexSegment) >= segments.size()) {
             throw std::out_of_range("Invalid index error");
         }
 
@@ -38,7 +38,10 @@ namespace cpp_warships::application {
         return true;
     }
 
-    std::vector<Segment*> Ship::getSegments() const { return segments; }
+    std::vector<Segment*> Ship::getSegments() const {
+        return segments;
+    }
+
     bool Ship::isDestroyed() {
         for (auto& segment : segments) {
             if (!segment->isDestroyed()) {
