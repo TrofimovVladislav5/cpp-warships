@@ -1,8 +1,9 @@
 #include "../include/GameField.h"
 
-#include <iostream>
+#include <ranges>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
 #include "../include/Structures.h"
 
@@ -19,11 +20,11 @@ namespace cpp_warships::application {
         , attacksOnField(other.getAttacksOnField())
     {}
 
-    GameField::GameField(GameField&& other)
+    GameField::GameField(GameField&& other) noexcept
         : width(other.getWidth())
         , height(other.getHeight())
-        , shipsCoordinateMap(std::move(other.getShipsCoordinateMap()))
-        , attacksOnField(std::move(other.getAttacksOnField()))
+        , shipsCoordinateMap(other.getShipsCoordinateMap())
+        , attacksOnField(other.getAttacksOnField())
     {}
 
     GameField& GameField::operator=(const GameField& other) {
@@ -37,7 +38,7 @@ namespace cpp_warships::application {
         return *this;
     }
 
-    GameField& GameField::operator=(GameField&& other) {
+    GameField& GameField::operator=(GameField&& other) noexcept {
         if (this != &other) {
             this->width = other.getWidth();
             this->height = other.getHeight();
@@ -48,14 +49,16 @@ namespace cpp_warships::application {
         return *this;
     }
 
-    GameField::GameField(int width, int height,
-        std::unordered_map<Ship *, std::unordered_set<std::pair<int, int>, hashFunc> > shipsCoordinateMap,
-        std::unordered_set<std::pair<int, int>, hashFunc> attacksOnField
+    GameField::GameField(
+        int width,
+        int height,
+        ShipsField shipsCoordinateMap,
+        ShipCoordinatesSet attacksOnField
     )
         : width(width)
         , height(height)
-        , shipsCoordinateMap(shipsCoordinateMap)
-        , attacksOnField(attacksOnField)
+        , shipsCoordinateMap(std::move(shipsCoordinateMap))
+        , attacksOnField(std::move(attacksOnField))
     {}
 
     int GameField::getHeight() const {
@@ -66,22 +69,30 @@ namespace cpp_warships::application {
         return width;
     }
 
-    const std::unordered_map<Ship*, std::unordered_set<std::pair<int, int>,hashFunc>>& GameField::getShipsCoordinateMap() const {
+    const ShipsField& GameField::getShipsCoordinateMap() const {
         return this->shipsCoordinateMap;
     }
 
-    const std::unordered_set<std::pair<int, int>, hashFunc>& GameField::getAttacksOnField() const {
+    const ShipCoordinatesSet& GameField::getAttacksOnField() const {
         return this->attacksOnField;
     }
 
-    bool GameField::canPlaceShip(std::pair<int, int> initialCoordinate, Direction direction, int length) {
+    bool GameField::canPlaceShip(
+        const std::pair<int, int>& initialCoordinate,
+        Direction direction,
+        int length
+    ) const {
         if (!shipCoordinatesInField(initialCoordinate, length, direction) || intersectionShips(initialCoordinate, length, direction)) {
             return false;
         }
         return true;
     }
 
-    void GameField::placeShip(Ship* ship, std::pair<int, int> initialCoordinate, Direction direction) {
+    void GameField::placeShip(
+        Ship* ship,
+        const std::pair<int, int>& initialCoordinate,
+        Direction direction
+    ) {
         int length = ship->getLength();
         for (int i = 0; i < length;i++) {
             std::pair<int, int> newCoordinate = initialCoordinate;
@@ -92,14 +103,14 @@ namespace cpp_warships::application {
         }
     }
 
-    bool GameField::intersectsWithArea(std::pair<int, int> center, int radius) {
+    bool GameField::intersectsWithArea(const std::pair<int, int>& center, const int radius) {
         for (int dy = -radius; dy <= radius; ++dy) {
             for (int dx = -radius; dx <= radius; ++dx) {
                 int newX = center.first + dx;
                 int newY = center.second + dy;
                 if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
-                    std::pair<int, int> checkCoord = {newX, newY};
-                    for (const auto& [ship, coordinates] : shipsCoordinateMap) {
+                    std::pair checkCoord = {newX, newY};
+                    for (const auto& coordinates : shipsCoordinateMap | std::views::values) {
                         if (coordinates.find(checkCoord) != coordinates.end()) {
                             return true;
                         }
@@ -111,14 +122,18 @@ namespace cpp_warships::application {
         return false;
     }
 
-    bool GameField::shipCoordinatesInField(std::pair<int, int> coords, int length, Direction direction) const {
+    bool GameField::shipCoordinatesInField(
+        const std::pair<int, int>& coords,
+        const int length,
+        const Direction direction
+    ) const {
         if (direction == Direction::horizontal) {
             return coords.first + length <= width;
         }
         return coords.second + length <= height;
     }
 
-    bool GameField::shipsAreContacting(std::pair<int, int> coords) const {
+    bool GameField::shipsAreContacting(const std::pair<int, int>& coords) const {
         for (int dy = -1;dy <= 1;dy++){
             for (int dx = -1;dx <= 1;dx++){
                 int newX = coords.first + dx;
@@ -136,7 +151,11 @@ namespace cpp_warships::application {
         return false;
     }
 
-    bool GameField::intersectionShips(std::pair<int , int> coordinates, int length, Direction direction) const {
+    bool GameField::intersectionShips(
+        const std::pair<int, int>& coordinates,
+        const int length,
+        const Direction direction
+    ) const {
         for (int i = 0;i < length;i++){
             std::pair<int, int> tempCoordinates = coordinates;
             if (direction == Direction::horizontal) {
@@ -158,7 +177,10 @@ namespace cpp_warships::application {
     }
 
 
-    AttackResult GameField::attack(std::pair<int, int> initialCoordinate, int damageCount) {
+    AttackResult GameField::attack(
+        const std::pair<int, int>& initialCoordinate,
+        const int damageCount
+    ) {
         if (initialCoordinate.first < 0 || initialCoordinate.first >= width
         ||  initialCoordinate.second < 0 || initialCoordinate.second >= height) throw std::out_of_range("Invalid coordinates to attack");
 
@@ -193,7 +215,7 @@ namespace cpp_warships::application {
     }
 
     bool GameField::isAllShipsDestroyed() const {
-        for (const auto& [ship, coordinates] : shipsCoordinateMap) {
+        for (const auto& ship : shipsCoordinateMap | std::views::keys) {
             if (!ship->isDestroyed()) {
                 return false;
             }
@@ -201,7 +223,7 @@ namespace cpp_warships::application {
         return true;
     }
 
-    void GameField::updateShipsCoordinateMap(const std::unordered_map<Ship *, std::unordered_set<std::pair<int, int>, hashFunc> > &newMap) {
+    void GameField::updateShipsCoordinateMap(const ShipsField& newMap) {
         shipsCoordinateMap.clear();
         shipsCoordinateMap = newMap;
     }

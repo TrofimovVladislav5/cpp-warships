@@ -6,8 +6,9 @@
 #include "Segment.h"
 
 namespace cpp_warships::application {
+    inline char ShipName[] = "Ship";
 
-    class Ship {
+    class Ship : game_saves::ISerializable<ShipName> {
     private:
         int maxSegmentHealth;
         std::vector<Segment*> segments;

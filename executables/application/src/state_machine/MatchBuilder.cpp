@@ -2,7 +2,7 @@
 
 #include <cpp_warships/utilities/include/ViewHelper.h>
 
-#include "../../include/GameSaveCreator.h"
+#include "../../include/save_system/GameSaveCreator.h"
 #include "../../include/state_machine/states/OngoingGameState.h"
 #include "../../include/state_machine/substates/BattleOngoingGameSubState.h"
 #include "../../include/state_machine/substates/InitiateOngoingGameSubState.h"
@@ -11,7 +11,7 @@
 namespace cpp_warships::application {
 
     OngoingGameSubState* MatchBuilder::initializeNewMatch() {
-        SubStateContext* context = new SubStateContext(currentData, reader);
+        auto* context = new SubStateContext(currentData, reader);
 
         if (isLoadedFromTemplate) {
             return new InitiateOngoingGameSubState(context);
@@ -21,13 +21,16 @@ namespace cpp_warships::application {
     }
 
     OngoingGameSubState* MatchBuilder::loadSavedMatch() {
-        SubStateContext* context = new SubStateContext(currentData, reader);
+        auto* context = new SubStateContext(currentData, reader);
 
         try {
-            if (currentData->playerField && currentData->playerManager &&
-                currentData->playerField->getShipsCoordinateMap().size() ==
-                        currentData->playerManager->getShips().size())
+            if (
+                currentData->playerField &&
+                currentData->playerManager &&
+                currentData->playerField->getShipsCoordinateMap().size() == currentData->playerManager->getShips().size()
+            ) {
                 return new BattleOngoingGameSubState(context);
+            }
 
             return new InitiateOngoingGameSubState(context);
         } catch (std::exception& e) {
@@ -48,7 +51,8 @@ namespace cpp_warships::application {
         try {
             auto matchSettings = new MatchSettings(defaultSettings.shipsCount, defaultSettings.fieldSize);
 
-            currentData = new GameStateDTO(matchSettings);
+            currentData = new GameStateDTO();
+            currentData->initiateNewGame(matchSettings);
             isLoaded = false;
             isLoadedFromTemplate = fromTemplate;
         } catch (std::exception& e) {
@@ -64,7 +68,9 @@ namespace cpp_warships::application {
             isLoaded = currentData != nullptr;
         } catch (std::exception& e) {
             ViewHelper::errorOut(
-                    "Something went wrong while loading the save file at path: " + filename, e);
+                "Something went wrong while loading the save file at path: " + filename,
+                e
+            );
             currentData = nullptr;
             isLoaded = false;
         }

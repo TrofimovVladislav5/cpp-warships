@@ -11,9 +11,7 @@ namespace cpp_warships::application {
         , fieldSize(fieldSize)
         , damageCount(1)
         , isActiveDoubleDamage(false)
-    {
-        std::cout << "Match settings created with damage count: " << std::to_string(damageCount) << std::endl;
-    }
+    {}
 
     int MatchSettings::getFieldSize() const {
         return fieldSize;

@@ -46,9 +46,10 @@ namespace cpp_warships::game_saves {
         template <SerializableDerivative TPassed = std::any>
         TSerialized serialize(TPassed &item) {
             ISerializableBase *castedItem = castToSerializableBase<TPassed>(item);
-            ISerializerBase *serializer = findRelatedSerializer(*castedItem);
-            if (auto* castedSerializer = dynamic_cast<ISerializerCore<TSerialized, TPassed>*>(serializer)) {
-                return castedSerializer->serialize(item);
+            if (ISerializerBase *serializer = findRelatedSerializer(*castedItem)) {
+                if (auto* castedSerializer = dynamic_cast<ISerializerCore<TSerialized, TPassed>*>(serializer)) {
+                    return castedSerializer->serialize(item);
+                }
             }
 
             throw exceptions::InterpretationException(
@@ -56,6 +57,19 @@ namespace cpp_warships::game_saves {
                 "(" + std::string(typeid(TSerialized).name()) + "),"
                 " conversion to ISerializerCore base failed. \n"
             );
+        }
+
+        /**
+         * @brief Destructor that cleans up the available serializers.
+         *
+         * This destructor iterates through all available serializers and deletes them to prevent memory leaks.
+         */
+        ~SerializerAggregator() {
+            for (const auto &value : availableSerializers | std::views::values) {
+                delete value;
+            }
+
+            availableSerializers.clear();
         }
 
         /**
@@ -92,13 +106,14 @@ namespace cpp_warships::game_saves {
          *
          * This method also sets child serializers for each serializer, allowing them to handle nested objects.
          * This is the main cause why setSerializers is not a constructor and called as a separate method.
+         * Make sure you pass the serializers which are dynamically allocated (usually with `new`).
          */
         template<SerializerDerivative... Serializers>
-        void setSerializers(Serializers... serializers) {
+        void setSerializers(Serializers*... serializers) {
             try {
                 ([&](auto& serializer) {
-                    availableSerializers[serializer.getType()] = &serializer;
-                    serializer.setChildrenSerializers(serializers...);
+                    availableSerializers[serializer->getType()] = serializer;
+                    serializer->setChildrenSerializers(serializers...);
                 }(serializers), ...);
             } catch (const std::exception &e) {
                 availableSerializers.clear();

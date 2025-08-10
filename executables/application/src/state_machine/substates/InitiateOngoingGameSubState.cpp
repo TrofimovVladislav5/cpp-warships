@@ -39,7 +39,6 @@ namespace cpp_warships::application {
         , placeControllerView(new PlaceShipControllerView(playerPlaceController))
         , confirmed(false)
     {
-        context->matchDTO->lastSubState = "InitiateOngoingGameSubState";
         input_parser::ConfigCommandBuilder<void> commandBuilder;
         input_parser::DefaultParameterBuilder parameterBuilder;
         this->inputScheme = {

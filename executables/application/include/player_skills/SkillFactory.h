@@ -19,7 +19,9 @@ namespace cpp_warships::application {
         explicit ConcreteSkillFactory(Args... args) : args(std::make_tuple(args...)) {}
 
         ISkill* createSkill() override {
-            return std::apply([](Args... args) { return new SkillType(args...); }, args);
+            return std::apply([](Args... args) {
+                return new SkillType(args...);
+            }, args);
         }
     };
 } // namespace cpp_warships::application

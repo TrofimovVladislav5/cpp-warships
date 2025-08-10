@@ -32,15 +32,15 @@ add_executable(cpp_warships main.cpp
         include/player_skills/SkillManagerView.h src/player_skills/SkillManagerView.cpp
         include/player_skills/exceptions/SkillException.h src/player_skills/exceptions/SkillException.cpp
         # Save System
-        include/GameSaveCreator.h src/GameSaveCreator.cpp
+        include/save_system/GameFieldJsonSerializer.h src/save_system/GameFieldJsonSerializer.cpp
+        include/save_system/GameSaveCreator.h src/save_system/GameSaveCreator.cpp
+        include/save_system/GameStateJsonSerializer.h src/save_system/GameStateJsonSerializer.cpp
         include/save_system/JsonFileHandler.h src/save_system/JsonFileHandler.cpp
-        include/save_system/Serializer.h src/save_system/Serializer.cpp
-        include/save_system/SerializerFactory.h
-        include/save_system/SerializerGameField.h src/save_system/SerializerGameField.cpp
-        include/save_system/SerializerManager.h src/save_system/SerializerManager.cpp
-        include/save_system/SerializerMatchSettings.h src/save_system/SerializerMatchSettings.cpp
-        include/save_system/SerializerSimplifyObjects.h src/save_system/SerializerSimplifyObjects.cpp
-        include/save_system/SerializerSkillManager.h src/save_system/SerializerSkillManager.cpp
+        include/save_system/MatchSettingsJsonSerializer.h src/save_system/MatchSettingsJsonSerializer.cpp
+        include/save_system/SegmentJsonSerializer.h src/save_system/SegmentJsonSerializer.cpp
+        include/save_system/ShipJsonSerializer.h src/save_system/ShipJsonSerializer.cpp
+        include/save_system/ShipManagerJsonSerializer.h src/save_system/ShipManagerJsonSerializer.cpp
+        include/save_system/SkillManagerJsonSerializer.h src/save_system/SkillManagerJsonSerializer.cpp
         # State Machine
         include/state_machine/GameState.h src/state_machine/GameState.cpp
         include/GameStateDTO.h src/GameStateDTO.cpp

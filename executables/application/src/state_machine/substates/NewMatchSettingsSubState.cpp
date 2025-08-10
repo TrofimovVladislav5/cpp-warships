@@ -77,10 +77,14 @@ namespace cpp_warships::application {
             }
 
             if (ViewHelper::confirmAction(
-                TypesHelper::methodToFunction(&input_reader::InputReader<>::readCommand, context->getInputReader()),
+                TypesHelper::methodToFunction(
+                    &input_reader::InputReader<>::readCommand,
+                    context->getInputReader()
+                ),
                 "yes"
             )) {
-                this->context->matchDTO = new GameStateDTO(currentSettings);
+                this->context->matchDTO = new GameStateDTO();
+                this->context->matchDTO->initiateNewGame(currentSettings);
                 return new InitiateOngoingGameSubState(context);
             } else {
                 this->currentSettings = nullptr;

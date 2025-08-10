@@ -3,8 +3,7 @@
 namespace cpp_warships::application {
 
     GameStateDTO::GameStateDTO()
-        : lastSubState("")
-        , playerManager(nullptr)
+        : playerManager(nullptr)
         , playerSkillManager(nullptr)
         , playerField(nullptr)
         , enemyManager(nullptr)
@@ -16,25 +15,38 @@ namespace cpp_warships::application {
         , roundNumber(0)
     {}
 
-    GameStateDTO::GameStateDTO(MatchSettings* settings)
-        : lastSubState("")
-        , playerManager(new ShipManager(settings->getShipsCount()))
-        , playerSkillManager(nullptr)
-        , playerField(new GameField(settings->getFieldSize(), settings->getFieldSize()))
-        , enemyManager(new ShipManager(settings->getShipsCount()))
-        , enemyField(new GameField(settings->getFieldSize(), settings->getFieldSize()))
-        , shipsSizes(settings->getShipsCount())
-        , settings(settings)
-        , isFinished(false)
-        , fieldSize(settings->getFieldSize())
-        , roundNumber(1)
+    std::vector<void*> GameStateDTO::initiateNewGame(MatchSettings *settings) {
+        this->settings = settings;
+        playerManager = new ShipManager(settings->getShipsCount());
+        playerSkillManager = nullptr;
+        playerField = new GameField(settings->getFieldSize(), settings->getFieldSize());
+        enemyManager = new ShipManager(settings->getShipsCount());
+        enemyField = new GameField(settings->getFieldSize(), settings->getFieldSize());
+        shipsSizes = settings->getShipsCount();
+        isFinished = false;
+        fieldSize = settings->getFieldSize();
+        roundNumber = 1;
+
+        return {
+            playerManager,
+            playerSkillManager,
+            playerField,
+            enemyManager,
+            enemyField
+        };
+    }
+
+    GameStateDTO::GameStateDTO(const GameStateDTO &other) noexcept
+        : playerManager(other.playerManager),
+          playerSkillManager(other.playerSkillManager),
+          playerField(other.playerField),
+          enemyManager(other.enemyManager),
+          enemyField(other.enemyField),
+          shipsSizes(other.shipsSizes),
+          settings(other.settings),
+          isFinished(other.isFinished),
+          fieldSize(other.fieldSize),
+          roundNumber(other.roundNumber)
     {}
 
-    GameStateDTO::~GameStateDTO() {
-        delete playerManager;
-        delete playerField;
-        delete enemyManager;
-        delete enemyField;
-        delete settings;
-    }
 } // namespace cpp_warships::application

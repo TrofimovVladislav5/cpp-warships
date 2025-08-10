@@ -19,7 +19,11 @@ else()
 endif()
 
 # Libraries list
-add_library(cxx_setup INTERFACE cpp_warships/utilities cpp_warships/input_parser)
+add_library(cxx_setup INTERFACE
+        cpp_warships/utilities
+        cpp_warships/input_parser
+        cpp_warships/input_reader
+        cpp_warships/game_saves)
 
 # General compiler options
 if (MSVC)

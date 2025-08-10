@@ -1,8 +1,13 @@
 #pragma once
 
-namespace cpp_warships::application {
+#include <cpp_warships/game_saves/include/ISerializable.h>
 
-    class Segment {
+namespace cpp_warships::application {
+    inline char SegmentName[] = "Segment";
+
+    class Segment
+        : public game_saves::ISerializable<SegmentName>
+    {
     private:
         int maxSegmentHealth;
         int currentSegmentHealth;

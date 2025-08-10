@@ -1,10 +1,15 @@
 #pragma once
 
+#include <cpp_warships/game_saves/include/ISerializable.h>
 #include <map>
 
 namespace cpp_warships::application {
 
-    class MatchSettings {
+    inline char MatchSettingsName[] = "MatchSettings";
+
+    class MatchSettings
+        : public game_saves::ISerializable<MatchSettingsName>
+    {
     private:
         std::map<int, int> shipSizesDictionary;
         int fieldSize;

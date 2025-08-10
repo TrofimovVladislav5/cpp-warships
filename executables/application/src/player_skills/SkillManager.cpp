@@ -15,7 +15,9 @@
 namespace cpp_warships::application {
 
     SkillManager::SkillManager(GameField* enemyField, MatchSettings* settings)
-        : skills({})
+        : referenceField(enemyField)
+        , matchSettings(settings)
+        , skills({})
         , currentSkill(nullptr)
     {
         factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
@@ -31,7 +33,9 @@ namespace cpp_warships::application {
     }
 
     SkillManager::SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings)
-        : skills(skills)
+        : referenceField(enemyField)
+        , matchSettings(settings)
+        , skills(skills)
         , currentSkill(nullptr)
     {
         factory["Scanner"] = new ConcreteSkillFactory<Scanner, GameField*>(enemyField);
@@ -44,6 +48,14 @@ namespace cpp_warships::application {
         for (auto& pair : factory) {
             delete pair.second;
         }
+    }
+
+    GameField* SkillManager::getReferenceField() const {
+        return referenceField;
+    }
+
+    MatchSettings* SkillManager::getMatchSettings() const {
+        return matchSettings;
     }
 
     void SkillManager::randomSkill() {
@@ -65,15 +77,16 @@ namespace cpp_warships::application {
 
     ISkill *SkillManager::createSkill(const std::string &skillName) {
         if (factory.find(skillName) == factory.end()) {
-            throw SkillException("(where create skill) no factory for skill " + skillName + " not found");
+            throw SkillException("Error creating skill: no factory for skill '" + skillName + "' found");
         }
         return factory[skillName]->createSkill();
     }
 
     void SkillManager::applySkill() {
         if (skills.empty()) {
-            throw SkillException("(where apply skill) no available skills");
+            throw SkillException("Error applying skill: no available skills");
         }
+
         currentSkill = createSkill(skills.front());
         currentSkill->apply();
         skills.pop_front();

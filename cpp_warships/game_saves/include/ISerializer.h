@@ -157,10 +157,10 @@ namespace cpp_warships::game_saves {
          * children items.
          */
         template <typename... Args>
-        void setChildrenSerializers(Args... children) {
+        void setChildrenSerializers(Args*... children) {
             // We are using this trick to dynamically exclude serializers which are not listed in TChildren.
             // It is required for correct order of arguments in the tuple to avoid confusion
-            childrenSerializers = helpers::TupleBuilder<TChildren...>::build(std::forward<Args>(children)...);
+            childrenSerializers = helpers::TupleBuilder<TChildren...>::build(std::forward<Args>(*children)...);
         }
     protected:
         /**

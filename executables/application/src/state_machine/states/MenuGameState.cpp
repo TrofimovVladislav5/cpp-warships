@@ -1,15 +1,16 @@
 #include "../../../include/state_machine/states/MenuGameState.h"
 
-#include <iostream>
-#include <cpp_warships/utilities/include/StateMessages.h>
-#include <cpp_warships/utilities/include/ViewHelper.h>
-#include <cpp_warships/utilities/include/TypesHelper.h>
-#include <cpp_warships/input_parser/include/builder/ConfigCommandBuilder.h>
 #include <cpp_warships/input_parser/include/DefaultParserError.h>
 #include <cpp_warships/input_parser/include/VoidParser.h>
+#include <cpp_warships/input_parser/include/builder/ConfigCommandBuilder.h>
 #include <cpp_warships/input_parser/include/builder/DefaultParameterBuilder.h>
+#include <cpp_warships/utilities/include/StateMessages.h>
+#include <cpp_warships/utilities/include/TypesHelper.h>
+#include <cpp_warships/utilities/include/ViewHelper.h>
 
-#include "../../../include/GameSaveCreator.h"
+#include <iostream>
+
+#include "../../../include/save_system/GameSaveCreator.h"
 #include "../../../include/state_machine/GameState.h"
 #include "../../../include/state_machine/states/OngoingGameState.h"
 
@@ -39,9 +40,11 @@ namespace cpp_warships::application {
     }
 
     void MenuGameState::handleList(input_parser::ParsedOptions options) {
-        std::string path = options["filename"];
+        std::string path = options["filename"].empty()
+            ? "."
+            : options["filename"];
         GameSaveCreator creator;
-        std::vector<std::string> saves = creator.listSaves(path.empty() ? "." : path);
+        std::vector<std::string> saves = creator.listSaves();
 
         ViewHelper::consoleOut("Available saves:");
         for (const auto& save : saves) {

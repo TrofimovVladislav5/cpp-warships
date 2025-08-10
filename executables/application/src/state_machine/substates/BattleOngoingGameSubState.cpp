@@ -43,8 +43,6 @@ namespace cpp_warships::application {
         , view(BattleView(context->matchDTO))
         , isPaused(false)
     {
-        context->matchDTO->lastSubState = "BattleOngoingGameSubState";
-
         input_parser::ConfigCommandBuilder<void> commandBuilder;
         input_parser::DefaultParameterBuilder parameterBuilder;
         this->inputScheme = {

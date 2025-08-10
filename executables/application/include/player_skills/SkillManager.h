@@ -5,14 +5,18 @@
 
 #include "Skill.h"
 #include "SkillFactory.h"
-#include "../ShipManager.h"
 #include "../GameField.h"
 #include "../MatchSettings.h"
 
 namespace cpp_warships::application {
+    inline char SkillManagerName[] = "SkillManager";
 
-    class SkillManager {
+    class SkillManager
+        : public game_saves::ISerializable<SkillManagerName>
+    {
     private:
+        GameField* referenceField;
+        MatchSettings* matchSettings;
         std::deque<std::string> skills;
         std::vector<std::string> availableSkills;
         std::unordered_map<std::string, SkillFactory*> factory;
@@ -22,9 +26,13 @@ namespace cpp_warships::application {
     public:
         explicit SkillManager(GameField* enemyField, MatchSettings* settings);
         explicit SkillManager(const std::deque<std::string>& skills, GameField* enemyField, MatchSettings* settings);
+        ~SkillManager() override;
+
+        [[nodiscard]] GameField* getReferenceField() const;
+        [[nodiscard]] MatchSettings* getMatchSettings() const;
+
         const std::vector<std::string>& nameSkills();
         std::string availableSkill();
-        ~SkillManager();
         void addSkill();
         void applySkill();
         void status() const;
