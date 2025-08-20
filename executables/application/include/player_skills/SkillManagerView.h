@@ -1,0 +1,16 @@
+#pragma once
+
+#include "SkillManager.h"
+
+namespace cpp_warships::application {
+
+    class SkillManagerView {
+    private:
+        SkillManager* skillManager;
+
+    public:
+        explicit SkillManagerView(SkillManager* skillManager);
+        void displayAvailableSkills();
+        void displayCurrentSkill();
+    };
+} // namespace cpp_warships::application
