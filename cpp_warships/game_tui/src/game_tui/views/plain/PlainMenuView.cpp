@@ -10,11 +10,13 @@ namespace cpp_warships::game_tui {
     PlainMenuView::PlainMenuView(
             const Theme& theme,
             const MenuState& state,
-            MatchInProgressQuery hasMatch
+            MatchInProgressQuery hasMatch,
+            SavedMatchQuery hasSavedMatch
     )
         : theme_(theme)
         , state_(state)
-        , hasMatch_(std::move(hasMatch)) {}
+        , hasMatch_(std::move(hasMatch))
+        , hasSavedMatch_(std::move(hasSavedMatch)) {}
 
     InputEvent PlainMenuView::interpret(const Keystroke& stroke) const {
         return {.stroke = stroke};
@@ -36,6 +38,10 @@ namespace cpp_warships::game_tui {
 
         if (hasMatch_()) {
             lines.push_back(plainKeyLine("r", "resume the match in play"));
+        }
+
+        if (hasSavedMatch_()) {
+            lines.push_back(plainKeyLine("f3", "load the saved match"));
         }
 
         lines.push_back(plainKeyLine("q", "quit"));

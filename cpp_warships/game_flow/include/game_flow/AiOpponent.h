@@ -9,11 +9,25 @@
 #include <game_flow/RandomEngine.h>
 
 namespace cpp_warships::game_flow {
+    /** @brief What the computer has learned so far: where it has already fired, and the hits
+     *  on the ship it is currently chasing. Carried across a save so a loaded game does not
+     *  hand the player a freshly amnesiac enemy. */
+    struct AiMemory {
+        std::unordered_set<game_core::Coordinate> attemptedCoordinates;
+        std::vector<game_core::Coordinate> currentTargetHits;
+    };
+
     /** @brief Chooses where the computer shoots: at random, then along any ship it finds.
      *  Randomness comes from the injected engine, so a seed reproduces a whole game. */
     class AiOpponent {
     public:
         explicit AiOpponent(RandomEngine& randomEngine);
+
+        /** @brief An opponent that already knows @p memory, as when a save is loaded. */
+        AiOpponent(RandomEngine& randomEngine, AiMemory memory);
+
+        /** @brief Everything this opponent has learned, ready to be written out. */
+        [[nodiscard]] AiMemory memory() const;
 
         /** @brief Picks the next cell to attack on @p board.
          *  @return nullopt when every cell has already been attempted. */

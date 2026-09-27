@@ -24,16 +24,8 @@ namespace cpp_warships::game_tui {
                 return static_cast<char>(std::tolower(letter));
             };
 
-            const auto first = std::find_if_not(
-                command.begin(),
-                command.end(),
-                isBlank
-            );
-            const auto last = std::find_if_not(
-                command.rbegin(),
-                command.rend(),
-                isBlank
-            ).base();
+            const auto first = std::find_if_not(command.begin(), command.end(), isBlank);
+            const auto last = std::find_if_not(command.rbegin(), command.rend(), isBlank).base();
 
             if (first >= last) {
                 return {};
@@ -58,6 +50,8 @@ namespace cpp_warships::game_tui {
                     {"back", Key::Backspace},
                     {"pgup", Key::PageUp},
                     {"pgdn", Key::PageDown},
+                    {"f2", Key::SaveKey},
+                    {"f3", Key::LoadKey},
             };
 
             const auto namedKey = NAMED_KEYS.find(command);

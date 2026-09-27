@@ -12,7 +12,8 @@ namespace cpp_warships::game_persistence {
             int roundNumber,
             game_flow::MatchPhase phase,
             game_flow::Participant currentTurn,
-            bool isDoubleDamageArmed
+            bool isDoubleDamageArmed,
+            game_flow::AiMemory opponentMemory
     )
         : settings_(std::move(settings))
         , playerBoard_(std::move(playerBoard))
@@ -21,7 +22,8 @@ namespace cpp_warships::game_persistence {
         , roundNumber_(roundNumber)
         , phase_(phase)
         , currentTurn_(currentTurn)
-        , isDoubleDamageArmed_(isDoubleDamageArmed) {}
+        , isDoubleDamageArmed_(isDoubleDamageArmed)
+        , opponentMemory_(std::move(opponentMemory)) {}
 
     MatchSnapshot MatchSnapshot::capture(const game_flow::Match& match) {
         return MatchSnapshot{
@@ -32,7 +34,8 @@ namespace cpp_warships::game_persistence {
                 match.roundNumber(),
                 match.phase(),
                 match.currentTurn(),
-                match.isDoubleDamageArmed()
+                match.isDoubleDamageArmed(),
+                match.opponentMemory()
         };
     }
 
@@ -44,7 +47,8 @@ namespace cpp_warships::game_persistence {
                 .roundNumber = roundNumber_,
                 .phase = phase_,
                 .currentTurn = currentTurn_,
-                .isDoubleDamageArmed = isDoubleDamageArmed_
+                .isDoubleDamageArmed = isDoubleDamageArmed_,
+                .opponentMemory = opponentMemory_
         };
 
         return game_flow::Match{settings_, randomEngine, std::move(state)};
@@ -80,5 +84,9 @@ namespace cpp_warships::game_persistence {
 
     bool MatchSnapshot::isDoubleDamageArmed() const noexcept {
         return isDoubleDamageArmed_;
+    }
+
+    const game_flow::AiMemory& MatchSnapshot::opponentMemory() const noexcept {
+        return opponentMemory_;
     }
 } // namespace cpp_warships::game_persistence

@@ -5,6 +5,7 @@
 
 #include <game_tui/input/BattleEventHandlers.h>
 #include <game_tui/input/MoveCursorEventHandler.h>
+#include <game_tui/input/SaveMatchEventHandler.h>
 
 namespace cpp_warships::game_tui {
     BattleScreen::BattleScreen(
@@ -25,6 +26,7 @@ namespace cpp_warships::game_tui {
         eventRouter_.add(std::make_shared<MoveCursorEventHandler>(state_.target, enemyWaters));
         eventRouter_.add(std::make_shared<FireEventHandler>(intentSink, state_, match_));
         eventRouter_.add(std::make_shared<UseSkillEventHandler>(intentSink, state_, match_));
+        eventRouter_.add(std::make_shared<SaveMatchEventHandler>(intentSink));
         eventRouter_.add(std::make_shared<LeaveBattleEventHandler>(intentSink));
     }
 

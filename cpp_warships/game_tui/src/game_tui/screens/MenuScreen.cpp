@@ -11,13 +11,17 @@ namespace cpp_warships::game_tui {
             IntentSink intentSink,
             const Theme& theme,
             MatchInProgressQuery hasMatch,
+            SavedMatchQuery hasSavedMatch,
             const MenuViewFactory& makeView
     )
-        : view_(makeView(theme, state_, hasMatch)) {
+        : view_(makeView(theme, state_, hasMatch, hasSavedMatch)) {
         eventRouter_.add(std::make_shared<BoardSizeEventHandler>(state_));
         eventRouter_.add(std::make_shared<StartMatchEventHandler>(intentSink, state_));
         eventRouter_.add(
                 std::make_shared<ResumeMatchEventHandler>(intentSink, std::move(hasMatch))
+        );
+        eventRouter_.add(
+                std::make_shared<LoadMatchEventHandler>(intentSink, std::move(hasSavedMatch))
         );
         eventRouter_.add(std::make_shared<CycleThemeEventHandler>(intentSink, state_));
         eventRouter_.add(std::make_shared<QuitEventHandler>(intentSink));

@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include <game_tui/Queries.h>
 #include <game_tui/input/EventHandler.h>
 #include <game_tui/intents/Intent.h>
 #include <game_tui/screens/MenuState.h>
@@ -30,6 +31,19 @@ namespace cpp_warships::game_tui {
     private:
         IntentSink intentSink_;
         const MenuState& state_;
+    };
+
+    /** @brief Picks the saved match back up, and only offers itself when there is a save. */
+    class LoadMatchEventHandler final : public EventHandler {
+    public:
+        LoadMatchEventHandler(IntentSink intentSink, SavedMatchQuery hasSavedMatch);
+
+        [[nodiscard]] bool isHandled(const InputEvent& input) const override;
+        void handleEvent(const InputEvent& input) override;
+
+    private:
+        IntentSink intentSink_;
+        SavedMatchQuery hasSavedMatch_;
     };
 
     /** @brief Returns to a match already in play, and only offers itself when there is one. */

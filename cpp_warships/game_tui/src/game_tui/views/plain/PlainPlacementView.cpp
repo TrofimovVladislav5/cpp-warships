@@ -105,6 +105,7 @@ namespace cpp_warships::game_tui {
             lines.push_back(plainKeyLine("b", "begin the battle"));
         }
 
+        lines.push_back(plainKeyLine("f2", "save the match"));
         lines.push_back(plainKeyLine("esc", "back to the menu"));
         lines.emplace_back("");
 

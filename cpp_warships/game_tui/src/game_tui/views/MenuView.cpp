@@ -24,10 +24,16 @@ namespace cpp_warships::game_tui {
         }
     } // namespace
 
-    MenuView::MenuView(const Theme& theme, const MenuState& state, MatchInProgressQuery hasMatch)
+    MenuView::MenuView(
+            const Theme& theme,
+            const MenuState& state,
+            MatchInProgressQuery hasMatch,
+            SavedMatchQuery hasSavedMatch
+    )
         : theme_(theme)
         , state_(state)
-        , hasMatch_(std::move(hasMatch)) {}
+        , hasMatch_(std::move(hasMatch))
+        , hasSavedMatch_(std::move(hasSavedMatch)) {}
 
     InputEvent MenuView::interpret(const Keystroke& stroke) const {
         return {.stroke = stroke};
@@ -62,6 +68,10 @@ namespace cpp_warships::game_tui {
 
         if (hasMatchInProgress) {
             hints.push_back(keyHint(theme, "r", "resume the match in play"));
+        }
+
+        if (hasSavedMatch_()) {
+            hints.push_back(keyHint(theme, "f3", "load the saved match"));
         }
 
         hints.push_back(keyHint(theme, "q", "quit"));

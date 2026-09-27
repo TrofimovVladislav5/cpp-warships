@@ -17,11 +17,13 @@ namespace cpp_warships::application {
                     .menu =
                             [](const game_tui::Theme& theme,
                                const game_tui::MenuState& state,
-                               game_tui::MatchInProgressQuery hasMatch) {
+                               game_tui::MatchInProgressQuery hasMatch,
+                               game_tui::SavedMatchQuery hasSavedMatch) {
                                 return std::make_unique<game_tui::MenuView>(
                                         theme,
                                         state,
-                                        std::move(hasMatch)
+                                        std::move(hasMatch),
+                                        std::move(hasSavedMatch)
                                 );
                             },
                     .placement =
@@ -55,11 +57,13 @@ namespace cpp_warships::application {
                     .menu =
                             [](const game_tui::Theme& theme,
                                const game_tui::MenuState& state,
-                               game_tui::MatchInProgressQuery hasMatch) {
+                               game_tui::MatchInProgressQuery hasMatch,
+                               game_tui::SavedMatchQuery hasSavedMatch) {
                                 return std::make_unique<game_tui::PlainMenuView>(
                                         theme,
                                         state,
-                                        std::move(hasMatch)
+                                        std::move(hasMatch),
+                                        std::move(hasSavedMatch)
                                 );
                             },
                     .placement =

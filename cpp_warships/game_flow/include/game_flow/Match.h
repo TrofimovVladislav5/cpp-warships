@@ -37,6 +37,7 @@ namespace cpp_warships::game_flow {
         MatchPhase phase = MatchPhase::Placement;
         Participant currentTurn = Participant::Player;
         bool isDoubleDamageArmed = false;
+        AiMemory opponentMemory;
     };
 
     class Match : private SkillContext {
@@ -69,6 +70,9 @@ namespace cpp_warships::game_flow {
         [[nodiscard]] bool isPlayerTurn() const noexcept;
         [[nodiscard]] Participant currentTurn() const noexcept;
         [[nodiscard]] bool isDoubleDamageArmed() const noexcept;
+
+        /** @brief What the computer has learned, so a save can carry it. */
+        [[nodiscard]] AiMemory opponentMemory() const;
 
         /** @brief Fires at the computer's board on the player's behalf.
          *  A hit keeps the turn, a miss passes it, and a rejected shot costs nothing. */

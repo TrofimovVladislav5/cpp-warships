@@ -10,6 +10,10 @@ namespace cpp_warships::application {
                         [&session] {
                             return session.hasMatch();
                         },
+                .hasSavedMatch =
+                        [&session] {
+                            return session.hasSavedMatch();
+                        },
                 .theme = [&session]() -> const game_tui::Theme& {
                     return session.theme();
                 }

@@ -12,7 +12,12 @@ namespace cpp_warships::game_tui {
      *  Reads what it was given and returns elements; it changes nothing. */
     class MenuView final : public FtxuiView {
     public:
-        MenuView(const Theme& theme, const MenuState& state, MatchInProgressQuery hasMatch);
+        MenuView(
+                const Theme& theme,
+                const MenuState& state,
+                MatchInProgressQuery hasMatch,
+                SavedMatchQuery hasSavedMatch
+        );
 
         [[nodiscard]] InputEvent interpret(const Keystroke& stroke) const override;
 
@@ -23,5 +28,6 @@ namespace cpp_warships::game_tui {
         const Theme& theme_;
         const MenuState& state_;
         MatchInProgressQuery hasMatch_;
+        SavedMatchQuery hasSavedMatch_;
     };
 } // namespace cpp_warships::game_tui

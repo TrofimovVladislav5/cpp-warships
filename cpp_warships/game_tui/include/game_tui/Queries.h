@@ -17,6 +17,9 @@ namespace cpp_warships::game_tui {
     /** @brief Whether there is a match to go back to, asked without reaching for it. */
     using MatchInProgressQuery = std::function<bool()>;
 
+    /** @brief Whether a saved match is there to pick back up, asked without reading it. */
+    using SavedMatchQuery = std::function<bool()>;
+
     /** @brief The colours everything is dressed in, asked afresh so a change is picked up. */
     using ThemeQuery = std::function<const Theme&()>;
 } // namespace cpp_warships::game_tui

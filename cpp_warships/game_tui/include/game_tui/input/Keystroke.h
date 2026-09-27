@@ -18,6 +18,11 @@ namespace cpp_warships::game_tui {
         ArrowRight,
         PageUp,
         PageDown,
+
+        /** @brief The function keys the game uses for saving and loading. */
+        SaveKey,
+        LoadKey,
+
         Pointer,
     };
 

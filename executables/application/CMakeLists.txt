@@ -1,6 +1,7 @@
 # Compile files
 add_executable(cpp_warships
         # Putting the parts together is this layer's whole job
+        include/build_save_archive.h src/build_save_archive.cpp
         include/build_session.h src/build_session.cpp
         include/build_queries.h src/build_queries.cpp
         include/build_intent_sink.h src/build_intent_sink.cpp

@@ -201,6 +201,7 @@ namespace cpp_warships::game_tui {
             std::vector<ftxui::Element> hints{
                     keyHint(theme, "arrows", "take aim"),
                     keyHint(theme, "enter", "fire"),
+                    keyHint(theme, "f2", "save the match"),
                     keyHint(theme, "esc", "back to the menu")
             };
 

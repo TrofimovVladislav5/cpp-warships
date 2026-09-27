@@ -5,6 +5,7 @@
 #include <build_intent_sink.h>
 #include <build_navigator.h>
 #include <build_queries.h>
+#include <build_save_archive.h>
 #include <build_session.h>
 #include <build_shell.h>
 #include <build_views.h>
@@ -14,7 +15,8 @@
 
 namespace cpp_warships::application {
     void runGame(game_flow::RandomEngine& randomEngine, const ShellKind shellKind) {
-        game_tui::Application session = buildSession(randomEngine);
+        const SaveLibrary saves = buildSaveLibrary(defaultSaveDirectory());
+        game_tui::Application session = buildSession(randomEngine, *saves.archive);
         const SessionQueries queries = buildQueries(session);
 
         const game_tui::ViewFactory views = buildViewFactory(shellKind);

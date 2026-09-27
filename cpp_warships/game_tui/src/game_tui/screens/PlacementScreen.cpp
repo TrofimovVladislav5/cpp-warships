@@ -5,6 +5,7 @@
 
 #include <game_tui/input/MoveCursorEventHandler.h>
 #include <game_tui/input/PlacementEventHandlers.h>
+#include <game_tui/input/SaveMatchEventHandler.h>
 
 namespace cpp_warships::game_tui {
     PlacementScreen::PlacementScreen(
@@ -32,6 +33,7 @@ namespace cpp_warships::game_tui {
         eventRouter_.add(std::make_shared<RemoveShipEventHandler>(intentSink, state_));
         eventRouter_.add(std::make_shared<ShuffleFleetEventHandler>(intentSink));
         eventRouter_.add(std::make_shared<BeginBattleEventHandler>(intentSink, match_));
+        eventRouter_.add(std::make_shared<SaveMatchEventHandler>(intentSink));
         eventRouter_.add(std::make_shared<LeavePlacementEventHandler>(intentSink));
     }
 

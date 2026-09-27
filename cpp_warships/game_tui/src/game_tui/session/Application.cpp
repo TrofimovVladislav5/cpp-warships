@@ -1,13 +1,24 @@
 #include <game_tui/session/Application.h>
 
+#include <game_persistence/MatchSnapshot.h>
+
 #include <stdexcept>
 #include <utility>
 
 #include <game_core/MatchSettings.h>
 
 namespace cpp_warships::game_tui {
-    Application::Application(game_flow::RandomEngine& randomEngine)
+    namespace {
+        /** @brief The one slot a session saves into. Several would want a screen to pick from. */
+        const std::string SAVE_SLOT_NAME = "quicksave";
+    } // namespace
+
+    Application::Application(
+            game_flow::RandomEngine& randomEngine,
+            game_persistence::SaveArchive& saveArchive
+    )
         : randomEngine_(randomEngine)
+        , saveArchive_(saveArchive)
         , theme_(defaultTheme()) {}
 
     const Theme& Application::theme() const noexcept {
@@ -84,6 +95,31 @@ namespace cpp_warships::game_tui {
             match_->applyNextSkill(target);
             settleTurn();
         }
+    }
+
+    bool Application::hasSavedMatch() const {
+        return saveArchive_.load(SAVE_SLOT_NAME).has_value();
+    }
+
+    bool Application::saveMatch() {
+        if (!match_.has_value()) {
+            return false;
+        }
+
+        return saveArchive_.save(SAVE_SLOT_NAME, game_persistence::MatchSnapshot::capture(*match_));
+    }
+
+    bool Application::loadMatch() {
+        const std::optional<game_persistence::MatchSnapshot> saved =
+                saveArchive_.load(SAVE_SLOT_NAME);
+        if (!saved.has_value()) {
+            return false;
+        }
+
+        match_.emplace(saved->restore(randomEngine_));
+        journal_.clear();
+
+        return true;
     }
 
     void Application::settleTurn() {

@@ -27,6 +27,8 @@ namespace cpp_warships::game_tui {
                     {ftxui::Event::ArrowRight, Key::ArrowRight},
                     {ftxui::Event::PageUp, Key::PageUp},
                     {ftxui::Event::PageDown, Key::PageDown},
+                    {ftxui::Event::F2, Key::SaveKey},
+                    {ftxui::Event::F3, Key::LoadKey},
             };
 
             const auto named = NAMED_KEYS.find(event);

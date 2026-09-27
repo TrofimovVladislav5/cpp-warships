@@ -4,6 +4,7 @@
 
 #include <game_core/Board.h>
 #include <game_core/MatchSettings.h>
+#include <game_flow/AiOpponent.h>
 #include <game_flow/Match.h>
 #include <game_flow/Participant.h>
 #include <game_flow/SkillKind.h>
@@ -24,7 +25,8 @@ namespace cpp_warships::game_persistence {
                 int roundNumber,
                 game_flow::MatchPhase phase,
                 game_flow::Participant currentTurn,
-                bool isDoubleDamageArmed
+                bool isDoubleDamageArmed,
+                game_flow::AiMemory opponentMemory
         );
 
         /** @brief Captures @p match exactly as it stands. */
@@ -41,6 +43,7 @@ namespace cpp_warships::game_persistence {
         [[nodiscard]] game_flow::MatchPhase phase() const noexcept;
         [[nodiscard]] game_flow::Participant currentTurn() const noexcept;
         [[nodiscard]] bool isDoubleDamageArmed() const noexcept;
+        [[nodiscard]] const game_flow::AiMemory& opponentMemory() const noexcept;
 
     private:
         game_core::MatchSettings settings_;
@@ -51,5 +54,6 @@ namespace cpp_warships::game_persistence {
         game_flow::MatchPhase phase_;
         game_flow::Participant currentTurn_;
         bool isDoubleDamageArmed_;
+        game_flow::AiMemory opponentMemory_;
     };
 } // namespace cpp_warships::game_persistence

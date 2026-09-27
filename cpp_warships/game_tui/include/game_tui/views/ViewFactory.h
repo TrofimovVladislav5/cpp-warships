@@ -15,8 +15,8 @@ namespace cpp_warships::game_tui {
     using GameViewPointer = std::unique_ptr<GameView>;
 
     /** @brief Makes the view for the menu, given what the menu is showing. */
-    using MenuViewFactory =
-            std::function<GameViewPointer(const Theme&, const MenuState&, MatchInProgressQuery)>;
+    using MenuViewFactory = std::function<
+            GameViewPointer(const Theme&, const MenuState&, MatchInProgressQuery, SavedMatchQuery)>;
 
     /** @brief Makes the view for the placement screen, given what it is showing. */
     using PlacementViewFactory =

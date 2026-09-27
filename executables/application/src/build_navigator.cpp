@@ -20,6 +20,7 @@ namespace cpp_warships::application {
                         intentSink,
                         session.theme(),
                         queries.hasMatch,
+                        queries.hasSavedMatch,
                         views.menu
                 )
         );

@@ -21,6 +21,8 @@ add_library(game_tui
         include/game_tui/intents/UseSkillIntent.h src/game_tui/intents/UseSkillIntent.cpp
         include/game_tui/intents/ResumeMatchIntent.h src/game_tui/intents/ResumeMatchIntent.cpp
         include/game_tui/intents/QuitIntent.h src/game_tui/intents/QuitIntent.cpp
+        include/game_tui/intents/SaveMatchIntent.h src/game_tui/intents/SaveMatchIntent.cpp
+        include/game_tui/intents/LoadMatchIntent.h src/game_tui/intents/LoadMatchIntent.cpp
         # Reading input, and turning it into actions
         include/game_tui/input/Keystroke.h src/game_tui/input/Keystroke.cpp
         include/game_tui/input/InputEvent.h
@@ -29,6 +31,8 @@ add_library(game_tui
         include/game_tui/input/MoveCursorEventHandler.h
         src/game_tui/input/MoveCursorEventHandler.cpp
         include/game_tui/input/MenuEventHandlers.h src/game_tui/input/MenuEventHandlers.cpp
+        include/game_tui/input/SaveMatchEventHandler.h
+        src/game_tui/input/SaveMatchEventHandler.cpp
         include/game_tui/input/PlacementEventHandlers.h
         src/game_tui/input/PlacementEventHandlers.cpp
         include/game_tui/input/BattleEventHandlers.h src/game_tui/input/BattleEventHandlers.cpp

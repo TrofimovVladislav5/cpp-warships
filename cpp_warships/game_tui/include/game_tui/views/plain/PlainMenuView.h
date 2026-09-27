@@ -10,7 +10,12 @@ namespace cpp_warships::game_tui {
      *  Reads what it was given and returns text; it changes nothing. */
     class PlainMenuView final : public GameView {
     public:
-        PlainMenuView(const Theme& theme, const MenuState& state, MatchInProgressQuery hasMatch);
+        PlainMenuView(
+                const Theme& theme,
+                const MenuState& state,
+                MatchInProgressQuery hasMatch,
+                SavedMatchQuery hasSavedMatch
+        );
 
         [[nodiscard]] Frame render(int availableWidth, int availableHeight) override;
 
@@ -21,5 +26,6 @@ namespace cpp_warships::game_tui {
         const Theme& theme_;
         const MenuState& state_;
         MatchInProgressQuery hasMatch_;
+        SavedMatchQuery hasSavedMatch_;
     };
 } // namespace cpp_warships::game_tui

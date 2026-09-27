@@ -26,7 +26,7 @@ namespace cpp_warships::game_flow {
         , randomEngine_(randomEngine)
         , playerBoard_(std::move(state.playerBoard))
         , computerBoard_(std::move(state.computerBoard))
-        , aiOpponent_(randomEngine)
+        , aiOpponent_(randomEngine, std::move(state.opponentMemory))
         , skillManager_(randomEngine, SkillQueue{std::move(state.bankedSkills)})
         , shotStrength_(settings_.baseDamage(), state.isDoubleDamageArmed)
         , turnOrder_(state.currentTurn)
@@ -199,6 +199,10 @@ namespace cpp_warships::game_flow {
         if (!turnOrder_.isPlayerTurn()) {
             runComputerTurn();
         }
+    }
+
+    AiMemory Match::opponentMemory() const {
+        return aiOpponent_.memory();
     }
 
     const SkillQueue& Match::skills() const noexcept {

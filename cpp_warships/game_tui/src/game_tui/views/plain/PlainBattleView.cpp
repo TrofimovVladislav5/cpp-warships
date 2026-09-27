@@ -76,7 +76,10 @@ namespace cpp_warships::game_tui {
 
     Frame PlainBattleView::render(int, int) {
         const game_flow::Match& match = match_();
-        const std::string turn = match.isPlayerTurn() ? "your turn" : "the enemy's turn";
+        const bool isFinished = match.phase() == game_flow::MatchPhase::Finished;
+        const std::string turn = isFinished             ? "YOUR FLEET IS GONE"
+                                 : match.isPlayerTurn() ? "your turn"
+                                                        : "the enemy's turn";
 
         std::vector<std::string> lines{
                 "BATTLE   round " + std::to_string(match.roundNumber()) + "   " + turn,
@@ -108,10 +111,15 @@ namespace cpp_warships::game_tui {
         lines.insert(lines.end(), log.begin(), log.end());
 
         lines.emplace_back("");
-        lines.push_back(plainKeyLine("arrows", "take aim"));
-        lines.push_back(plainKeyLine("enter", "fire"));
-        lines.push_back(plainKeyLine("k", "use the next skill"));
-        lines.push_back(plainKeyLine("pgup", "further back through the log"));
+
+        if (!isFinished) {
+            lines.push_back(plainKeyLine("arrows", "take aim"));
+            lines.push_back(plainKeyLine("enter", "fire"));
+            lines.push_back(plainKeyLine("k", "use the next skill"));
+            lines.push_back(plainKeyLine("pgup", "further back through the log"));
+            lines.push_back(plainKeyLine("f2", "save the match"));
+        }
+
         lines.push_back(plainKeyLine("esc", "back to the menu"));
         lines.emplace_back("");
 

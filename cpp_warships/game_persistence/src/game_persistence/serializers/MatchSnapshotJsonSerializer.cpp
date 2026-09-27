@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 namespace cpp_warships::game_persistence {
     namespace {
@@ -37,11 +38,7 @@ namespace cpp_warships::game_persistence {
                 return entry.second == name;
             };
 
-            const auto found = std::find_if(
-                namesByValue.begin(),
-                namesByValue.end(),
-                matchesName
-            );
+            const auto found = std::find_if(namesByValue.begin(), namesByValue.end(), matchesName);
             if (found == namesByValue.end()) {
                 throw serialization::exceptions::DeserializationException(
                         what,
@@ -50,6 +47,57 @@ namespace cpp_warships::game_persistence {
             }
 
             return found->first;
+        }
+        [[nodiscard]] nlohmann::json coordinatesToJson(
+                const std::vector<game_core::Coordinate>& coordinates
+        ) {
+            nlohmann::json written = nlohmann::json::array();
+            for (const game_core::Coordinate& coordinate : coordinates) {
+                written.push_back({{"x", coordinate.x}, {"y", coordinate.y}});
+            }
+
+            return written;
+        }
+
+        [[nodiscard]] std::vector<game_core::Coordinate> coordinatesFromJson(
+                const nlohmann::json& written
+        ) {
+            std::vector<game_core::Coordinate> coordinates;
+            for (const nlohmann::json& coordinate : written) {
+                coordinates.push_back({coordinate["x"].get<int>(), coordinate["y"].get<int>()});
+            }
+
+            return coordinates;
+        }
+
+        /** @brief What the computer knows, written out so a loaded game keeps a sharp enemy. */
+        [[nodiscard]] nlohmann::json memoryToJson(const game_flow::AiMemory& memory) {
+            const std::vector<game_core::Coordinate> attempted{
+                    memory.attemptedCoordinates.begin(),
+                    memory.attemptedCoordinates.end()
+            };
+
+            return nlohmann::json{
+                    {"attemptedCoordinates", coordinatesToJson(attempted)},
+                    {"currentTargetHits", coordinatesToJson(memory.currentTargetHits)}
+            };
+        }
+
+        /** @brief The computer's knowledge read back, empty for a save written before it
+         *  was kept, which simply means that enemy starts the load looking again. */
+        [[nodiscard]] game_flow::AiMemory memoryFromJson(const nlohmann::json& item) {
+            if (!item.contains("opponentMemory")) {
+                return {};
+            }
+
+            const nlohmann::json& memory = item["opponentMemory"];
+            const std::vector<game_core::Coordinate> attempted =
+                    coordinatesFromJson(memory["attemptedCoordinates"]);
+
+            return game_flow::AiMemory{
+                    .attemptedCoordinates = {attempted.begin(), attempted.end()},
+                    .currentTargetHits = coordinatesFromJson(memory["currentTargetHits"])
+            };
         }
     } // namespace
 
@@ -79,7 +127,8 @@ namespace cpp_warships::game_persistence {
                 {"roundNumber", item.roundNumber()},
                 {"phase", NAME_BY_PHASE.at(item.phase())},
                 {"currentTurn", NAME_BY_PARTICIPANT.at(item.currentTurn())},
-                {"isDoubleDamageArmed", item.isDoubleDamageArmed()}
+                {"isDoubleDamageArmed", item.isDoubleDamageArmed()},
+                {"opponentMemory", memoryToJson(item.opponentMemory())}
         };
     }
 
@@ -117,7 +166,8 @@ namespace cpp_warships::game_persistence {
                 item["roundNumber"].get<int>(),
                 phase,
                 currentTurn,
-                item["isDoubleDamageArmed"].get<bool>()
+                item["isDoubleDamageArmed"].get<bool>(),
+                memoryFromJson(item)
         };
     }
 } // namespace cpp_warships::game_persistence

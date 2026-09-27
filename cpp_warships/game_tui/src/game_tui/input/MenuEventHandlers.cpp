@@ -7,6 +7,7 @@
 
 #include <game_tui/Theme.h>
 #include <game_tui/intents/ChangeThemeIntent.h>
+#include <game_tui/intents/LoadMatchIntent.h>
 #include <game_tui/intents/QuitIntent.h>
 #include <game_tui/intents/ResumeMatchIntent.h>
 #include <game_tui/intents/ShowScreenIntent.h>
@@ -61,6 +62,21 @@ namespace cpp_warships::game_tui {
 
     void ResumeMatchEventHandler::handleEvent(const InputEvent&) {
         intentSink_(std::make_shared<ResumeMatchIntent>());
+    }
+
+    LoadMatchEventHandler::LoadMatchEventHandler(
+            IntentSink intentSink,
+            SavedMatchQuery hasSavedMatch
+    )
+        : intentSink_(std::move(intentSink))
+        , hasSavedMatch_(std::move(hasSavedMatch)) {}
+
+    bool LoadMatchEventHandler::isHandled(const InputEvent& input) const {
+        return input.stroke.key == Key::LoadKey && hasSavedMatch_();
+    }
+
+    void LoadMatchEventHandler::handleEvent(const InputEvent&) {
+        intentSink_(std::make_shared<LoadMatchIntent>());
     }
 
     CycleThemeEventHandler::CycleThemeEventHandler(IntentSink intentSink, MenuState& state)

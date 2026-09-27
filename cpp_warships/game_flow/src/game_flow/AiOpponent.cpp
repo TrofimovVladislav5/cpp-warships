@@ -5,11 +5,22 @@
 #include <algorithm>
 #include <array>
 #include <limits>
+#include <utility>
 
 namespace cpp_warships::game_flow {
 
     AiOpponent::AiOpponent(RandomEngine& randomEngine)
         : randomEngine_(randomEngine) {}
+
+    AiOpponent::AiOpponent(RandomEngine& randomEngine, AiMemory memory)
+        : randomEngine_(randomEngine)
+        , attemptedCoordinates_(std::move(memory.attemptedCoordinates))
+        , currentTargetHits_(std::move(memory.currentTargetHits)) {}
+
+    AiMemory AiOpponent::memory() const {
+        return {.attemptedCoordinates = attemptedCoordinates_,
+                .currentTargetHits = currentTargetHits_};
+    }
 
     std::optional<game_core::Coordinate> AiOpponent::unfinishedHit(
             const game_core::Board& board

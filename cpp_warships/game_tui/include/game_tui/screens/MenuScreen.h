@@ -17,6 +17,7 @@ namespace cpp_warships::game_tui {
                 IntentSink intentSink,
                 const Theme& theme,
                 MatchInProgressQuery hasMatch,
+                SavedMatchQuery hasSavedMatch,
                 const MenuViewFactory& makeView
         );
 

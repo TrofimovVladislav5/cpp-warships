@@ -137,6 +137,7 @@ namespace cpp_warships::game_tui {
                 hints.push_back(keyHint(theme, "b", "begin the battle"));
             }
 
+            hints.push_back(keyHint(theme, "f2", "save the match"));
             hints.push_back(keyHint(theme, "esc", "back to the menu"));
             return keyLegend(std::move(hints));
         }

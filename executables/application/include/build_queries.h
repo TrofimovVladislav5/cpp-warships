@@ -8,6 +8,7 @@ namespace cpp_warships::application {
     struct SessionQueries {
         game_tui::MatchQuery match;
         game_tui::MatchInProgressQuery hasMatch;
+        game_tui::SavedMatchQuery hasSavedMatch;
         game_tui::ThemeQuery theme;
     };
 
