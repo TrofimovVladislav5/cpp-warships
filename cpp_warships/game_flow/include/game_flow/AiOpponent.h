@@ -38,9 +38,12 @@ namespace cpp_warships::game_flow {
         /** @brief Ends the current chase, ruling out every cell around the sunk ship. */
         void finishHunt(const game_core::Board& board);
 
-        void reset();
-
     private:
+        /** @brief A cell already struck that is still holding, and so is worth striking again.
+         *  A segment outlasts a single shot, so the chase must finish one before moving on. */
+        [[nodiscard]] std::optional<game_core::Coordinate> unfinishedHit(
+                const game_core::Board& board
+        ) const;
         [[nodiscard]] std::vector<game_core::Coordinate> untriedNeighbours(
                 game_core::Coordinate coordinate,
                 const game_core::Board& board

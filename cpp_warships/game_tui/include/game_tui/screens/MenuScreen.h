@@ -1,57 +1,32 @@
 #pragma once
 
-#include <functional>
-
-#include <ftxui/component/component.hpp>
-
-#include <game_tui/EventRouter.h>
-#include <game_tui/Intent.h>
-#include <game_tui/Screen.h>
+#include <game_tui/Queries.h>
 #include <game_tui/Theme.h>
+#include <game_tui/input/EventRouter.h>
+#include <game_tui/intents/Intent.h>
 #include <game_tui/screens/MenuState.h>
+#include <game_tui/screens/Screen.h>
+#include <game_tui/views/ViewFactory.h>
 
 namespace cpp_warships::game_tui {
-    /** @brief Draws the menu: the title, the board sizes on offer and the themes.
-     *  Reads state and returns elements; it changes nothing. */
-    class MenuView {
-    public:
-        [[nodiscard]] static ftxui::Element render(
-                const Theme& theme,
-                const MenuState& state,
-                bool hasMatchInProgress
-        );
-    };
-
-    /** @brief Wires the menu's handlers to its view. It holds no input logic of its own. */
-    class MenuController {
-    public:
-        using MatchInProgressQuery = std::function<bool()>;
-
-        MenuController(IntentSink intentSink, const Theme& theme, MatchInProgressQuery hasMatch);
-
-        [[nodiscard]] ftxui::Component component();
-
-    private:
-        const Theme& theme_;
-        MatchInProgressQuery hasMatch_;
-        MenuState state_;
-        EventRouter eventRouter_;
-    };
-
-    /** @brief The menu screen, pairing its view with its controller. */
+    /** @brief The menu screen: what the player has chosen, how it is drawn and what the
+     *  keys do. It owns those three and wires them together, holding no logic of its own. */
     class MenuScreen final : public Screen {
     public:
         MenuScreen(
                 IntentSink intentSink,
                 const Theme& theme,
-                MenuController::MatchInProgressQuery hasMatch
+                MatchInProgressQuery hasMatch,
+                const MenuViewFactory& makeView
         );
 
         [[nodiscard]] ScreenKind kind() const override;
-        [[nodiscard]] ftxui::Component component() override;
+        [[nodiscard]] GameView& view() override;
+        bool handleEvent(const Keystroke& stroke) override;
 
     private:
-        MenuController controller_;
-        ftxui::Component component_;
+        MenuState state_;
+        GameViewPointer view_;
+        EventRouter eventRouter_;
     };
 } // namespace cpp_warships::game_tui

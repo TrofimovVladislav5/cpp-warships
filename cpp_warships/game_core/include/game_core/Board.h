@@ -45,7 +45,8 @@ namespace cpp_warships::game_core {
         bool removeShipAt(Coordinate coordinate);
 
         /** @brief Attacks a cell, which may be struck again while a segment there still lives.
-         *  Resolved cells -- water already shot, or a destroyed segment -- reject further shots. */
+         *  Resolved cells -- water already shot, or a destroyed segment -- reject further shots.
+         *  Sinking a ship lays bare the water around it, which no ship can occupy. */
         AttackOutcome attack(Coordinate coordinate, int damage);
 
         /** @brief What @p visibility knows about @p coordinate. */
@@ -66,6 +67,11 @@ namespace cpp_warships::game_core {
     private:
         [[nodiscard]] const Ship* shipAt(Coordinate coordinate) const noexcept;
         [[nodiscard]] bool touchesExistingShip(Coordinate coordinate) const;
+
+        /** @brief Marks the water hugging @p ship as attacked since nothing can be hiding there. */
+        void revealWaterAround(const Ship& ship);
+        /** @brief Processes the attack when it is known that the attacked cell is a ship. */
+        AttackOutcome attackShipCell(Ship* targetShip, Coordinate coordinate, int damage);
 
         int width_;
         int height_;

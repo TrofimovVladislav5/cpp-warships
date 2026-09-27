@@ -1,7 +1,7 @@
 #pragma once
 
 #include <game_core/Coordinate.h>
-#include <game_tui/Intent.h>
+#include <game_tui/intents/Intent.h>
 
 namespace cpp_warships::game_tui {
     /** @brief Asks the application to take back the ship covering a cell. */
@@ -9,7 +9,7 @@ namespace cpp_warships::game_tui {
     public:
         explicit RemoveShipIntent(game_core::Coordinate coordinate);
 
-        void applyTo(Application& application) const override;
+        void applyTo(const IntentContext& context) const override;
 
     private:
         game_core::Coordinate coordinate_;

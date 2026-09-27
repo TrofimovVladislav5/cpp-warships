@@ -1,22 +1,31 @@
 #include <game_tui/screens/PlacementScreen.h>
-#include <game_tui/screens/PlacementEventHandlers.h>
 
-#include <ftxui/component/event.hpp>
 #include <memory>
 #include <utility>
 
+#include <game_tui/input/MoveCursorEventHandler.h>
+#include <game_tui/input/PlacementEventHandlers.h>
+
 namespace cpp_warships::game_tui {
-    PlacementController::PlacementController(
+    PlacementScreen::PlacementScreen(
             IntentSink intentSink,
             const Theme& theme,
-            MatchQuery match
+            MatchQuery match,
+            const PlacementViewFactory& makeView
     )
-        : theme_(theme)
-        , match_(std::move(match)) {
+        : match_(std::move(match))
+        , view_(makeView(theme, match_, state_)) {
+        const BoardQuery ownBoard = [this]() -> const game_core::Board& {
+            return match_().playerBoard();
+        };
+
         eventRouter_.add(
-                std::make_shared<PlacementMouseEventHandler>(intentSink, state_, match_, view_)
+                std::make_shared<LayShipWithMouseEventHandler>(intentSink, state_, match_)
         );
-        eventRouter_.add(std::make_shared<MoveCursorEventHandler>(state_, match_));
+        eventRouter_.add(std::make_shared<TakeBackShipWithMouseEventHandler>(intentSink, state_));
+        eventRouter_.add(std::make_shared<PickShipWithWheelEventHandler>(state_, match_));
+        eventRouter_.add(std::make_shared<TakeAimWithMouseEventHandler>(state_));
+        eventRouter_.add(std::make_shared<MoveCursorEventHandler>(state_.cursor, ownBoard));
         eventRouter_.add(std::make_shared<RotateShipEventHandler>(state_));
         eventRouter_.add(std::make_shared<CycleShipLengthEventHandler>(state_, match_));
         eventRouter_.add(std::make_shared<PlaceShipEventHandler>(intentSink, state_, match_));
@@ -26,27 +35,15 @@ namespace cpp_warships::game_tui {
         eventRouter_.add(std::make_shared<LeavePlacementEventHandler>(intentSink));
     }
 
-    ftxui::Component PlacementController::component() {
-        const auto renderPlacement = [this] {
-            return view_.render(theme_, match_(), state_);
-        };
-
-        const auto dispatchEvent = [this](ftxui::Event event) {
-            return eventRouter_.dispatch(event);
-        };
-
-        return ftxui::CatchEvent(ftxui::Renderer(renderPlacement), dispatchEvent);
-    }
-
-    PlacementScreen::PlacementScreen(IntentSink intentSink, const Theme& theme, MatchQuery match)
-        : controller_(std::move(intentSink), theme, std::move(match))
-        , component_(controller_.component()) {}
-
     ScreenKind PlacementScreen::kind() const {
         return ScreenKind::Placement;
     }
 
-    ftxui::Component PlacementScreen::component() {
-        return component_;
+    GameView& PlacementScreen::view() {
+        return *view_;
+    }
+
+    bool PlacementScreen::handleEvent(const Keystroke& stroke) {
+        return eventRouter_.dispatch(view_->interpret(stroke));
     }
 } // namespace cpp_warships::game_tui

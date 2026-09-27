@@ -23,11 +23,14 @@ namespace cpp_warships::game_core {
      *  Fog of war is a rule, so it lives in the model rather than the view. */
     enum class Visibility { Owner, Opponent };
 
-    /** @brief What is known to be at a cell. The view maps these to glyphs and colors. */
+    /** @brief What is known to be at a cell. The view maps these to glyphs and colors.
+     *  A segment that still holds is told apart from one with nothing left, so a player
+     *  can see which cells are finished and which are still worth firing on. */
     enum class CellState {
         Water,
         Ship,
-        Hit,
+        Damaged,
+        Destroyed,
         Sunk,
         Miss,
     };

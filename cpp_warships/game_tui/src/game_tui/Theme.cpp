@@ -7,40 +7,42 @@ namespace cpp_warships::game_tui {
         Theme makeMidnightTheme() {
             return Theme{
                     .name = "midnight",
-                    .background = ftxui::Color::RGB(16, 18, 28),
-                    .surface = ftxui::Color::RGB(28, 32, 48),
-                    .border = ftxui::Color::RGB(64, 72, 104),
-                    .text = ftxui::Color::RGB(226, 232, 248),
-                    .textMuted = ftxui::Color::RGB(136, 146, 178),
-                    .accent = ftxui::Color::RGB(126, 190, 255),
-                    .water = ftxui::Color::RGB(52, 62, 92),
-                    .ship = ftxui::Color::RGB(168, 180, 208),
-                    .hit = ftxui::Color::RGB(246, 170, 86),
-                    .sunk = ftxui::Color::RGB(232, 92, 92),
-                    .miss = ftxui::Color::RGB(96, 106, 138),
-                    .cursor = ftxui::Color::RGB(126, 190, 255),
-                    .danger = ftxui::Color::RGB(232, 92, 92),
-                    .success = ftxui::Color::RGB(126, 210, 150)
+                    .background = Color{16, 18, 28},
+                    .surface = Color{28, 32, 48},
+                    .border = Color{64, 72, 104},
+                    .text = Color{226, 232, 248},
+                    .textMuted = Color{136, 146, 178},
+                    .accent = Color{126, 190, 255},
+                    .water = {Color{28, 40, 68}, Color{78, 94, 130}},
+                    .ship = {Color{176, 188, 214}, Color{18, 22, 34}},
+                    .damaged = {Color{250, 200, 90}, Color{58, 34, 4}},
+                    .destroyed = {Color{206, 118, 38}, Color{40, 18, 2}},
+                    .sunk = {Color{160, 34, 44}, Color{255, 228, 228}},
+                    .miss = {Color{134, 134, 134}, Color{16, 16, 16}},
+                    .cursor = {Color{126, 190, 255}, Color{10, 16, 30}},
+                    .danger = Color{232, 92, 92},
+                    .success = Color{126, 210, 150}
             };
         }
 
         Theme makeHarbourTheme() {
             return Theme{
                     .name = "harbour",
-                    .background = ftxui::Color::RGB(246, 244, 238),
-                    .surface = ftxui::Color::RGB(232, 228, 218),
-                    .border = ftxui::Color::RGB(176, 168, 152),
-                    .text = ftxui::Color::RGB(38, 40, 44),
-                    .textMuted = ftxui::Color::RGB(118, 116, 112),
-                    .accent = ftxui::Color::RGB(28, 104, 168),
-                    .water = ftxui::Color::RGB(202, 212, 222),
-                    .ship = ftxui::Color::RGB(72, 80, 92),
-                    .hit = ftxui::Color::RGB(198, 118, 30),
-                    .sunk = ftxui::Color::RGB(176, 48, 48),
-                    .miss = ftxui::Color::RGB(150, 156, 164),
-                    .cursor = ftxui::Color::RGB(28, 104, 168),
-                    .danger = ftxui::Color::RGB(176, 48, 48),
-                    .success = ftxui::Color::RGB(46, 134, 82)
+                    .background = Color{246, 244, 238},
+                    .surface = Color{232, 228, 218},
+                    .border = Color{176, 168, 152},
+                    .text = Color{38, 40, 44},
+                    .textMuted = Color{118, 116, 112},
+                    .accent = Color{28, 104, 168},
+                    .water = {Color{208, 222, 236}, Color{128, 148, 172}},
+                    .ship = {Color{66, 74, 88}, Color{238, 240, 244}},
+                    .damaged = {Color{244, 186, 66}, Color{48, 28, 2}},
+                    .destroyed = {Color{202, 110, 24}, Color{40, 18, 2}},
+                    .sunk = {Color{158, 28, 36}, Color{255, 234, 234}},
+                    .miss = {Color{128, 128, 128}, Color{252, 252, 252}},
+                    .cursor = {Color{28, 104, 168}, Color{240, 246, 252}},
+                    .danger = Color{176, 48, 48},
+                    .success = Color{46, 134, 82}
             };
         }
     } // namespace
@@ -60,11 +62,7 @@ namespace cpp_warships::game_tui {
         };
 
         const auto& themes = availableThemes();
-        const auto found = std::find_if(
-            themes.begin(),
-            themes.end(),
-            hasName
-        );
+        const auto found = std::find_if(themes.begin(), themes.end(), hasName);
 
         return found == themes.end() ? defaultTheme() : *found;
     }

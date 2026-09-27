@@ -77,6 +77,9 @@ namespace cpp_warships::game_flow {
         /** @brief Plays the computer's shots until it misses or the match ends. */
         void runComputerTurn();
 
+        /** @brief Hands play on once the player's turn is over, letting the enemy answer. */
+        void concludeTurn();
+
         [[nodiscard]] const SkillQueue& skills() const noexcept;
 
         /** @brief Whether the next banked skill needs a target cell from the player. */
@@ -100,11 +103,16 @@ namespace cpp_warships::game_flow {
          *  @return whether the computer still holds the turn and should fire again. */
         bool takeComputerShot();
 
-        void applyShotOutcome(
-                game_core::AttackOutcome outcome,
-                game_core::Coordinate coordinate,
-                Participant actor
-        );
+        /** @brief Settles a shot of the player's: records it and banks any skill it earned.
+         *  Says nothing about whose turn it is, because not every shot is a turn.
+         *  The computer settles its own shots inside takeComputerShot. */
+        void recordPlayerShot(game_core::AttackOutcome outcome, game_core::Coordinate coordinate);
+
+        /** @brief Hands the turn over, unless @p outcome earned the player another shot. */
+        void passTurnUnlessKept(game_core::AttackOutcome outcome);
+
+        /** @brief Replaces the enemy fleet for a fresh round.
+         *  Our own board carries over, so what the enemy knows of it carries over too. */
         void startNextRound();
         void concludeAsLoss();
 

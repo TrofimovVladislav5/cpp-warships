@@ -3,30 +3,38 @@
 #include <string>
 #include <vector>
 
-#include <ftxui/screen/color.hpp>
+#include <game_tui/Color.h>
 
 namespace cpp_warships::game_tui {
+    /** @brief A filled board cell: the colour of the tile and the ink of the glyph on it.
+     *  Board cells are drawn as rectangles, so every tile colour needs a legible partner. */
+    struct CellColors {
+        Color fill;
+        Color ink;
+    };
+
     /** @brief Every colour the interface may use, named by role rather than by hue.
      *  Screens read these slots and never name a colour themselves. */
     struct Theme {
         std::string name;
 
-        ftxui::Color background;
-        ftxui::Color surface;
-        ftxui::Color border;
-        ftxui::Color text;
-        ftxui::Color textMuted;
-        ftxui::Color accent;
+        Color background;
+        Color surface;
+        Color border;
+        Color text;
+        Color textMuted;
+        Color accent;
 
-        ftxui::Color water;
-        ftxui::Color ship;
-        ftxui::Color hit;
-        ftxui::Color sunk;
-        ftxui::Color miss;
-        ftxui::Color cursor;
+        CellColors water;
+        CellColors ship;
+        CellColors damaged;
+        CellColors destroyed;
+        CellColors sunk;
+        CellColors miss;
+        CellColors cursor;
 
-        ftxui::Color danger;
-        ftxui::Color success;
+        Color danger;
+        Color success;
     };
 
     /** @brief The themes the interface can be dressed in, in the order they are offered. */

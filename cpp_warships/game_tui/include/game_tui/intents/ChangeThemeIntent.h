@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <game_tui/Intent.h>
+#include <game_tui/intents/Intent.h>
 
 namespace cpp_warships::game_tui {
     /** @brief Asks the application to dress itself in another theme. */
@@ -10,7 +10,7 @@ namespace cpp_warships::game_tui {
     public:
         explicit ChangeThemeIntent(std::string themeName);
 
-        void applyTo(Application& application) const override;
+        void applyTo(const IntentContext& context) const override;
 
     private:
         std::string themeName_;

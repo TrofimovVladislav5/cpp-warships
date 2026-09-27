@@ -11,6 +11,24 @@ namespace cpp_warships::game_flow {
     AiOpponent::AiOpponent(RandomEngine& randomEngine)
         : randomEngine_(randomEngine) {}
 
+    std::optional<game_core::Coordinate> AiOpponent::unfinishedHit(
+            const game_core::Board& board
+    ) const {
+        const auto isStillHolding = [&board](const game_core::Coordinate& hit) {
+            const auto cellState = board.stateAt(hit, game_core::Visibility::Opponent);
+            return cellState == game_core::CellState::Damaged;
+        };
+
+        const auto damagedCell =
+                std::find_if(currentTargetHits_.begin(), currentTargetHits_.end(), isStillHolding);
+
+        if (damagedCell == currentTargetHits_.end()) {
+            return std::nullopt;
+        } else {
+            return std::optional{*damagedCell};
+        }
+    }
+
     std::vector<game_core::Coordinate> AiOpponent::untriedNeighbours(
             game_core::Coordinate coordinate,
             const game_core::Board& board
@@ -85,6 +103,10 @@ namespace cpp_warships::game_flow {
     }
 
     std::optional<game_core::Coordinate> AiOpponent::chooseTarget(const game_core::Board& board) {
+        if (const std::optional<game_core::Coordinate> holding = unfinishedHit(board)) {
+            return holding;
+        }
+
         if (currentTargetHits_.size() == 1) {
             const std::vector<game_core::Coordinate> neighbours =
                     untriedNeighbours(currentTargetHits_.front(), board);
@@ -124,20 +146,26 @@ namespace cpp_warships::game_flow {
     }
 
     void AiOpponent::registerHit(game_core::Coordinate coordinate) {
-        currentTargetHits_.push_back(coordinate);
+        const auto known =
+                std::find(currentTargetHits_.begin(), currentTargetHits_.end(), coordinate);
+
+        if (known == currentTargetHits_.end()) {
+            currentTargetHits_.push_back(coordinate);
+        }
     }
 
     void AiOpponent::recordOutcome(
-            game_core::Coordinate coordinate,
-            game_core::AttackOutcome outcome,
+            const game_core::Coordinate coordinate,
+            const game_core::AttackOutcome outcome,
             const game_core::Board& board
     ) {
-        markAttempted(coordinate);
+        const auto cellState = board.stateAt(coordinate, game_core::Visibility::Opponent);
+        const bool isStillHolding = cellState == game_core::CellState::Damaged;
+        if (!isStillHolding) {
+            markAttempted(coordinate);
+        }
+
         behaviourFor(outcome).updateHunt(*this, coordinate, board);
     }
 
-    void AiOpponent::reset() {
-        attemptedCoordinates_.clear();
-        currentTargetHits_.clear();
-    }
 } // namespace cpp_warships::game_flow

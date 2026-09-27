@@ -90,12 +90,8 @@ namespace cpp_warships::game_flow {
     }
 
     void Match::startNextRound() {
-        events_.record({
-                .kind = MatchEventKind::RoundWon,
-                .actor = Participant::Player,
-        });
+        events_.record({.kind = MatchEventKind::RoundWon, .actor = Participant::Player});
 
-        aiOpponent_.reset();
         placeFleetRandomly(computerBoard_, settings_.fleet(), randomEngine_);
         ++roundNumber_;
         turnOrder_.giveTo(Participant::Player);
@@ -106,25 +102,34 @@ namespace cpp_warships::game_flow {
         phase_ = MatchPhase::Finished;
     }
 
-    void Match::applyShotOutcome(
-            game_core::AttackOutcome outcome,
-            game_core::Coordinate coordinate,
-            Participant actor
+    void Match::recordPlayerShot(
+            const game_core::AttackOutcome outcome,
+            const game_core::Coordinate coordinate
     ) {
         const AttackOutcomeBehaviour& behaviour = behaviourFor(outcome);
-        events_.record({.kind = behaviour.eventKind(), .actor = actor, .coordinate = coordinate});
+        events_.record(
+                {.kind = behaviour.eventKind(),
+                 .actor = Participant::Player,
+                 .coordinate = coordinate}
+        );
 
-        if (behaviour.grantsSkill() && actor == Participant::Player) {
+        if (behaviour.grantsSkill()) {
             const SkillKind granted = skillManager_.grantRandom();
             events_.record(
-                    {.kind = MatchEventKind::SkillGranted, .actor = actor, .skill = granted}
+                    {.kind = MatchEventKind::SkillGranted,
+                     .actor = Participant::Player,
+                     .skill = granted}
             );
         }
+    }
 
-        if (!behaviour.keepsTurn()) {
-            turnOrder_.pass();
-            events_.record({.kind = MatchEventKind::TurnPassed, .actor = turnOrder_.current()});
+    void Match::passTurnUnlessKept(const game_core::AttackOutcome outcome) {
+        if (behaviourFor(outcome).keepsTurn()) {
+            return;
         }
+
+        turnOrder_.pass();
+        events_.record({.kind = MatchEventKind::TurnPassed, .actor = turnOrder_.current()});
     }
 
     game_core::AttackOutcome Match::fireAt(game_core::Coordinate coordinate) {
@@ -138,7 +143,9 @@ namespace cpp_warships::game_flow {
             shotStrength_.spend();
         }
 
-        applyShotOutcome(outcome, coordinate, Participant::Player);
+        recordPlayerShot(outcome, coordinate);
+        passTurnUnlessKept(outcome);
+
         if (computerBoard_.allShipsSunk()) {
             startNextRound();
         }
@@ -175,7 +182,6 @@ namespace cpp_warships::game_flow {
 
         bool keepsTurn = true;
         bool isPlayerFleetSunk = false;
-
         while (keepsTurn && !isPlayerFleetSunk) {
             keepsTurn = takeComputerShot();
             isPlayerFleetSunk = playerBoard_.allShipsSunk();
@@ -186,6 +192,12 @@ namespace cpp_warships::game_flow {
         } else {
             turnOrder_.giveTo(Participant::Player);
             events_.record({.kind = MatchEventKind::TurnPassed, .actor = Participant::Player});
+        }
+    }
+
+    void Match::concludeTurn() {
+        if (!turnOrder_.isPlayerTurn()) {
+            runComputerTurn();
         }
     }
 
@@ -220,7 +232,9 @@ namespace cpp_warships::game_flow {
     void Match::strikeEnemyCell(game_core::Coordinate coordinate) {
         const game_core::AttackOutcome outcome =
                 computerBoard_.attack(coordinate, shotStrength_.baseDamage());
-        applyShotOutcome(outcome, coordinate, Participant::Player);
+
+        // A skill is not a shot: whatever it hits, the player still has their turn to take.
+        recordPlayerShot(outcome, coordinate);
 
         if (computerBoard_.allShipsSunk()) {
             startNextRound();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <game_tui/Intent.h>
+#include <game_tui/intents/Intent.h>
 
 namespace cpp_warships::game_tui {
     /** @brief Asks the application to begin a new match on a board of the given size. */
@@ -8,7 +8,7 @@ namespace cpp_warships::game_tui {
     public:
         explicit StartMatchIntent(int boardSize);
 
-        void applyTo(Application& application) const override;
+        void applyTo(const IntentContext& context) const override;
 
     private:
         int boardSize_;

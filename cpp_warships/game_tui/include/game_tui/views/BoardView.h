@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <string>
 #include <unordered_set>
 
 #include <ftxui/dom/elements.hpp>
@@ -11,6 +12,7 @@
 #include <game_core/Coordinate.h>
 #include <game_core/Outcomes.h>
 #include <game_tui/Theme.h>
+#include <game_tui/views/CoordinateLabel.h>
 
 namespace cpp_warships::game_tui {
     /** @brief What is drawn on top of a board: where the cursor rests and which cells are marked.
@@ -18,7 +20,7 @@ namespace cpp_warships::game_tui {
     struct BoardOverlay {
         std::optional<game_core::Coordinate> cursor;
         std::unordered_set<game_core::Coordinate> marked;
-        ftxui::Color markColor;
+        CellColors markColors;
     };
 
     /** @brief Draws a board as a labelled grid and remembers where that grid landed.

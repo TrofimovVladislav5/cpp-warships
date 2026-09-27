@@ -21,7 +21,9 @@ namespace cpp_warships::game_flow {
         /** @brief The match's random source, so a skill's choices replay from the seed. */
         [[nodiscard]] virtual RandomEngine& randomEngine() = 0;
 
-        /** @brief Fires at @p coordinate on the player's behalf, with the usual consequences. */
+        /** @brief Fires at @p coordinate on the player's behalf, with the usual
+         *  consequences bar one: it does not hand the turn over, because using a
+         *  skill is not the same as taking your shot. */
         virtual void strikeEnemyCell(game_core::Coordinate coordinate) = 0;
 
         /** @brief Arms the next shot to deal double damage. */

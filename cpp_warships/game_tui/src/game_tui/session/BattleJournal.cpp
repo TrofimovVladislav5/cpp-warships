@@ -1,0 +1,27 @@
+#include <game_tui/session/BattleJournal.h>
+
+namespace cpp_warships::game_tui {
+    namespace {
+        constexpr std::size_t REMEMBERED_EVENT_COUNT = 200;
+    } // namespace
+
+    void BattleJournal::absorb(const game_flow::MatchEventLog& events) {
+        entries_.insert(entries_.end(), events.begin(), events.end());
+
+        while (entries_.size() > REMEMBERED_EVENT_COUNT) {
+            entries_.pop_front();
+        }
+    }
+
+    void BattleJournal::clear() noexcept {
+        entries_.clear();
+    }
+
+    const std::deque<game_flow::MatchEvent>& BattleJournal::entries() const noexcept {
+        return entries_;
+    }
+
+    bool BattleJournal::isEmpty() const noexcept {
+        return entries_.empty();
+    }
+} // namespace cpp_warships::game_tui

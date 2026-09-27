@@ -1,7 +1,7 @@
 #pragma once
 
-#include <game_tui/Intent.h>
-#include <game_tui/ScreenKind.h>
+#include <game_tui/intents/Intent.h>
+#include <game_tui/screens/ScreenKind.h>
 
 namespace cpp_warships::game_tui {
     /** @brief Asks the application to show another screen. */
@@ -9,7 +9,7 @@ namespace cpp_warships::game_tui {
     public:
         explicit ShowScreenIntent(ScreenKind screen);
 
-        void applyTo(Application& application) const override;
+        void applyTo(const IntentContext& context) const override;
 
     private:
         ScreenKind screen_;

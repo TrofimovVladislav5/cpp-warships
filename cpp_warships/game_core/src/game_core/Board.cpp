@@ -129,15 +129,43 @@ namespace cpp_warships::game_core {
 
             attackedCells_.insert(coordinate);
             return AttackOutcome::Miss;
-        } else {
-            const std::optional<int> index = targetShip->segmentIndexAt(coordinate);
-            if (targetShip->segmentHealth(*index) == 0) {
-                return AttackOutcome::AlreadyAttacked;
-            }
+        }
 
-            attackedCells_.insert(coordinate);
-            targetShip->damageSegment(*index, damage);
-            return targetShip->isSunk() ? AttackOutcome::Sunk : AttackOutcome::Hit;
+        return attackShipCell(targetShip.base(), coordinate, damage);
+    }
+
+    AttackOutcome Board::attackShipCell(
+            Ship* targetShip,
+            const Coordinate coordinate,
+            const int damage
+    ) {
+        const std::optional<int> index = targetShip->segmentIndexAt(coordinate);
+        if (targetShip->segmentHealth(*index) == 0) {
+            return AttackOutcome::AlreadyAttacked;
+        }
+
+        attackedCells_.insert(coordinate);
+        targetShip->damageSegment(*index, damage);
+
+        if (!targetShip->isSunk()) {
+            return AttackOutcome::Hit;
+        } else {
+            revealWaterAround(*targetShip);
+            return AttackOutcome::Sunk;
+        }
+    }
+
+    void Board::revealWaterAround(const Ship& ship) {
+        for (const Coordinate coordinate : ship.coordinates()) {
+            for (int offsetY = -1; offsetY <= 1; ++offsetY) {
+                for (int offsetX = -1; offsetX <= 1; ++offsetX) {
+                    const Coordinate neighbour{coordinate.x + offsetX, coordinate.y + offsetY};
+
+                    if (contains(neighbour) && shipAt(neighbour) == nullptr) {
+                        attackedCells_.insert(neighbour);
+                    }
+                }
+            }
         }
     }
 
@@ -146,7 +174,12 @@ namespace cpp_warships::game_core {
         const Ship* ship = shipAt(coordinate);
 
         if (ship != nullptr && isAttacked) {
-            return ship->isSunk() ? CellState::Sunk : CellState::Hit;
+            if (ship->isSunk()) {
+                return CellState::Sunk;
+            }
+
+            const std::optional<int> index = ship->segmentIndexAt(coordinate);
+            return ship->segmentHealth(*index) == 0 ? CellState::Destroyed : CellState::Damaged;
         } else if (isAttacked) {
             return CellState::Miss;
         } else if (ship != nullptr && visibility == Visibility::Owner) {
