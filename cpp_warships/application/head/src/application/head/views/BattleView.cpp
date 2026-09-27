@@ -150,7 +150,7 @@ namespace cpp_warships::head {
 
         /** @brief A fixed window on the story so far, newest first, scrolled back by @p skipped.
          *  It keeps its height whether the log is empty or a hundred lines long. */
-        ftxui::Element journalLines(const Theme& theme, const BattleJournal& journal, int skipped) {
+        ftxui::Element journalLines(const Theme& theme, const model::BattleJournal& journal, int skipped) {
             const std::deque<flow::MatchEvent>& entries = journal.entries();
             const int total = static_cast<int>(entries.size());
             const int from = std::clamp(skipped, 0, furthestLogScroll(total));
@@ -173,7 +173,7 @@ namespace cpp_warships::head {
 
         ftxui::Element journalHeading(
                 const Theme& theme,
-                const BattleJournal& journal,
+                const model::BattleJournal& journal,
                 int skipped
         ) {
             const int total = static_cast<int>(journal.entries().size());
@@ -216,7 +216,7 @@ namespace cpp_warships::head {
     BattleView::BattleView(
             const Theme& theme,
             MatchQuery match,
-            const BattleJournal& journal,
+            const model::BattleJournal& journal,
             const BattleState& state
     )
         : theme_(theme)
@@ -227,7 +227,7 @@ namespace cpp_warships::head {
     ftxui::Element BattleView::renderElement() {
         const Theme& theme = theme_;
         const flow::Match& match = match_();
-        const BattleJournal& journal = journal_;
+        const model::BattleJournal& journal = journal_;
         const BattleState& state = state_;
 
         BoardOverlay ownOverlay;

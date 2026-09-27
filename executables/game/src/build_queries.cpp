@@ -1,21 +1,24 @@
 #include <build_queries.h>
 
 namespace cpp_warships::application {
-    SessionQueries buildQueries(const head::Application& session) {
+    SessionQueries buildQueries(
+            const model::WarshipsGame& game,
+            const head::ThemeSelection& theme
+    ) {
         return SessionQueries{
-                .match = [&session]() -> const flow::Match& {
-                    return session.match();
+                .match = [&game]() -> const flow::Match& {
+                    return game.match();
                 },
                 .hasMatch =
-                        [&session] {
-                            return session.hasMatch();
+                        [&game] {
+                            return game.hasMatch();
                         },
                 .hasSavedMatch =
-                        [&session] {
-                            return session.hasSavedMatch();
+                        [&game] {
+                            return game.saves().hasSavedMatch();
                         },
-                .theme = [&session]() -> const head::Theme& {
-                    return session.theme();
+                .theme = [&theme]() -> const head::Theme& {
+                    return theme.current();
                 }
         };
     }

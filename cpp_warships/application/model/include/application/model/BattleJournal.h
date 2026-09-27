@@ -5,7 +5,7 @@
 
 #include <application/flow/MatchEvent.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::model {
     /** @brief The running story of a match, oldest first, trimmed to what a panel can show.
      *  The match forgets its events when drained, so what is kept is kept here. */
     class BattleJournal {
@@ -19,4 +19,4 @@ namespace cpp_warships::head {
     private:
         std::deque<flow::MatchEvent> entries_;
     };
-} // namespace cpp_warships::head
+} // namespace cpp_warships::model

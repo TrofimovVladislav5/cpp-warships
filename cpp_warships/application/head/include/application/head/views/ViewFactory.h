@@ -8,7 +8,7 @@
 #include <application/head/screens/BattleState.h>
 #include <application/head/screens/MenuState.h>
 #include <application/head/screens/PlacementState.h>
-#include <application/head/session/BattleJournal.h>
+#include <application/model/BattleJournal.h>
 #include <application/head/views/GameView.h>
 
 namespace cpp_warships::head {
@@ -24,7 +24,7 @@ namespace cpp_warships::head {
 
     /** @brief Makes the view for the battle screen, given what it is showing. */
     using BattleViewFactory = std::function<
-            GameViewPointer(const Theme&, MatchQuery, const BattleJournal&, const BattleState&)>;
+            GameViewPointer(const Theme&, MatchQuery, const model::BattleJournal&, const BattleState&)>;
 
     /** @brief One whole way of presenting the game: a view for every screen there is.
      *  Swapping the presentation is swapping this, and nothing else. */

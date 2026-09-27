@@ -39,7 +39,7 @@ namespace cpp_warships::application {
                     .battle =
                             [](const head::Theme& theme,
                                head::MatchQuery match,
-                               const head::BattleJournal& journal,
+                               const model::BattleJournal& journal,
                                const head::BattleState& state) {
                                 return std::make_unique<head::BattleView>(
                                         theme,
@@ -79,7 +79,7 @@ namespace cpp_warships::application {
                     .battle =
                             [](const head::Theme& theme,
                                head::MatchQuery match,
-                               const head::BattleJournal& journal,
+                               const model::BattleJournal& journal,
                                const head::BattleState& state) {
                                 return std::make_unique<head::PlainBattleView>(
                                         theme,

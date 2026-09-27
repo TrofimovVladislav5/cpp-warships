@@ -12,7 +12,7 @@ namespace cpp_warships::head {
             IntentSink intentSink,
             const Theme& theme,
             MatchQuery match,
-            const BattleJournal& journal,
+            const model::BattleJournal& journal,
             const BattleViewFactory& makeView
     )
         : match_(std::move(match))

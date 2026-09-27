@@ -11,7 +11,7 @@
 #include <application/head/Theme.h>
 #include <application/head/input/InputEvent.h>
 #include <application/head/screens/BattleState.h>
-#include <application/head/session/BattleJournal.h>
+#include <application/model/BattleJournal.h>
 #include <application/head/views/BoardView.h>
 #include <application/head/views/ftxui_bridge/FtxuiView.h>
 
@@ -23,7 +23,7 @@ namespace cpp_warships::head {
         BattleView(
                 const Theme& theme,
                 MatchQuery match,
-                const BattleJournal& journal,
+                const model::BattleJournal& journal,
                 const BattleState& state
         );
 
@@ -38,7 +38,7 @@ namespace cpp_warships::head {
 
         const Theme& theme_;
         MatchQuery match_;
-        const BattleJournal& journal_;
+        const model::BattleJournal& journal_;
         const BattleState& state_;
         BoardView ownWatersView_;
         BoardView enemyWatersView_;

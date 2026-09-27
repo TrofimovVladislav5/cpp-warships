@@ -1,12 +1,12 @@
 # Compile files
 add_library(warships_head
+        # What can go wrong here
+        include/application/head/errors/PresentationExceptions.h src/application/head/errors/PresentationExceptions.cpp
         # Shared vocabulary
         include/application/head/Color.h
         include/application/head/Theme.h src/application/head/Theme.cpp
         include/application/head/Queries.h
-        # What the session currently is
-        include/application/head/session/Application.h src/application/head/session/Application.cpp
-        include/application/head/session/BattleJournal.h src/application/head/session/BattleJournal.cpp
+        include/application/head/ThemeSelection.h src/application/head/ThemeSelection.cpp
         # What a screen may ask for
         include/application/head/intents/Intent.h
         include/application/head/intents/IntentContext.h
@@ -93,5 +93,5 @@ target_include_directories(warships_head
 
 # Link dependencies
 target_link_libraries(warships_head
-        PUBLIC warships_core warships_flow warships_persistence ftxui::ftxui cxx_setup
+        PUBLIC warships_core warships_flow warships_persistence warships_model ftxui::ftxui cxx_setup
 )

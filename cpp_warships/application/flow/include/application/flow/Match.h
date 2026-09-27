@@ -11,6 +11,7 @@
 #include <application/flow/AttackOutcomeBehaviour.h>
 #include <application/flow/EventLog.h>
 #include <application/flow/MatchEvent.h>
+#include <application/flow/MatchPhase.h>
 #include <application/flow/PlacementPlan.h>
 #include <application/flow/RandomEngine.h>
 #include <application/flow/ShotStrength.h>
@@ -19,15 +20,6 @@
 #include <application/flow/TurnOrder.h>
 
 namespace cpp_warships::flow {
-    /** @brief Which part of a match is being played. */
-    enum class MatchPhase {
-        Placement,
-        Battle,
-        Finished,
-    };
-
-    /** @brief A game in progress: two boards, whose turn it is and what has happened.
-     *  Decides everything and draws nothing, reporting events for the interface to render. */
     /** @brief Everything a match needs to carry on from where a save left off. */
     struct MatchRestoreState {
         core::Board playerBoard;
@@ -40,6 +32,8 @@ namespace cpp_warships::flow {
         AiMemory opponentMemory;
     };
 
+    /** @brief A game in progress: two boards, whose turn it is and what has happened.
+     *  Decides everything and draws nothing, reporting events for the interface to render. */
     class Match : private SkillContext {
     public:
         Match(core::MatchSettings settings, RandomEngine& randomEngine);

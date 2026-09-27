@@ -1,7 +1,7 @@
 #include <application/head/intents/PlaceShipIntent.h>
 
 #include <application/head/intents/IntentContext.h>
-#include <application/head/session/Application.h>
+#include <application/model/ApplicationContext.h>
 
 namespace cpp_warships::head {
     PlaceShipIntent::PlaceShipIntent(
@@ -14,6 +14,6 @@ namespace cpp_warships::head {
         , length_(length) {}
 
     void PlaceShipIntent::applyTo(const IntentContext& context) const {
-        context.session.placeShip(origin_, direction_, length_);
+        context.application.game().play().placeShip(origin_, direction_, length_);
     }
 } // namespace cpp_warships::head

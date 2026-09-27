@@ -4,7 +4,7 @@
 #include <application/head/input/EventHandler.h>
 #include <application/head/intents/Intent.h>
 #include <application/head/screens/BattleState.h>
-#include <application/head/session/BattleJournal.h>
+#include <application/model/BattleJournal.h>
 
 namespace cpp_warships::head {
     /** @brief Fires at the cell under the sight, and holds off while the enemy is shooting. */
@@ -52,14 +52,14 @@ namespace cpp_warships::head {
     /** @brief Walks the log back through older lines, by wheel over it or by page keys. */
     class ScrollLogEventHandler final : public EventHandler {
     public:
-        ScrollLogEventHandler(BattleState& state, const BattleJournal& journal);
+        ScrollLogEventHandler(BattleState& state, const model::BattleJournal& journal);
 
         [[nodiscard]] bool isHandled(const InputEvent& input) const override;
         void handleEvent(const InputEvent& input) override;
 
     private:
         BattleState& state_;
-        const BattleJournal& journal_;
+        const model::BattleJournal& journal_;
     };
 
     /** @brief Goes back to the menu, leaving the match standing where it is. */

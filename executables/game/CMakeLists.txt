@@ -2,7 +2,7 @@
 add_executable(cpp_warships
         # Putting the parts together is this layer's whole job
         include/build_save_archive.h src/build_save_archive.cpp
-        include/build_session.h src/build_session.cpp
+        include/build_game.h src/build_game.cpp
         include/build_queries.h src/build_queries.cpp
         include/build_intent_sink.h src/build_intent_sink.cpp
         include/build_navigator.h src/build_navigator.cpp
@@ -21,6 +21,7 @@ target_include_directories(cpp_warships
 # Link dependencies
 target_link_libraries(cpp_warships
         PRIVATE warships_head
+        PRIVATE warships_model
         PRIVATE utilities
         PRIVATE cxx_setup
 )

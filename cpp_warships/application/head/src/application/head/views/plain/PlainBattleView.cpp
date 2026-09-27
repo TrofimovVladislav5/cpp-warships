@@ -32,7 +32,7 @@ namespace cpp_warships::head {
         /** @brief The window on the story, newest first and scrolled back the same way the
          *  interactive log scrolls, so the paging keys mean the same thing here. */
         [[nodiscard]] std::vector<std::string> journalLines(
-                const BattleJournal& journal,
+                const model::BattleJournal& journal,
                 const Theme& theme,
                 const int skipped
         ) {
@@ -62,7 +62,7 @@ namespace cpp_warships::head {
     PlainBattleView::PlainBattleView(
             const Theme& theme,
             MatchQuery match,
-            const BattleJournal& journal,
+            const model::BattleJournal& journal,
             const BattleState& state
     )
         : theme_(theme)

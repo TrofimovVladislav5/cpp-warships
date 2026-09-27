@@ -1,15 +1,21 @@
 #pragma once
 
+namespace cpp_warships::model {
+    class ApplicationContext;
+}
+
 namespace cpp_warships::head {
-    class Application;
     class ScreenNavigator;
     class Shell;
+    class ThemeSelection;
 
-    /** @brief Everything an intent is allowed to act on: the session it belongs to, where
-     *  the player is, and the host showing it all. Nothing else is reachable. */
+    /** @brief Everything an intent is allowed to act on: the game it belongs to, where the
+     *  player is, the host showing it and the palette it is shown in. Nothing else is reachable.
+     *  Navigation and the palette sit here only until the interface takes them back over. */
     struct IntentContext {
-        Application& session;
+        model::ApplicationContext& application;
         ScreenNavigator& navigator;
         Shell& shell;
+        ThemeSelection& theme;
     };
 } // namespace cpp_warships::head

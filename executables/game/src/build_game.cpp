@@ -1,10 +1,10 @@
-#include <build_session.h>
+#include <build_game.h>
 
 namespace cpp_warships::application {
-    head::Application buildSession(
+    std::unique_ptr<model::WarshipsGame> buildGame(
             flow::RandomEngine& randomEngine,
             persistence::SaveArchive& saveArchive
     ) {
-        return head::Application{randomEngine, saveArchive};
+        return std::make_unique<model::WarshipsGame>(randomEngine, saveArchive);
     }
 } // namespace cpp_warships::application

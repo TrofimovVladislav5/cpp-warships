@@ -3,7 +3,7 @@
 #include <application/head/Queries.h>
 #include <application/head/Theme.h>
 #include <application/head/screens/BattleState.h>
-#include <application/head/session/BattleJournal.h>
+#include <application/model/BattleJournal.h>
 #include <application/head/views/GameView.h>
 
 namespace cpp_warships::head {
@@ -14,7 +14,7 @@ namespace cpp_warships::head {
         PlainBattleView(
                 const Theme& theme,
                 MatchQuery match,
-                const BattleJournal& journal,
+                const model::BattleJournal& journal,
                 const BattleState& state
         );
 
@@ -26,7 +26,7 @@ namespace cpp_warships::head {
     private:
         const Theme& theme_;
         MatchQuery match_;
-        const BattleJournal& journal_;
+        const model::BattleJournal& journal_;
         const BattleState& state_;
     };
 } // namespace cpp_warships::head

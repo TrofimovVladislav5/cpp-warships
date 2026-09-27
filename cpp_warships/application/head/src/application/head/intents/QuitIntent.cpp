@@ -2,7 +2,6 @@
 
 #include <application/head/host/Shell.h>
 #include <application/head/intents/IntentContext.h>
-#include <application/head/session/Application.h>
 
 namespace cpp_warships::head {
     void QuitIntent::applyTo(const IntentContext& context) const {

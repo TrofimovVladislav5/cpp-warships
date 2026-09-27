@@ -2,7 +2,6 @@
 
 #include <application/head/intents/IntentContext.h>
 #include <application/head/screens/ScreenNavigator.h>
-#include <application/head/session/Application.h>
 
 namespace cpp_warships::head {
     ShowScreenIntent::ShowScreenIntent(ScreenKind screen)

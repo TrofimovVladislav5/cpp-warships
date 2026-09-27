@@ -1,5 +1,9 @@
 # Compile files
 add_library(warships_core
+        # What can go wrong, and the root every other layer hangs its errors from
+        include/application/core/errors/ErrorLayer.h src/application/core/errors/ErrorLayer.cpp
+        include/application/core/errors/WarshipsException.h src/application/core/errors/WarshipsException.cpp
+        include/application/core/errors/CoreExceptions.h src/application/core/errors/CoreExceptions.cpp
         # Value types
         include/application/core/Coordinate.h
         include/application/core/Direction.h

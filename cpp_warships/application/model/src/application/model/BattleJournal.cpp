@@ -1,6 +1,6 @@
-#include <application/head/session/BattleJournal.h>
+#include <application/model/BattleJournal.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::model {
     namespace {
         constexpr std::size_t REMEMBERED_EVENT_COUNT = 200;
     } // namespace
@@ -24,4 +24,4 @@ namespace cpp_warships::head {
     bool BattleJournal::isEmpty() const noexcept {
         return entries_.empty();
     }
-} // namespace cpp_warships::head
+} // namespace cpp_warships::model

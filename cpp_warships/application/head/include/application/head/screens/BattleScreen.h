@@ -6,7 +6,7 @@
 #include <application/head/intents/Intent.h>
 #include <application/head/screens/BattleState.h>
 #include <application/head/screens/Screen.h>
-#include <application/head/session/BattleJournal.h>
+#include <application/model/BattleJournal.h>
 #include <application/head/views/ViewFactory.h>
 
 namespace cpp_warships::head {
@@ -18,7 +18,7 @@ namespace cpp_warships::head {
                 IntentSink intentSink,
                 const Theme& theme,
                 MatchQuery match,
-                const BattleJournal& journal,
+                const model::BattleJournal& journal,
                 const BattleViewFactory& makeView
         );
 

@@ -83,7 +83,7 @@ namespace cpp_warships::head {
         }
     }
 
-    ScrollLogEventHandler::ScrollLogEventHandler(BattleState& state, const BattleJournal& journal)
+    ScrollLogEventHandler::ScrollLogEventHandler(BattleState& state, const model::BattleJournal& journal)
         : state_(state)
         , journal_(journal) {}
 

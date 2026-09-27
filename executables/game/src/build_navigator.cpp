@@ -9,7 +9,7 @@
 namespace cpp_warships::application {
     head::ScreenNavigator buildNavigator(
             const head::IntentSink& intentSink,
-            const head::Application& session,
+            const model::WarshipsGame& game,
             const SessionQueries& queries,
             const head::ViewFactory& views
     ) {
@@ -18,7 +18,7 @@ namespace cpp_warships::application {
         navigator.add(
                 std::make_unique<head::MenuScreen>(
                         intentSink,
-                        session.theme(),
+                        queries.theme(),
                         queries.hasMatch,
                         queries.hasSavedMatch,
                         views.menu
@@ -27,7 +27,7 @@ namespace cpp_warships::application {
         navigator.add(
                 std::make_unique<head::PlacementScreen>(
                         intentSink,
-                        session.theme(),
+                        queries.theme(),
                         queries.match,
                         views.placement
                 )
@@ -35,9 +35,9 @@ namespace cpp_warships::application {
         navigator.add(
                 std::make_unique<head::BattleScreen>(
                         intentSink,
-                        session.theme(),
+                        queries.theme(),
                         queries.match,
-                        session.journal(),
+                        game.journal(),
                         views.battle
                 )
         );
