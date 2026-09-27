@@ -1,0 +1,31 @@
+#pragma once
+
+#include <optional>
+#include <string>
+#include <unordered_set>
+#include <vector>
+
+#include <application/core/Board.h>
+#include <application/core/Coordinate.h>
+#include <application/core/Outcomes.h>
+
+namespace cpp_warships::head {
+    /** @brief What is drawn on top of a plain board: where the cursor rests, which cells
+     *  are spoken for, and the letter those cells are marked with. */
+    struct PlainBoardOverlay {
+        std::optional<core::Coordinate> cursor;
+        std::unordered_set<core::Coordinate> marked;
+        char markGlyph = '+';
+    };
+
+    /** @brief A board ruled out in ASCII, the way the console game used to draw it.
+     *  Returns finished lines, so the caller only has to print them in order. */
+    [[nodiscard]] std::vector<std::string> plainBoardLines(
+            const core::Board& board,
+            core::Visibility visibility,
+            const PlainBoardOverlay& overlay
+    );
+
+    /** @brief What each cell state is written as, so a legend can be printed beside a board. */
+    [[nodiscard]] std::string plainBoardLegend();
+} // namespace cpp_warships::head
