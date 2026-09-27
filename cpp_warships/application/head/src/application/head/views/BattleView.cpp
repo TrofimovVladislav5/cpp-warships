@@ -13,6 +13,7 @@
 
 #include <application/head/views/EventNarration.h>
 #include <application/head/views/KeyHint.h>
+#include <application/head/views/ftxui_bridge/FtxuiNotices.h>
 
 namespace cpp_warships::head {
     namespace {
@@ -214,21 +215,34 @@ namespace cpp_warships::head {
     } // namespace
 
     BattleView::BattleView(
-            const Theme& theme,
-            MatchQuery match,
-            const model::BattleJournal& journal,
-            const BattleState& state
-    )
-        : theme_(theme)
-        , match_(std::move(match))
-        , journal_(journal)
-        , state_(state) {}
+            const PresentationContext& context,
+            GridGeometry& geometry
+    ) noexcept
+        : context_(context)
+        , ownWatersView_(geometry, ScreenRegion::OwnWaters)
+        , enemyWatersView_(geometry, ScreenRegion::EnemyWaters)
+        , geometry_(geometry) {}
+
+    void BattleView::publishLogGeometry() const {
+        if (logBox_.x_max < logBox_.x_min) {
+            return;
+        }
+
+        geometry_.rememberLog(
+                logBox_.x_min,
+                logBox_.y_min,
+                logBox_.x_max - logBox_.x_min + 1,
+                logBox_.y_max - logBox_.y_min + 1
+        );
+    }
 
     ftxui::Element BattleView::renderElement() {
-        const Theme& theme = theme_;
-        const flow::Match& match = match_();
-        const model::BattleJournal& journal = journal_;
-        const BattleState& state = state_;
+        publishLogGeometry();
+
+        const Theme& theme = context_.theme();
+        const flow::Match& match = context_.game().match();
+        const model::BattleJournal& journal = context_.game().journal();
+        const BattleState& state = context_.state().battle;
 
         BoardOverlay ownOverlay;
         BoardOverlay enemyOverlay;
@@ -267,39 +281,9 @@ namespace cpp_warships::head {
                                                   ftxui::reflect(logBox_),
                                           ftxui::filler()}
                                  ) | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, SIDE_PANEL_WIDTH)}
-                        ) | ftxui::flex}
+                        ) | ftxui::flex,
+                        noticeBlock(theme, context_.application())}
                ) |
                ftxui::border | color(theme.border) | bgcolor(theme.background) | ftxui::flex;
-    }
-
-    InputEvent BattleView::interpret(const Keystroke& stroke) const {
-        if (!isPointer(stroke)) {
-            return {.stroke = stroke};
-        }
-
-        const int screenX = stroke.pointerX;
-        const int screenY = stroke.pointerY;
-
-        const std::optional<core::Coordinate> enemyCell =
-                enemyWatersView_.cellAt(screenX, screenY);
-        if (enemyCell.has_value()) {
-            return {.stroke = stroke, .region = InputRegion::EnemyWaters, .cell = enemyCell};
-        }
-
-        if (isOverLog(screenX, screenY)) {
-            return {.stroke = stroke, .region = InputRegion::Log};
-        }
-
-        const std::optional<core::Coordinate> ownCell =
-                ownWatersView_.cellAt(screenX, screenY);
-        if (ownCell.has_value()) {
-            return {.stroke = stroke, .region = InputRegion::OwnWaters, .cell = ownCell};
-        }
-
-        return {.stroke = stroke};
-    }
-
-    bool BattleView::isOverLog(int screenX, int screenY) const {
-        return logBox_.Contain(screenX, screenY);
     }
 } // namespace cpp_warships::head

@@ -1,0 +1,25 @@
+#pragma once
+
+#include <string>
+
+namespace cpp_warships::model {
+    /** @brief How an intent went. A scenario reads this to decide what to do next, and a
+     *  failure travels back as one of these rather than as an exception, because by the
+     *  time it is here the error has already been caught and answered for. */
+    class IntentResult {
+    public:
+        [[nodiscard]] static IntentResult succeeded();
+
+        /** @brief A step that did not happen, and @p reason in words a player could read. */
+        [[nodiscard]] static IntentResult failed(std::string reason);
+
+        [[nodiscard]] bool isSucceeded() const noexcept;
+        [[nodiscard]] const std::string& reason() const noexcept;
+
+    private:
+        IntentResult(bool isSucceeded, std::string reason);
+
+        bool isSucceeded_;
+        std::string reason_;
+    };
+} // namespace cpp_warships::model

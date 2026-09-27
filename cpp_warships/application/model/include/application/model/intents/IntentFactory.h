@@ -1,0 +1,38 @@
+#pragma once
+
+#include <optional>
+
+#include <application/core/Coordinate.h>
+#include <application/core/Direction.h>
+#include <application/model/ApplicationContext.h>
+#include <application/model/intents/GameIntent.h>
+
+namespace cpp_warships::model {
+    /** @brief Where intents come from, and the only thing that holds the whole context.
+     *  Each intent it builds is handed just the one part of the game it works on, so an
+     *  intent has no way to reach anything else even if it wanted to. */
+    class IntentFactory {
+    public:
+        /** @brief Builds against @p application, which must outlive every intent it makes. */
+        explicit IntentFactory(ApplicationContext& application) noexcept;
+
+        [[nodiscard]] GameIntentPointer startMatch(int boardSize) const;
+        [[nodiscard]] GameIntentPointer placeShip(
+                core::Coordinate origin,
+                core::Direction direction,
+                int length
+        ) const;
+        [[nodiscard]] GameIntentPointer removeShip(core::Coordinate coordinate) const;
+        [[nodiscard]] GameIntentPointer shuffleFleet() const;
+        [[nodiscard]] GameIntentPointer beginBattle() const;
+        [[nodiscard]] GameIntentPointer fireAt(core::Coordinate coordinate) const;
+        [[nodiscard]] GameIntentPointer useSkill(std::optional<core::Coordinate> target) const;
+
+        [[nodiscard]] GameIntentPointer saveMatch() const;
+        [[nodiscard]] GameIntentPointer loadMatch() const;
+        [[nodiscard]] GameIntentPointer finishSession() const;
+
+    private:
+        ApplicationContext& application_;
+    };
+} // namespace cpp_warships::model

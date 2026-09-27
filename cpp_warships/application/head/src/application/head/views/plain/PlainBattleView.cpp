@@ -1,5 +1,7 @@
 #include <application/head/views/plain/PlainBattleView.h>
 
+#include <application/head/views/Notices.h>
+
 #include <algorithm>
 #include <cstddef>
 #include <deque>
@@ -59,23 +61,14 @@ namespace cpp_warships::head {
         }
     } // namespace
 
-    PlainBattleView::PlainBattleView(
-            const Theme& theme,
-            MatchQuery match,
-            const model::BattleJournal& journal,
-            const BattleState& state
-    )
-        : theme_(theme)
-        , match_(std::move(match))
-        , journal_(journal)
-        , state_(state) {}
+    PlainBattleView::PlainBattleView(const PresentationContext& context) noexcept
+        : context_(context) {}
 
-    InputEvent PlainBattleView::interpret(const Keystroke& stroke) const {
-        return {.stroke = stroke};
-    }
 
     Frame PlainBattleView::render(int, int) {
-        const flow::Match& match = match_();
+        const flow::Match& match = context_.game().match();
+        const model::BattleJournal& journal = context_.game().journal();
+        const BattleState& state = context_.state().battle;
         const bool isFinished = match.phase() == flow::MatchPhase::Finished;
         const std::string turn = isFinished             ? "YOUR FLEET IS GONE"
                                  : match.isPlayerTurn() ? "your turn"
@@ -94,7 +87,7 @@ namespace cpp_warships::head {
         lines.emplace_back("");
         lines.emplace_back("ENEMY WATERS");
 
-        const PlainBoardOverlay aim{.cursor = state_.target};
+        const PlainBoardOverlay aim{.cursor = state.target};
         const std::vector<std::string> enemyWaters =
                 plainBoardLines(match.computerBoard(), core::Visibility::Opponent, aim);
         lines.insert(lines.end(), enemyWaters.begin(), enemyWaters.end());
@@ -102,12 +95,12 @@ namespace cpp_warships::head {
         lines.emplace_back("");
         lines.push_back(plainBoardLegend());
         lines.emplace_back("");
-        lines.push_back("  aiming at " + coordinateLabel(state_.target));
+        lines.push_back("  aiming at " + coordinateLabel(state.target));
         lines.emplace_back("");
         lines.push_back(skillBankLine(match));
         lines.emplace_back("");
 
-        const std::vector<std::string> log = journalLines(journal_, theme_, state_.logScroll);
+        const std::vector<std::string> log = journalLines(journal, context_.theme(), state.logScroll);
         lines.insert(lines.end(), log.begin(), log.end());
 
         lines.emplace_back("");
@@ -122,6 +115,10 @@ namespace cpp_warships::head {
 
         lines.push_back(plainKeyLine("esc", "back to the menu"));
         lines.emplace_back("");
+
+        for (const std::string& notice : noticesToShow(context_.application())) {
+            lines.push_back("  ! " + notice);
+        }
 
         return frameOfLines(lines);
     }

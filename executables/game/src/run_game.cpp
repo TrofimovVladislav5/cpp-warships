@@ -2,41 +2,46 @@
 
 #include <memory>
 
+#include <build_event_pipeline.h>
 #include <build_game.h>
-#include <build_intent_sink.h>
-#include <build_navigator.h>
 #include <build_queries.h>
+#include <build_renderers.h>
 #include <build_save_archive.h>
 #include <build_shell.h>
-#include <build_views.h>
 
-#include <application/head/ThemeSelection.h>
-#include <application/head/intents/IntentContext.h>
-#include <application/head/screens/ScreenNavigator.h>
+#include <application/head/PresentationContext.h>
+#include <application/head/input/EventPipeline.h>
 #include <application/model/ApplicationContext.h>
+#include <application/model/intents/IntentFactory.h>
+#include <application/model/intents/IntentProcessor.h>
+#include <application/model/scenarios/SyncScenarioQueue.h>
 
 namespace cpp_warships::application {
     void runGame(flow::RandomEngine& randomEngine, const ShellKind shellKind) {
         const SaveLibrary saves = buildSaveLibrary(defaultSaveDirectory());
         const std::unique_ptr<model::WarshipsGame> game =
                 buildGame(randomEngine, *saves.archive);
+
         model::ApplicationContext application{*game};
+        const model::IntentFactory intents{application};
+        model::IntentProcessor processor{application};
+        model::SyncScenarioQueue scenarios{processor};
 
-        head::ThemeSelection theme;
-        const SessionQueries queries = buildQueries(*game, theme);
+        head::PresentationContext context{application};
+        const SessionQueries queries = buildQueries(*game, context.themeSelection());
 
-        const head::ViewFactory views = buildViewFactory(shellKind);
+        head::RendererSet renderers = buildRenderers(shellKind, context);
         const std::unique_ptr<head::Shell> shell = buildShell(shellKind, queries.theme);
-        head::ScreenNavigator navigator;
-        const head::IntentContext context{
-                .application = application,
-                .navigator = navigator,
-                .shell = *shell,
-                .theme = theme
-        };
 
-        const head::IntentSink intentSink = buildIntentSink(context);
-        navigator = buildNavigator(intentSink, *game, queries, views);
-        shell->run(navigator);
+        model::EventQueue events;
+        const std::unique_ptr<head::EventBus> bus = buildEventBus(context);
+        const std::unique_ptr<model::EventRouter> router =
+                buildEventRouter(intents, scenarios, context, queries);
+
+        head::EventPipeline pipeline{context, *bus, events, *router, scenarios};
+
+        shell->run(context, renderers, pipeline, [&application] {
+            return application.isFinished();
+        });
     }
 } // namespace cpp_warships::application

@@ -118,7 +118,7 @@ namespace cpp_warships::head {
         return std::make_shared<FrameNode>(frame);
     }
 
-    Frame FtxuiView::render(const int availableWidth, const int availableHeight) {
+    Frame FtxuiRenderer::render(const int availableWidth, const int availableHeight) {
         const int width = availableWidth > 0 ? availableWidth : DEFAULT_FRAME_WIDTH;
         const int height = availableHeight > 0 ? availableHeight : DEFAULT_FRAME_HEIGHT;
 

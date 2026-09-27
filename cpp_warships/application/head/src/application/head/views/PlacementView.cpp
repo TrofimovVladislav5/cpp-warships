@@ -10,6 +10,7 @@
 #include <application/core/Ship.h>
 #include <application/head/views/CellAppearance.h>
 #include <application/head/views/KeyHint.h>
+#include <application/head/views/ftxui_bridge/FtxuiNotices.h>
 
 namespace cpp_warships::head {
     namespace {
@@ -143,15 +144,17 @@ namespace cpp_warships::head {
         }
     } // namespace
 
-    PlacementView::PlacementView(const Theme& theme, MatchQuery match, const PlacementState& state)
-        : theme_(theme)
-        , match_(std::move(match))
-        , state_(state) {}
+    PlacementView::PlacementView(
+            const PresentationContext& context,
+            GridGeometry& geometry
+    ) noexcept
+        : context_(context)
+        , boardView_(geometry, ScreenRegion::OwnWaters) {}
 
     ftxui::Element PlacementView::renderElement() {
-        const Theme& theme = theme_;
-        const flow::Match& match = match_();
-        const PlacementState& state = state_;
+        const Theme& theme = context_.theme();
+        const flow::Match& match = context_.game().match();
+        const PlacementState& state = context_.state().placement;
 
         const flow::PlacementPlan plan = match.playerPlacementPlan();
         const core::Board& board = match.playerBoard();
@@ -180,22 +183,10 @@ namespace cpp_warships::head {
                                           legend(theme, plan),
                                           ftxui::filler()}
                                  ) | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, PLACEMENT_PANEL_WIDTH)}
-                        ) | ftxui::flex}
+                        ) | ftxui::flex,
+                        noticeBlock(theme, context_.application())}
                ) |
                ftxui::border | color(theme.border) | bgcolor(theme.background) | ftxui::flex;
     }
 
-    InputEvent PlacementView::interpret(const Keystroke& stroke) const {
-        if (!isPointer(stroke)) {
-            return {.stroke = stroke};
-        }
-
-        const std::optional<core::Coordinate> cell =
-                boardView_.cellAt(stroke.pointerX, stroke.pointerY);
-        if (!cell.has_value()) {
-            return {.stroke = stroke};
-        }
-
-        return {.stroke = stroke, .region = InputRegion::OwnWaters, .cell = cell};
-    }
 } // namespace cpp_warships::head

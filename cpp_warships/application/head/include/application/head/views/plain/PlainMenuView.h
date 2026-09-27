@@ -2,30 +2,21 @@
 
 #include <application/head/Queries.h>
 #include <application/head/Theme.h>
-#include <application/head/screens/MenuState.h>
-#include <application/head/views/GameView.h>
+#include <application/head/state/MenuState.h>
+#include <application/head/PresentationContext.h>
+#include <application/head/views/Renderer.h>
 
 namespace cpp_warships::head {
     /** @brief The menu as the console game used to print it: a few lines, no colour.
      *  Reads what it was given and returns text; it changes nothing. */
-    class PlainMenuView final : public GameView {
+    class PlainMenuView final : public Renderer {
     public:
-        PlainMenuView(
-                const Theme& theme,
-                const MenuState& state,
-                MatchInProgressQuery hasMatch,
-                SavedMatchQuery hasSavedMatch
-        );
+        explicit PlainMenuView(const PresentationContext& context) noexcept;
 
         [[nodiscard]] Frame render(int availableWidth, int availableHeight) override;
 
-        /** @brief Reads @p stroke as it stands: printed text has nowhere to point at. */
-        [[nodiscard]] InputEvent interpret(const Keystroke& stroke) const override;
 
     private:
-        const Theme& theme_;
-        const MenuState& state_;
-        MatchInProgressQuery hasMatch_;
-        SavedMatchQuery hasSavedMatch_;
+        const PresentationContext& context_;
     };
 } // namespace cpp_warships::head

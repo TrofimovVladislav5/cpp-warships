@@ -12,8 +12,12 @@ namespace cpp_warships::head {
     public:
         explicit TuiShell(ThemeQuery theme);
 
-        void run(ScreenNavigator& navigator) override;
-        void requestQuit() override;
+        void run(
+                PresentationContext& context,
+                RendererSet& renderers,
+                EventPipeline& pipeline,
+                const SessionFinishedQuery& isFinished
+        ) override;
 
     private:
         ftxui::ScreenInteractive interactiveScreen_;

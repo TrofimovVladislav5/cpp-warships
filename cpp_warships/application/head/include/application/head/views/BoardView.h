@@ -12,6 +12,7 @@
 #include <application/core/Coordinate.h>
 #include <application/core/Outcomes.h>
 #include <application/head/Theme.h>
+#include <application/head/input/GridGeometry.h>
 #include <application/head/views/CoordinateLabel.h>
 
 namespace cpp_warships::head {
@@ -27,6 +28,11 @@ namespace cpp_warships::head {
      *  The remembered geometry is what turns a mouse position back into a cell. */
     class BoardView {
     public:
+        /** @brief Draws into @p geometry's record of @p region, which must outlive it.
+         *  Where the grid landed is written down there rather than kept here, because
+         *  whatever reads the pointer is no longer the thing that drew the board. */
+        BoardView(GridGeometry& geometry, ScreenRegion region) noexcept;
+
         [[nodiscard]] ftxui::Element render(
                 const core::Board& board,
                 core::Visibility visibility,
@@ -34,10 +40,12 @@ namespace cpp_warships::head {
                 const BoardOverlay& overlay
         );
 
-        /** @brief The cell drawn at a screen position, or nullopt when that is off the grid. */
-        [[nodiscard]] std::optional<core::Coordinate> cellAt(int screenX, int screenY) const;
-
     private:
+        /** @brief Writes down where the grid landed when it was last painted. */
+        void publishGeometry() const;
+
+        GridGeometry& geometry_;
+        ScreenRegion region_;
         ftxui::Box gridBox_;
         int boardWidth_ = 0;
         int boardHeight_ = 0;

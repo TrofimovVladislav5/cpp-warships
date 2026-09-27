@@ -3,7 +3,8 @@
 #include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include <application/head/views/GameView.h>
+#include <application/head/input/Keystroke.h>
+#include <application/head/views/Renderer.h>
 
 namespace cpp_warships::head {
     /** @brief What @p event is, said without naming FTXUI, so the game never has to ask. */
@@ -14,7 +15,7 @@ namespace cpp_warships::head {
 
     /** @brief A view that draws with FTXUI, handing back a finished frame like any other.
      *  Subclasses build elements and never think about frames; this turns one into the other. */
-    class FtxuiView : public GameView {
+    class FtxuiRenderer : public Renderer {
     public:
         [[nodiscard]] Frame render(int availableWidth, int availableHeight) final;
 

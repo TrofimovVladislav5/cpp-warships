@@ -1,5 +1,7 @@
 #include <application/head/views/plain/PlainPlacementView.h>
 
+#include <application/head/views/Notices.h>
+
 #include <string>
 #include <utility>
 #include <vector>
@@ -44,31 +46,24 @@ namespace cpp_warships::head {
     } // namespace
 
     /** @brief The theme is offered and not taken: printed text is not dressed in colour. */
-    PlainPlacementView::PlainPlacementView(
-            const Theme&,
-            MatchQuery match,
-            const PlacementState& state
-    )
-        : match_(std::move(match))
-        , state_(state) {}
+    PlainPlacementView::PlainPlacementView(const PresentationContext& context) noexcept
+        : context_(context) {}
 
-    InputEvent PlainPlacementView::interpret(const Keystroke& stroke) const {
-        return {.stroke = stroke};
-    }
 
     Frame PlainPlacementView::render(int, int) {
-        const flow::Match& match = match_();
+        const flow::Match& match = context_.game().match();
+        const PlacementState& state = context_.state().placement;
         const flow::PlacementPlan plan = match.playerPlacementPlan();
-        const int lengthInHand = shipLengthInHand(plan, state_);
+        const int lengthInHand = shipLengthInHand(plan, state);
 
         const bool isLegal =
                 lengthInHand > 0 &&
-                match.playerBoard().canPlace(state_.cursor, state_.direction, lengthInHand) ==
+                match.playerBoard().canPlace(state.cursor, state.direction, lengthInHand) ==
                         core::PlacementError::None;
 
         const PlainBoardOverlay overlay{
-                .cursor = state_.cursor,
-                .marked = shipInHandCells(state_, lengthInHand),
+                .cursor = state.cursor,
+                .marked = shipInHandCells(state, lengthInHand),
                 .markGlyph = isLegal ? '+' : '!'
         };
 
@@ -86,10 +81,10 @@ namespace cpp_warships::head {
         lines.insert(lines.end(), roster.begin(), roster.end());
 
         const std::string lie =
-                state_.direction == core::Direction::Horizontal ? "across" : "down";
+                state.direction == core::Direction::Horizontal ? "across" : "down";
         lines.emplace_back("");
         lines.push_back(
-                "  aiming at " + coordinateLabel(state_.cursor) + ", lying " + lie +
+                "  aiming at " + coordinateLabel(state.cursor) + ", lying " + lie +
                 (isLegal ? "" : "   (will not fit here)")
         );
         lines.emplace_back("");
@@ -108,6 +103,10 @@ namespace cpp_warships::head {
         lines.push_back(plainKeyLine("f2", "save the match"));
         lines.push_back(plainKeyLine("esc", "back to the menu"));
         lines.emplace_back("");
+
+        for (const std::string& notice : noticesToShow(context_.application())) {
+            lines.push_back("  ! " + notice);
+        }
 
         return frameOfLines(lines);
     }

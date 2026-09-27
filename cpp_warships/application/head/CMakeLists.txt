@@ -7,38 +7,28 @@ add_library(warships_head
         include/application/head/Theme.h src/application/head/Theme.cpp
         include/application/head/Queries.h
         include/application/head/ThemeSelection.h src/application/head/ThemeSelection.cpp
-        # What a screen may ask for
-        include/application/head/intents/Intent.h
-        include/application/head/intents/IntentContext.h
-        include/application/head/intents/ShowScreenIntent.h src/application/head/intents/ShowScreenIntent.cpp
-        include/application/head/intents/StartMatchIntent.h src/application/head/intents/StartMatchIntent.cpp
-        include/application/head/intents/ChangeThemeIntent.h src/application/head/intents/ChangeThemeIntent.cpp
-        include/application/head/intents/PlaceShipIntent.h src/application/head/intents/PlaceShipIntent.cpp
-        include/application/head/intents/RemoveShipIntent.h src/application/head/intents/RemoveShipIntent.cpp
-        include/application/head/intents/ShuffleFleetIntent.h src/application/head/intents/ShuffleFleetIntent.cpp
-        include/application/head/intents/BeginBattleIntent.h src/application/head/intents/BeginBattleIntent.cpp
-        include/application/head/intents/FireAtIntent.h src/application/head/intents/FireAtIntent.cpp
-        include/application/head/intents/UseSkillIntent.h src/application/head/intents/UseSkillIntent.cpp
-        include/application/head/intents/ResumeMatchIntent.h src/application/head/intents/ResumeMatchIntent.cpp
-        include/application/head/intents/QuitIntent.h src/application/head/intents/QuitIntent.cpp
-        include/application/head/intents/SaveMatchIntent.h src/application/head/intents/SaveMatchIntent.cpp
-        include/application/head/intents/LoadMatchIntent.h src/application/head/intents/LoadMatchIntent.cpp
-        # Reading input, and turning it into actions
+        include/application/head/PresentationContext.h src/application/head/PresentationContext.cpp
+        # Reading input: raw strokes in, asks in the game's own words out
         include/application/head/input/Keystroke.h src/application/head/input/Keystroke.cpp
-        include/application/head/input/InputEvent.h
-        include/application/head/input/EventHandler.h
-        include/application/head/input/EventRouter.h src/application/head/input/EventRouter.cpp
-        include/application/head/input/MoveCursorEventHandler.h
-        src/application/head/input/MoveCursorEventHandler.cpp
-        include/application/head/input/MenuEventHandlers.h src/application/head/input/MenuEventHandlers.cpp
-        include/application/head/input/SaveMatchEventHandler.h
-        src/application/head/input/SaveMatchEventHandler.cpp
-        include/application/head/input/PlacementEventHandlers.h
-        src/application/head/input/PlacementEventHandlers.cpp
-        include/application/head/input/BattleEventHandlers.h src/application/head/input/BattleEventHandlers.cpp
+        include/application/head/input/GridGeometry.h src/application/head/input/GridGeometry.cpp
+        include/application/head/input/ScreenInput.h
+        include/application/head/input/MenuInput.h src/application/head/input/MenuInput.cpp
+        include/application/head/input/PlacementInput.h src/application/head/input/PlacementInput.cpp
+        include/application/head/input/BattleInput.h src/application/head/input/BattleInput.cpp
+        include/application/head/input/EventBus.h src/application/head/input/EventBus.cpp
+        include/application/head/input/EventPipeline.h src/application/head/input/EventPipeline.cpp
+        # ... and what the game does about them
+        include/application/head/input/handlers/SessionHandlers.h
+        src/application/head/input/handlers/SessionHandlers.cpp
+        include/application/head/input/handlers/PlacementHandlers.h
+        src/application/head/input/handlers/PlacementHandlers.cpp
+        include/application/head/input/handlers/BattleHandlers.h
+        src/application/head/input/handlers/BattleHandlers.cpp
         # How things are drawn
         include/application/head/views/Frame.h src/application/head/views/Frame.cpp
-        include/application/head/views/GameView.h
+        include/application/head/views/Renderer.h
+        include/application/head/views/RendererSet.h src/application/head/views/RendererSet.cpp
+        include/application/head/views/Notices.h src/application/head/views/Notices.cpp
         include/application/head/views/CellAppearance.h src/application/head/views/CellAppearance.cpp
         include/application/head/views/CoordinateLabel.h src/application/head/views/CoordinateLabel.cpp
         include/application/head/views/BoardView.h src/application/head/views/BoardView.cpp
@@ -47,12 +37,13 @@ add_library(warships_head
         include/application/head/views/MenuView.h src/application/head/views/MenuView.cpp
         include/application/head/views/PlacementView.h src/application/head/views/PlacementView.cpp
         include/application/head/views/BattleView.h src/application/head/views/BattleView.cpp
-        include/application/head/views/ViewFactory.h
         # ... the one place that knows both how FTXUI draws and how we do
         include/application/head/views/ftxui_bridge/FtxuiPalette.h
         src/application/head/views/ftxui_bridge/FtxuiPalette.cpp
         include/application/head/views/ftxui_bridge/FtxuiView.h
         src/application/head/views/ftxui_bridge/FtxuiView.cpp
+        include/application/head/views/ftxui_bridge/FtxuiNotices.h
+        src/application/head/views/ftxui_bridge/FtxuiNotices.cpp
         # ... and how they are drawn when there is no interactive terminal to draw into
         include/application/head/views/plain/PlainFrame.h src/application/head/views/plain/PlainFrame.cpp
         include/application/head/views/plain/PlainBoardGrid.h
@@ -62,16 +53,12 @@ add_library(warships_head
         src/application/head/views/plain/PlainPlacementView.cpp
         include/application/head/views/plain/PlainBattleView.h
         src/application/head/views/plain/PlainBattleView.cpp
-        # A screen: its state, its view and what its keys do, wired together
-        include/application/head/screens/Screen.h
+        # Which screen is showing, and what the interface remembers of its own
         include/application/head/screens/ScreenKind.h
-        include/application/head/screens/ScreenNavigator.h src/application/head/screens/ScreenNavigator.cpp
-        include/application/head/screens/MenuState.h
-        include/application/head/screens/MenuScreen.h src/application/head/screens/MenuScreen.cpp
-        include/application/head/screens/PlacementState.h src/application/head/screens/PlacementState.cpp
-        include/application/head/screens/PlacementScreen.h src/application/head/screens/PlacementScreen.cpp
-        include/application/head/screens/BattleState.h src/application/head/screens/BattleState.cpp
-        include/application/head/screens/BattleScreen.h src/application/head/screens/BattleScreen.cpp
+        include/application/head/state/MenuState.h
+        include/application/head/state/PlacementState.h src/application/head/state/PlacementState.cpp
+        include/application/head/state/BattleState.h src/application/head/state/BattleState.cpp
+        include/application/head/state/PresentationState.h
         # Where it all runs
         include/application/head/host/Shell.h
         include/application/head/host/TuiShell.h src/application/head/host/TuiShell.cpp

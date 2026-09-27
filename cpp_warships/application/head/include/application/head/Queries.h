@@ -5,6 +5,7 @@
 #include <application/core/Board.h>
 #include <application/flow/Match.h>
 #include <application/head/Theme.h>
+#include <application/head/screens/ScreenKind.h>
 
 namespace cpp_warships::head {
     /** @brief Read-only reach into the match in play, so a screen can draw it but never change it.
@@ -22,4 +23,7 @@ namespace cpp_warships::head {
 
     /** @brief The colours everything is dressed in, asked afresh so a change is picked up. */
     using ThemeQuery = std::function<const Theme&()>;
+
+    /** @brief Which screen the player is on, asked afresh because it changes under us. */
+    using ScreenKindQuery = std::function<ScreenKind()>;
 } // namespace cpp_warships::head

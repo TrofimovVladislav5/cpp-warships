@@ -9,39 +9,33 @@
 #include <application/flow/Match.h>
 #include <application/head/Queries.h>
 #include <application/head/Theme.h>
-#include <application/head/input/InputEvent.h>
-#include <application/head/screens/BattleState.h>
+#include <application/head/state/BattleState.h>
 #include <application/model/BattleJournal.h>
 #include <application/head/views/BoardView.h>
+#include <application/head/PresentationContext.h>
 #include <application/head/views/ftxui_bridge/FtxuiView.h>
 
 namespace cpp_warships::head {
     /** @brief Draws both fleets, the skills in the bank and the story so far.
      *  Reads the match and returns elements; it changes nothing. */
-    class BattleView final : public FtxuiView {
+    class BattleView final : public FtxuiRenderer {
     public:
-        BattleView(
-                const Theme& theme,
-                MatchQuery match,
-                const model::BattleJournal& journal,
-                const BattleState& state
-        );
+        BattleView(const PresentationContext& context, GridGeometry& geometry) noexcept;
 
-        [[nodiscard]] InputEvent interpret(const Keystroke& stroke) const override;
 
     protected:
         [[nodiscard]] ftxui::Element renderElement() override;
 
     private:
-        /** @brief Whether a screen position falls inside the log, which scrolls on its own. */
-        [[nodiscard]] bool isOverLog(int screenX, int screenY) const;
+        /** @brief Writes down where the log landed when it was last painted. */
+        void publishLogGeometry() const;
 
-        const Theme& theme_;
-        MatchQuery match_;
-        const model::BattleJournal& journal_;
-        const BattleState& state_;
+        /** @brief Whether a screen position falls inside the log, which scrolls on its own. */
+
+        const PresentationContext& context_;
         BoardView ownWatersView_;
         BoardView enemyWatersView_;
+        GridGeometry& geometry_;
         ftxui::Box logBox_;
     };
 } // namespace cpp_warships::head

@@ -9,6 +9,7 @@
 #include <ftxui/component/event.hpp>
 
 #include <application/head/views/KeyHint.h>
+#include <application/head/views/ftxui_bridge/FtxuiNotices.h>
 
 namespace cpp_warships::head {
     namespace {
@@ -24,25 +25,14 @@ namespace cpp_warships::head {
         }
     } // namespace
 
-    MenuView::MenuView(
-            const Theme& theme,
-            const MenuState& state,
-            MatchInProgressQuery hasMatch,
-            SavedMatchQuery hasSavedMatch
-    )
-        : theme_(theme)
-        , state_(state)
-        , hasMatch_(std::move(hasMatch))
-        , hasSavedMatch_(std::move(hasSavedMatch)) {}
+    MenuView::MenuView(const PresentationContext& context) noexcept
+        : context_(context) {}
 
-    InputEvent MenuView::interpret(const Keystroke& stroke) const {
-        return {.stroke = stroke};
-    }
 
     ftxui::Element MenuView::renderElement() {
-        const Theme& theme = theme_;
-        const MenuState& state = state_;
-        const bool hasMatchInProgress = hasMatch_();
+        const Theme& theme = context_.theme();
+        const MenuState& state = context_.state().menu;
+        const bool hasMatchInProgress = context_.game().hasMatch();
 
         std::vector<ftxui::Element> rows{
                 titleBlock(theme),
@@ -70,12 +60,13 @@ namespace cpp_warships::head {
             hints.push_back(keyHint(theme, "r", "resume the match in play"));
         }
 
-        if (hasSavedMatch_()) {
+        if (context_.game().saves().hasSavedMatch()) {
             hints.push_back(keyHint(theme, "f3", "load the saved match"));
         }
 
         hints.push_back(keyHint(theme, "q", "quit"));
         rows.push_back(keyLegend(std::move(hints)));
+        rows.push_back(noticeBlock(theme, context_.application()));
 
         return ftxui::vbox(std::move(rows)) |
                ftxui::size(ftxui::WIDTH, ftxui::GREATER_THAN, MINIMUM_PANEL_WIDTH) | ftxui::center |

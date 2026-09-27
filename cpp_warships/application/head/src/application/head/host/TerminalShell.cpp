@@ -7,8 +7,9 @@
 #include <ostream>
 #include <string>
 
-#include <application/head/screens/ScreenNavigator.h>
-#include <application/head/views/GameView.h>
+#include <application/head/PresentationContext.h>
+#include <application/head/input/EventPipeline.h>
+#include <application/head/views/RendererSet.h>
 
 namespace cpp_warships::head {
     namespace {
@@ -67,27 +68,27 @@ namespace cpp_warships::head {
         : input_(input)
         , output_(output) {}
 
-    void TerminalShell::run(ScreenNavigator& navigator) {
-        isRunning_ = true;
-
-        while (isRunning_) {
-            drawFrame(navigator.activeScreen().view());
+    void TerminalShell::run(
+            PresentationContext& context,
+            RendererSet& renderers,
+            EventPipeline& pipeline,
+            const SessionFinishedQuery& isFinished
+    ) {
+        while (!isFinished()) {
+            drawFrame(renderers, context.currentScreen());
 
             const std::optional<Keystroke> stroke = readKeystroke();
             if (!stroke.has_value()) {
                 return;
             }
 
-            navigator.activeScreen().handleEvent(*stroke);
+            pipeline.offer(*stroke);
+            pipeline.settle();
         }
     }
 
-    void TerminalShell::requestQuit() {
-        isRunning_ = false;
-    }
-
-    void TerminalShell::drawFrame(GameView& view) const {
-        output_ << frameToText(view.render(0, 0)) << PROMPT;
+    void TerminalShell::drawFrame(RendererSet& renderers, const ScreenKind screen) const {
+        output_ << frameToText(renderers.render(screen, 0, 0)) << PROMPT;
         output_.flush();
     }
 

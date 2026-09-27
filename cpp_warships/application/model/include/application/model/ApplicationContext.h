@@ -1,5 +1,8 @@
 #pragma once
 
+#include <deque>
+#include <string>
+
 #include <application/model/WarshipsGame.h>
 
 namespace cpp_warships::model {
@@ -18,8 +21,17 @@ namespace cpp_warships::model {
         [[nodiscard]] bool isFinished() const noexcept;
         void finish() noexcept;
 
+        /** @brief Says that @p message is worth telling the player. This is how a failure
+         *  reaches the interface: as something to read, not as something to catch. */
+        void note(std::string message);
+
+        /** @brief What is worth telling the player, oldest first. */
+        [[nodiscard]] const std::deque<std::string>& notices() const noexcept;
+        void clearNotices() noexcept;
+
     private:
         WarshipsGame& game_;
         bool isFinished_ = false;
+        std::deque<std::string> notices_;
     };
 } // namespace cpp_warships::model

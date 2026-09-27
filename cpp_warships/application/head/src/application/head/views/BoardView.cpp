@@ -68,12 +68,18 @@ namespace cpp_warships::head {
         }
     } // namespace
 
+    BoardView::BoardView(GridGeometry& geometry, const ScreenRegion region) noexcept
+        : geometry_(geometry)
+        , region_(region) {}
+
     ftxui::Element BoardView::render(
             const core::Board& board,
             core::Visibility visibility,
             const Theme& theme,
             const BoardOverlay& overlay
     ) {
+        publishGeometry();
+
         boardWidth_ = board.width();
         boardHeight_ = board.height();
 
@@ -127,20 +133,21 @@ namespace cpp_warships::head {
         );
     }
 
-    std::optional<core::Coordinate> BoardView::cellAt(int screenX, int screenY) const {
-        if (!gridBox_.Contain(screenX, screenY)) {
-            return std::nullopt;
+    void BoardView::publishGeometry() const {
+        if (boardWidth_ <= 0 || boardHeight_ <= 0 || gridBox_.x_max < gridBox_.x_min) {
+            return;
         }
 
-        const core::Coordinate coordinate{
-                (screenX - gridBox_.x_min) / BOARD_COLUMN_PITCH,
-                (screenY - gridBox_.y_min) / BOARD_ROW_PITCH
-        };
-
-        if (coordinate.x >= boardWidth_ || coordinate.y >= boardHeight_) {
-            return std::nullopt;
-        }
-
-        return coordinate;
+        geometry_.rememberBoard(
+                region_,
+                gridBox_.x_min,
+                gridBox_.y_min,
+                gridBox_.x_max - gridBox_.x_min + 1,
+                gridBox_.y_max - gridBox_.y_min + 1,
+                boardWidth_,
+                boardHeight_,
+                BOARD_COLUMN_PITCH,
+                BOARD_ROW_PITCH
+        );
     }
 } // namespace cpp_warships::head

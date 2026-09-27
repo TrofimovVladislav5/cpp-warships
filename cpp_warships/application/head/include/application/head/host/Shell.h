@@ -1,18 +1,29 @@
 #pragma once
 
-namespace cpp_warships::head {
-    class ScreenNavigator;
+#include <functional>
 
-    /** @brief Whatever is hosting the interface, seen only as the thing that can be closed.
-     *  Keeps the terminal loop out of everything that merely wants to end it. */
+namespace cpp_warships::head {
+    class EventPipeline;
+    class PresentationContext;
+    class RendererSet;
+
+    /** @brief Whether the session has been asked to end. */
+    using SessionFinishedQuery = std::function<bool()>;
+
+    /** @brief Whatever is hosting the interface: something that draws what @p context
+     *  currently looks like and feeds back what the player does. It is never told to
+     *  stop, it watches for it, which is what keeps quitting behind what was queued. */
     class Shell {
     public:
         virtual ~Shell() = default;
 
-        /** @brief Asks the host to stop showing the interface and return. */
-        virtual void requestQuit() = 0;
-
-        /** @brief Shows whichever screen @p navigator has open, until the player quits. */
-        virtual void run(ScreenNavigator& navigator) = 0;
+        /** @brief Draws @p context through @p renderers and feeds what the player does
+         *  into @p pipeline, until @p isFinished says the session is over. */
+        virtual void run(
+                PresentationContext& context,
+                RendererSet& renderers,
+                EventPipeline& pipeline,
+                const SessionFinishedQuery& isFinished
+        ) = 0;
     };
 } // namespace cpp_warships::head
