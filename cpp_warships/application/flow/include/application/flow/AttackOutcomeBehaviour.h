@@ -1,9 +1,12 @@
 #pragma once
 
-#include <application/core/Board.h>
 #include <application/core/Coordinate.h>
 #include <application/core/Outcomes.h>
 #include <application/flow/MatchEvent.h>
+
+namespace cpp_warships::core {
+    class Board;
+}
 
 namespace cpp_warships::flow {
     class AiOpponent;

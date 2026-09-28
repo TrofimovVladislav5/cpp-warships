@@ -4,7 +4,7 @@
 
 #include <map>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::model {
     template <typename T>
     using SchemeMap = std::map<std::string, ParserCommandInfo<T>>;
 
@@ -13,7 +13,7 @@ namespace cpp_warships::input_parser {
 
     template <typename T = void>
     class Parser {
-       protected:
+    protected:
         SchemeMap<T> scheme;
         ParseCallback<void> displayError;
 
@@ -89,8 +89,10 @@ namespace cpp_warships::input_parser {
             return true;
         }
 
-        std::pair<bool, ParsedOptions>
-        validateParams(const std::vector<std::string>& inputChunks, ParserCommandInfo<T>& command) {
+        std::pair<bool, ParsedOptions> validateParams(
+            const std::vector<std::string>& inputChunks,
+            ParserCommandInfo<T>& command
+        ) {
             bool isValid = true;
             ParsedOptions validParamValues;
 
@@ -115,19 +117,20 @@ namespace cpp_warships::input_parser {
             return std::make_pair(isValid, validParamValues);
         }
 
-       public:
+    public:
         virtual ~Parser() = default;
 
-        explicit Parser(SchemeMap<T> scheme) : scheme(std::move(scheme)), displayError(nullptr) {
-        }
+        explicit Parser(SchemeMap<T> scheme)
+            : scheme(std::move(scheme))
+            , displayError(nullptr) {}
 
         explicit Parser(
             SchemeMap<T> scheme,
             ParseCallback<void> displayError,
             const SchemeHelpCallback<void>& _ = nullptr
         )
-            : scheme(std::move(scheme)), displayError(std::move(displayError)) {
-        }
+            : scheme(std::move(scheme))
+            , displayError(std::move(displayError)) {}
 
         std::pair<ParseCallback<T>, ParsedOptions> parse(const std::string& input) {
             std::vector<std::string> splitInput = StringHelper::split(input, ' ');
@@ -149,9 +152,11 @@ namespace cpp_warships::input_parser {
         }
 
         virtual std::pair<ParseCallback<T>, ParsedOptions> getCommandError() = 0;
-        virtual std::pair<ParseCallback<T>, ParsedOptions>
-        getOptionsError(ParserCommandInfo<T> command, ParsedOptions arguments) = 0;
+        virtual std::pair<ParseCallback<T>, ParsedOptions> getOptionsError(
+            ParserCommandInfo<T> command,
+            ParsedOptions arguments
+        ) = 0;
         virtual BindedParseCallback<T> bindedParse(const std::string& input) = 0;
         virtual void executedParse(const std::string& input) = 0;
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::model

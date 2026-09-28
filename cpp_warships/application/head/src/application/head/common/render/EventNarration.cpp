@@ -1,10 +1,12 @@
+#include <application/flow/MatchEvent.h>
+#include <application/head/common/Theme.h>
 #include <application/head/common/render/CoordinateLabel.h>
 #include <application/head/common/render/EventNarration.h>
 
 #include <functional>
 #include <unordered_map>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::render {
     namespace {
         using Narrator = std::function<EventLine(const flow::MatchEvent&, const Theme&)>;
 
@@ -93,4 +95,4 @@ namespace cpp_warships::head {
     EventLine narrate(const flow::MatchEvent& event, const Theme& theme) {
         return NARRATOR_BY_KIND.at(event.kind)(event, theme);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::render

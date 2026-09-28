@@ -8,10 +8,7 @@ namespace cpp_warships::flow {
         : pending_(std::move(pending)) {}
 
     SkillKind SkillQueue::grantRandom(RandomEngine& randomEngine) {
-        std::uniform_int_distribution<std::size_t> distribution{
-            0,
-            ALL_SKILL_KINDS.size() - 1
-        };
+        std::uniform_int_distribution<std::size_t> distribution{0, ALL_SKILL_KINDS.size() - 1};
         const SkillKind granted = ALL_SKILL_KINDS[distribution(randomEngine)];
 
         grant(granted);

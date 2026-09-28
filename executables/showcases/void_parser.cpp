@@ -5,12 +5,15 @@
 #include <utilities/ViewHelper.h>
 
 using namespace cpp_warships::input_parser;
+using namespace cpp_warships::input_parser::builder;
+using namespace cpp_warships::input_parser::command;
+using namespace cpp_warships::input_parser::model;
 
 class ParserCommandsHandler {
-   private:
+private:
     bool isExited = false;
 
-   public:
+public:
     void handleExit(ParsedOptions) {
         ViewHelper::consoleOut("Leaving");
         isExited = true;

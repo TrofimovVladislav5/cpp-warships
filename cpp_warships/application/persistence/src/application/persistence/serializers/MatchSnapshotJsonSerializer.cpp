@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::persistence {
+namespace cpp_warships::persistence::serializers {
     namespace {
         const std::unordered_map<flow::SkillKind, std::string> NAME_BY_SKILL{
             {flow::SkillKind::Scanner, "scanner"},
@@ -96,9 +96,8 @@ namespace cpp_warships::persistence {
             };
         }
 
-        /** @brief The computer's knowledge read back, empty for a save written
-         * before it was kept, which simply means that enemy starts the load
-         * looking again. */
+        /** @brief The computer's knowledge read back, empty for a save written before it was
+         * kept, which simply means that enemy starts the load looking again. */
         [[nodiscard]] flow::AiMemory memoryFromJson(const nlohmann::json& item) {
             if (!item.contains("opponentMemory")) {
                 return {};
@@ -136,9 +135,8 @@ namespace cpp_warships::persistence {
             return written;
         }
 
-        /** @brief The story read back, empty for a save written before it was
-         * kept, which simply means that game carries on with nothing behind it.
-         */
+        /** @brief The story read back, empty for a save written before it was kept, which simply
+         * means that game carries on with nothing behind it. */
         [[nodiscard]] flow::MatchEventLog journalFromJson(const nlohmann::json& item) {
             if (!item.contains("journal")) {
                 return {};
@@ -248,4 +246,4 @@ namespace cpp_warships::persistence {
             journalFromJson(item)
         };
     }
-}  // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence::serializers

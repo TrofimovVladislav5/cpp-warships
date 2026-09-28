@@ -18,17 +18,16 @@ namespace cpp_warships::serialization {
      * serializable objects. */
     template <typename TSerialized>
     class SerializerAggregator {
-       protected:
+    protected:
         /** @brief A map of available serializers indexed by their type name. */
         std::unordered_map<std::string, ISerializerBase*> availableSerializers;
 
-       public:
-        SerializerAggregator() : availableSerializers({}) {
-        }
+    public:
+        SerializerAggregator()
+            : availableSerializers({}) {}
 
-        /** @brief Serializes an item of type TPassed using the related
-         * serializer.
-         *  @return The serialized data of type TSerialized. */
+        /** @brief Serializes an item of type TPassed using the related serializer.          *
+         * @return The serialized data of type TSerialized. */
         template <SerializableDerivative TPassed = std::any>
         TSerialized serialize(TPassed& item) {
             ISerializableBase* castedItem = castToSerializableBase<TPassed>(item);
@@ -57,9 +56,8 @@ namespace cpp_warships::serialization {
             availableSerializers.clear();
         }
 
-        /** @brief Deserializes an item of type TSerialized using the related
-         * serializer.
-         *  @return The deserialized item of type TReturn. */
+        /** @brief Deserializes an item of type TSerialized using the related serializer.          *
+         * @return The deserialized item of type TReturn. */
         template <typename TReturn = std::any>
         TReturn deserialize(TSerialized item) {
             for (auto& serializer : availableSerializers | std::views::values) {
@@ -97,7 +95,7 @@ namespace cpp_warships::serialization {
             }
         }
 
-       private:
+    private:
         template <typename TPassed = std::any>
         static ISerializableBase* castToSerializableBase(TPassed& item) {
             if (auto* castedItem = dynamic_cast<ISerializableBase*>(&item)) {

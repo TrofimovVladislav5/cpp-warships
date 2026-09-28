@@ -1,10 +1,7 @@
 #pragma once
 
-#include <application/core/Board.h>
 #include <application/core/Coordinate.h>
 #include <application/core/Outcomes.h>
-#include <application/head/common/Theme.h>
-#include <application/head/common/input/GridGeometry.h>
 #include <application/head/common/render/CoordinateLabel.h>
 
 #include <ftxui/dom/elements.hpp>
@@ -14,41 +11,52 @@
 #include <string>
 #include <unordered_set>
 
-namespace cpp_warships::head {
-    /** @brief What is drawn on top of a board: where the cursor rests and which
-     * cells are marked.
-     */
+namespace cpp_warships::core {
+    class Board;
+}
+
+namespace cpp_warships::head::common {
+    struct Theme;
+}
+
+namespace cpp_warships::head::common::input {
+    class GridGeometry;
+}
+
+namespace cpp_warships::head::tui {
+    /** @brief What is drawn on top of a board: where the cursor rests and which cells are
+     * marked. */
     struct BoardOverlay {
         std::optional<core::Coordinate> cursor;
         std::unordered_set<core::Coordinate> marked;
-        CellColors markColors;
+        common::CellColors markColors;
     };
 
-    /** @brief Draws a board as a labelled grid and remembers where that grid
-     * landed. The remembered geometry is what turns a mouse position back into
-     * a cell. */
+    /** @brief Draws a board as a labelled grid and remembers where that grid landed. */
     class BoardView {
-       public:
+    public:
         /** @brief Draws into @p geometry's record of @p region, which must
          * outlive it. */
-        BoardView(GridGeometry& geometry, ScreenRegion region) noexcept;
+        BoardView(
+            common::input::GridGeometry& geometry,
+            common::input::ScreenRegion region
+        ) noexcept;
 
         [[nodiscard]] ftxui::Element render(
             const core::Board& board,
             core::Visibility visibility,
-            const Theme& theme,
+            const common::Theme& theme,
             const BoardOverlay& overlay
         );
 
-       private:
-        /** @brief Writes down where the grid landed when it was last painted.
-         */
+    private:
+        /** @brief Writes down where the grid landed when it was last painted. */
         void publishGeometry() const;
 
-        GridGeometry& geometry_;
-        ScreenRegion region_;
+        common::input::GridGeometry& geometry_;
+        common::input::ScreenRegion region_;
         ftxui::Box gridBox_;
         int boardWidth_ = 0;
         int boardHeight_ = 0;
     };
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::tui

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace cpp_warships::model {
+namespace cpp_warships::model::events {
     void EventQueue::push(GameEvent event) {
         events_.push_back(std::move(event));
     }
@@ -20,4 +20,4 @@ namespace cpp_warships::model {
     bool EventQueue::isEmpty() const noexcept {
         return events_.empty();
     }
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::events

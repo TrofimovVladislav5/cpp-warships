@@ -1,6 +1,6 @@
 #include <application/head/common/input/Keystroke.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::input {
     bool isCharacter(const Keystroke& stroke, const std::string& character) {
         return stroke.key == Key::Character && stroke.character == character;
     }
@@ -13,4 +13,4 @@ namespace cpp_warships::head {
         return isPointer(stroke) && (stroke.button == PointerButton::WheelUp ||
                                      stroke.button == PointerButton::WheelDown);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::input

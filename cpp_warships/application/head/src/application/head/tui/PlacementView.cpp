@@ -1,29 +1,31 @@
 #include <application/core/Ship.h>
-#include <application/head/ftxui/CellAppearance.h>
-#include <application/head/ftxui/FtxuiNotices.h>
-#include <application/head/ftxui/FtxuiPalette.h>
-#include <application/head/ftxui/KeyHint.h>
-#include <application/head/ftxui/PlacementView.h>
+#include <application/head/common/PresentationContext.h>
+#include <application/head/tui/CellAppearance.h>
+#include <application/head/tui/FtxuiNotices.h>
+#include <application/head/tui/FtxuiPalette.h>
+#include <application/head/tui/KeyHint.h>
+#include <application/head/tui/PlacementView.h>
 
 #include <cstddef>
 #include <string>
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::tui {
     namespace {
         /** @brief How a ship is drawn on the roster: smaller than a board cell,
-         *  with a gap across and a clear line between one ship and the next. */
-        /** @brief How wide the fleet panel stands, whatever the terminal does.
-         */
+         * with a gap across and a clear line between one ship and the next. */
+        /** @brief How wide the fleet panel stands, whatever the terminal does. */
         constexpr int PLACEMENT_PANEL_WIDTH = 28;
 
         constexpr int ROSTER_TILE_WIDTH = 2;
         constexpr int ROSTER_TILE_GAP = 1;
         constexpr int ROSTER_ROW_GAP = 1;
 
-        std::unordered_set<core::Coordinate>
-        shipInHandCells(const PlacementState& state, int lengthInHand) {
+        std::unordered_set<core::Coordinate> shipInHandCells(
+            const common::state::PlacementState& state,
+            int lengthInHand
+        ) {
             if (lengthInHand <= 0) {
                 return {};
             }
@@ -33,11 +35,11 @@ namespace cpp_warships::head {
             return {covered.begin(), covered.end()};
         }
 
-        CellColors shipInHandColors(
+        common::CellColors shipInHandColors(
             const core::Board& board,
-            const PlacementState& state,
+            const common::state::PlacementState& state,
             int lengthInHand,
-            const Theme& theme
+            const common::Theme& theme
         ) {
             const core::PlacementError error =
                 board.canPlace(state.cursor, state.direction, lengthInHand);
@@ -45,10 +47,8 @@ namespace cpp_warships::head {
             return {isLegal ? theme.success : theme.danger, theme.background};
         }
 
-        /** @brief A ship of @p length as a row of separate cells, in miniature.
-         *  The roster is a legend beside the board, so it is drawn tighter than
-         * the board. */
-        ftxui::Element hullOfLength(int length, Color fill) {
+        /** @brief A ship of @p length as a row of separate cells, in miniature. */
+        ftxui::Element hullOfLength(int length, common::Color fill) {
             const auto tileWidth = static_cast<std::size_t>(ROSTER_TILE_WIDTH);
             const auto gapWidth = static_cast<std::size_t>(ROSTER_TILE_GAP);
 
@@ -64,7 +64,7 @@ namespace cpp_warships::head {
             return ftxui::hbox(std::move(tiles));
         }
 
-        ftxui::Element header(const Theme& theme, const flow::Match& match) {
+        ftxui::Element header(const common::Theme& theme, const flow::Match& match) {
             const std::string boardSize = std::to_string(match.settings().boardSize());
 
             return ftxui::hbox(
@@ -74,8 +74,11 @@ namespace cpp_warships::head {
             );
         }
 
-        ftxui::Element
-        fleetRoster(const Theme& theme, const flow::PlacementPlan& plan, int lengthInHand) {
+        ftxui::Element fleetRoster(
+            const common::Theme& theme,
+            const flow::PlacementPlan& plan,
+            int lengthInHand
+        ) {
             std::vector<ftxui::Element> rows{
                 ftxui::text("FLEET") | ftxui::bold | color(theme.accent),
                 ftxui::separator() | color(theme.border)
@@ -84,7 +87,7 @@ namespace cpp_warships::head {
             bool isFirstEntry = true;
             for (const auto& [length, remaining] : plan.remaining()) {
                 const bool isInHand = length == lengthInHand;
-                const Color hullFill = remaining > 0 ? theme.ship.fill : theme.surface;
+                const common::Color hullFill = remaining > 0 ? theme.ship.fill : theme.surface;
 
                 for (int gap = 0; gap < ROSTER_ROW_GAP && !isFirstEntry; ++gap) {
                     rows.push_back(ftxui::text(""));
@@ -104,8 +107,11 @@ namespace cpp_warships::head {
             return ftxui::vbox(std::move(rows));
         }
 
-        ftxui::Element
-        standing(const Theme& theme, const flow::PlacementPlan& plan, const PlacementState& state) {
+        ftxui::Element standing(
+            const common::Theme& theme,
+            const flow::PlacementPlan& plan,
+            const common::state::PlacementState& state
+        ) {
             if (plan.isComplete()) {
                 return ftxui::text("fleet ready") | ftxui::bold | color(theme.success);
             }
@@ -114,7 +120,7 @@ namespace cpp_warships::head {
             return ftxui::text(isAcross ? "lying across" : "lying down") | color(theme.textMuted);
         }
 
-        ftxui::Element legend(const Theme& theme, const flow::PlacementPlan& plan) {
+        ftxui::Element legend(const common::Theme& theme, const flow::PlacementPlan& plan) {
             std::vector<ftxui::Element> hints{
                 keyHint(theme, "arrows", "aim"),
                 keyHint(theme, "enter", "lay the ship"),
@@ -134,20 +140,20 @@ namespace cpp_warships::head {
     }  // namespace
 
     PlacementView::PlacementView(
-        const PresentationContext& context,
-        GridGeometry& geometry
+        const common::PresentationContext& context,
+        common::input::GridGeometry& geometry
     ) noexcept
-        : context_(context), boardView_(geometry, ScreenRegion::OwnWaters) {
-    }
+        : context_(context)
+        , boardView_(geometry, common::input::ScreenRegion::OwnWaters) {}
 
     ftxui::Element PlacementView::renderElement() {
-        const Theme& theme = context_.theme();
+        const common::Theme& theme = context_.theme();
         const flow::Match& match = context_.game().match();
-        const PlacementState& state = context_.state().placement;
+        const common::state::PlacementState& state = context_.state().placement;
 
         const flow::PlacementPlan plan = match.playerPlacementPlan();
         const core::Board& board = match.playerBoard();
-        const int lengthInHand = shipLengthInHand(plan, state);
+        const int lengthInHand = common::state::shipLengthInHand(plan, state);
 
         const BoardOverlay overlay{
             .cursor = state.cursor,
@@ -176,4 +182,4 @@ namespace cpp_warships::head {
                ) |
                ftxui::border | color(theme.border) | bgcolor(theme.background) | ftxui::flex;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::tui

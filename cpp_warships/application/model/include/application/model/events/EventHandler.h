@@ -4,10 +4,10 @@
 
 #include <memory>
 
-namespace cpp_warships::model {
+namespace cpp_warships::model::events {
     /** @brief One thing the game can do in answer to an event. */
     class EventHandler {
-       public:
+    public:
         virtual ~EventHandler() = default;
 
         /** @brief Whether @p event is something this handler acts on. */
@@ -19,4 +19,4 @@ namespace cpp_warships::model {
     };
 
     using EventHandlerPointer = std::shared_ptr<EventHandler>;
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::events

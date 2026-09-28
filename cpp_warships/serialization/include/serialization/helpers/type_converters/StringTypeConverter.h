@@ -6,10 +6,8 @@ namespace cpp_warships::serialization::helpers::type_converters {
     /** @brief StringTypeConverter is a utility class that provides methods to
      * convert from string to various types and vice versa. */
     class StringTypeConverter {
-       public:
-        /** @brief Converts a string to an integer value.
-         *  @return Converted integer value or throws an
-         * `std::runtime_exception` if conversion fails. */
+    public:
+        /** @brief Converts a string to an integer value. */
         static int stringToInt(const std::string& data) {
             try {
                 return std::stoi(data);
@@ -19,9 +17,7 @@ namespace cpp_warships::serialization::helpers::type_converters {
             }
         }
 
-        /** @brief Converts a string to a float value.
-         *  @return Converted float value or throws an `std::runtime_exception`
-         * if conversion fails. */
+        /** @brief Converts a string to a float value. */
         static float stringToFloat(const std::string& data) {
             try {
                 return std::stof(data);

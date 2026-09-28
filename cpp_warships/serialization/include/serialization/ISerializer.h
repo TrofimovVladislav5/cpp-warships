@@ -21,22 +21,19 @@ namespace cpp_warships::serialization {
     template <typename TSerialized, typename TItem>
     class ISerializerCore;
 
-    /** @brief Pure virtual base class that doesn't use any template parameters.
-     */
+    /** @brief Pure virtual base class that doesn't use any template parameters. */
     class ISerializerBase {
-       public:
+    public:
         virtual ~ISerializerBase() = default;
         [[nodiscard]] virtual std::string getType() = 0;
     };
 
-    /** @brief Base class for typed serializers implementing the getType method.
-     */
+    /** @brief Base class for typed serializers implementing the getType method. */
     template <char* TName>
     class ISerializerTyped : public ISerializerBase {
-       public:
-        /** @brief getType method that returns the type name or throws an error
-         * when called on base class.
-         *  @return A string representation of the type name. */
+    public:
+        /** @brief getType method that returns the type name or throws an error when called on
+         * base class. */
         [[nodiscard]] std::string getType() override {
             if constexpr (TName != nullptr) {
                 return TName;
@@ -52,12 +49,12 @@ namespace cpp_warships::serialization {
     /** @brief Trait to check if a type is a derivative of ISerializer. */
     template <typename T>
     struct is_serializer_derivative {
-       private:
+    private:
         template <typename U, typename V, char* Z, typename... TArgs>
         static std::true_type test(ISerializer<U, V, Z, TArgs...>*);
         static std::false_type test(...);
 
-       public:
+    public:
         static constexpr bool value = decltype(test(std::declval<T*>()))::value;
     };
 
@@ -69,7 +66,7 @@ namespace cpp_warships::serialization {
      * and deserialization. */
     template <typename TSerialized, typename TItem>
     class ISerializerCore {
-       public:
+    public:
         virtual ~ISerializerCore() = default;
 
         /** @brief Serializes an item into a serialized format. @return The
@@ -80,10 +77,8 @@ namespace cpp_warships::serialization {
          * instance with filled-in fields. */
         virtual TItem deserialize(TSerialized data) = 0;
 
-        /** @brief Checks if the serializer can handle the given serialized
-         * item.
-         *  @return True if the serializer can handle the item, false otherwise.
-         */
+        /** @brief Checks if the serializer can handle the given serialized item.          * @return
+         * True if the serializer can handle the item, false otherwise. */
         virtual bool isRelated(TSerialized item) = 0;
     };
 
@@ -91,21 +86,18 @@ namespace cpp_warships::serialization {
      * serialization logic. */
     template <typename TSerialized, typename TItem, char* TName, typename... TChildren>
     class ISerializer : public ISerializerTyped<TName>, public ISerializerCore<TSerialized, TItem> {
-       public:
+    public:
         ~ISerializer() override = default;
         ISerializer() = default;
 
-        /** @brief Constructor that initializes the serializer with child
-         * serializers.
-         */
+        /** @brief Constructor that initializes the serializer with child serializers. */
         template <
             typename... Args,
             typename = std::enable_if_t<
                 (sizeof...(Args) == sizeof...(TChildren)) && (sizeof...(TChildren) > 0) &&
                 std::is_same_v<std::tuple<Args...>, std::tuple<TChildren...>>>>
         explicit ISerializer(Args&&... children)
-            : childrenSerializers(std::forward<Args>(children)...) {
-        }
+            : childrenSerializers(std::forward<Args>(children)...) {}
 
         /** @brief Method to set child serializers at runtime that will be used
          * by this serializer. */
@@ -115,7 +107,7 @@ namespace cpp_warships::serialization {
                 helpers::TupleBuilder<TChildren...>::build(std::forward<Args>(*children)...);
         }
 
-       protected:
+    protected:
         /** @brief Tuple of child serializers that this serializer can use. */
         std::tuple<TChildren...> childrenSerializers;
     };

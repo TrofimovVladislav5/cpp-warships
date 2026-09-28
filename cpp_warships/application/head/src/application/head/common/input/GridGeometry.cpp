@@ -1,13 +1,15 @@
 #include <application/head/common/input/GridGeometry.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::input {
     bool GridGeometry::Patch::contains(const int screenX, const int screenY) const {
         return isKnown && screenX >= left && screenX < left + width && screenY >= top &&
                screenY < top + height;
     }
 
-    std::optional<core::Coordinate>
-    GridGeometry::Patch::cellAt(const int screenX, const int screenY) const {
+    std::optional<core::Coordinate> GridGeometry::Patch::cellAt(
+        const int screenX,
+        const int screenY
+    ) const {
         if (!contains(screenX, screenY) || columnPitch <= 0 || rowPitch <= 0) {
             return std::nullopt;
         }
@@ -45,8 +47,12 @@ namespace cpp_warships::head {
         };
     }
 
-    void
-    GridGeometry::rememberLog(const int left, const int top, const int width, const int height) {
+    void GridGeometry::rememberLog(
+        const int left,
+        const int top,
+        const int width,
+        const int height
+    ) {
         log_ = Patch{
             .isKnown = true,
             .left = left,
@@ -80,8 +86,11 @@ namespace cpp_warships::head {
         return ScreenRegion::Elsewhere;
     }
 
-    std::optional<core::Coordinate>
-    GridGeometry::cellAt(const ScreenRegion region, const int screenX, const int screenY) const {
+    std::optional<core::Coordinate> GridGeometry::cellAt(
+        const ScreenRegion region,
+        const int screenX,
+        const int screenY
+    ) const {
         return patchFor(region).cellAt(screenX, screenY);
     }
 
@@ -104,4 +113,4 @@ namespace cpp_warships::head {
         const GridGeometry& self = *this;
         return const_cast<Patch&>(self.patchFor(region));
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::input

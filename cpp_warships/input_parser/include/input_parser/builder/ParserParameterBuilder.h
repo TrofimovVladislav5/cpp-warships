@@ -1,15 +1,15 @@
 #pragma once
 #include <regex>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::builder {
     class ParserParameterBuilder {
-       protected:
+    protected:
         std::vector<std::string> flags;
         std::regex validator;
         std::string description;
         bool necessary = false;
 
-       public:
+    public:
         virtual ~ParserParameterBuilder() = default;
 
         virtual ParserParameterBuilder& addFlag(std::string flag) = 0;
@@ -23,4 +23,4 @@ namespace cpp_warships::input_parser {
             necessary = false;
         };
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::builder

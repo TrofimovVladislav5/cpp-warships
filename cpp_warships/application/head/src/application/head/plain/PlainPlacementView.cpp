@@ -1,4 +1,5 @@
 #include <application/core/Ship.h>
+#include <application/head/common/PresentationContext.h>
 #include <application/head/common/render/CoordinateLabel.h>
 #include <application/head/common/render/Notices.h>
 #include <application/head/plain/PlainBoardGrid.h>
@@ -9,12 +10,14 @@
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::plain {
     namespace {
         /** @brief The cells the ship in hand would take up, so they can be
          * marked on the grid. */
-        [[nodiscard]] std::unordered_set<core::Coordinate>
-        shipInHandCells(const PlacementState& state, const int lengthInHand) {
+        [[nodiscard]] std::unordered_set<core::Coordinate> shipInHandCells(
+            const common::state::PlacementState& state,
+            const int lengthInHand
+        ) {
             if (lengthInHand <= 0) {
                 return {};
             }
@@ -24,8 +27,10 @@ namespace cpp_warships::head {
             return {covered.begin(), covered.end()};
         }
 
-        [[nodiscard]] std::vector<std::string>
-        rosterLines(const flow::PlacementPlan& plan, const int lengthInHand) {
+        [[nodiscard]] std::vector<std::string> rosterLines(
+            const flow::PlacementPlan& plan,
+            const int lengthInHand
+        ) {
             std::vector<std::string> lines{"FLEET WAITING"};
 
             for (const auto& [length, remaining] : plan.remaining()) {
@@ -42,15 +47,14 @@ namespace cpp_warships::head {
 
     /** @brief The theme is offered and not taken: printed text is not dressed
      * in colour. */
-    PlainPlacementView::PlainPlacementView(const PresentationContext& context) noexcept
-        : context_(context) {
-    }
+    PlainPlacementView::PlainPlacementView(const common::PresentationContext& context) noexcept
+        : context_(context) {}
 
-    Frame PlainPlacementView::render(int, int) {
+    common::render::Frame PlainPlacementView::render(int, int) {
         const flow::Match& match = context_.game().match();
-        const PlacementState& state = context_.state().placement;
+        const common::state::PlacementState& state = context_.state().placement;
         const flow::PlacementPlan plan = match.playerPlacementPlan();
-        const int lengthInHand = shipLengthInHand(plan, state);
+        const int lengthInHand = common::state::shipLengthInHand(plan, state);
 
         const bool isLegal =
             lengthInHand > 0 &&
@@ -79,7 +83,7 @@ namespace cpp_warships::head {
         const std::string lie = state.direction == core::Direction::Horizontal ? "across" : "down";
         lines.emplace_back("");
         lines.push_back(
-            "  aiming at " + coordinateLabel(state.cursor) + ", lying " + lie +
+            "  aiming at " + common::render::coordinateLabel(state.cursor) + ", lying " + lie +
             (isLegal ? "" : "   (will not fit here)")
         );
         lines.emplace_back("");
@@ -98,10 +102,10 @@ namespace cpp_warships::head {
         lines.push_back(plainKeyLine("esc", "back to the menu"));
         lines.emplace_back("");
 
-        for (const std::string& notice : noticesToShow(context_.application())) {
+        for (const std::string& notice : common::render::noticesToShow(context_.application())) {
             lines.push_back("  ! " + notice);
         }
 
-        return frameOfLines(lines);
+        return common::render::frameOfLines(lines);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::plain

@@ -1,3 +1,4 @@
+#include <application/core/Board.h>
 #include <application/flow/AiOpponent.h>
 #include <application/flow/AttackOutcomeBehaviour.h>
 
@@ -28,11 +29,8 @@ namespace cpp_warships::flow {
             return cellState == core::CellState::Damaged;
         };
 
-        const auto damagedCell = std::find_if(
-            currentTargetHits_.begin(),
-            currentTargetHits_.end(),
-            isStillHolding
-        );
+        const auto damagedCell =
+            std::find_if(currentTargetHits_.begin(), currentTargetHits_.end(), isStillHolding);
 
         if (damagedCell == currentTargetHits_.end()) {
             return std::nullopt;
@@ -116,16 +114,11 @@ namespace cpp_warships::flow {
         }
 
         if (currentTargetHits_.size() == 1) {
-            const std::vector<core::Coordinate> neighbours = untriedNeighbours(
-                currentTargetHits_.front(),
-                board
-            );
+            const std::vector<core::Coordinate> neighbours =
+                untriedNeighbours(currentTargetHits_.front(), board);
 
             if (!neighbours.empty()) {
-                std::uniform_int_distribution<std::size_t> distribution{
-                    0,
-                    neighbours.size() - 1
-                };
+                std::uniform_int_distribution<std::size_t> distribution{0, neighbours.size() - 1};
 
                 return neighbours[distribution(randomEngine_)];
             }
@@ -142,10 +135,7 @@ namespace cpp_warships::flow {
         for (const core::Coordinate& hit : currentTargetHits_) {
             for (int rowOffset = -1; rowOffset <= 1; ++rowOffset) {
                 for (int columnOffset = -1; columnOffset <= 1; ++columnOffset) {
-                    const core::Coordinate neighbour{
-                        hit.x + columnOffset,
-                        hit.y + rowOffset
-                    };
+                    const core::Coordinate neighbour{hit.x + columnOffset, hit.y + rowOffset};
 
                     if (board.contains(neighbour)) {
                         attemptedCoordinates_.insert(neighbour);
@@ -162,11 +152,8 @@ namespace cpp_warships::flow {
     }
 
     void AiOpponent::registerHit(core::Coordinate coordinate) {
-        const auto known = std::find(
-            currentTargetHits_.begin(),
-            currentTargetHits_.end(),
-            coordinate
-        );
+        const auto known =
+            std::find(currentTargetHits_.begin(), currentTargetHits_.end(), coordinate);
 
         if (known == currentTargetHits_.end()) {
             currentTargetHits_.push_back(coordinate);

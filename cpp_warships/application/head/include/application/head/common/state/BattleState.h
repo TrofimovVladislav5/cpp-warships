@@ -2,7 +2,7 @@
 
 #include <application/core/Coordinate.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::state {
     /** @brief Where the player is aiming, and how far back through the log they
      * have scrolled. */
     struct BattleState {
@@ -17,8 +17,6 @@ namespace cpp_warships::head {
      * story gets. */
     inline constexpr int LOG_VISIBLE_LINES = 10;
 
-    /** @brief The furthest back a log of @p entryCount lines scrolls in its
-     * window.
-     */
+    /** @brief The furthest back a log of @p entryCount lines scrolls in its window. */
     [[nodiscard]] int furthestLogScroll(int entryCount);
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::state

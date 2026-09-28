@@ -1,5 +1,5 @@
-#include <application/head/ftxui/FtxuiPalette.h>
-#include <application/head/ftxui/FtxuiView.h>
+#include <application/head/tui/FtxuiPalette.h>
+#include <application/head/tui/FtxuiView.h>
 
 #include <ftxui/component/mouse.hpp>
 #include <ftxui/dom/node.hpp>
@@ -7,24 +7,24 @@
 #include <map>
 #include <utility>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::tui {
     namespace {
         constexpr int DEFAULT_FRAME_WIDTH = 80;
         constexpr int DEFAULT_FRAME_HEIGHT = 24;
 
-        [[nodiscard]] Key keyOf(const ftxui::Event& event) {
-            static const std::map<ftxui::Event, Key> NAMED_KEYS = {
-                {ftxui::Event::Return, Key::Enter},
-                {ftxui::Event::Escape, Key::Escape},
-                {ftxui::Event::Tab, Key::Tab},
-                {ftxui::Event::Backspace, Key::Backspace},
-                {ftxui::Event::Delete, Key::Delete},
-                {ftxui::Event::ArrowUp, Key::ArrowUp},
-                {ftxui::Event::ArrowDown, Key::ArrowDown},
-                {ftxui::Event::ArrowLeft, Key::ArrowLeft},
-                {ftxui::Event::ArrowRight, Key::ArrowRight},
-                {ftxui::Event::PageUp, Key::PageUp},
-                {ftxui::Event::PageDown, Key::PageDown},
+        [[nodiscard]] common::input::Key keyOf(const ftxui::Event& event) {
+            static const std::map<ftxui::Event, common::input::Key> NAMED_KEYS = {
+                {ftxui::Event::Return, common::input::Key::Enter},
+                {ftxui::Event::Escape, common::input::Key::Escape},
+                {ftxui::Event::Tab, common::input::Key::Tab},
+                {ftxui::Event::Backspace, common::input::Key::Backspace},
+                {ftxui::Event::Delete, common::input::Key::Delete},
+                {ftxui::Event::ArrowUp, common::input::Key::ArrowUp},
+                {ftxui::Event::ArrowDown, common::input::Key::ArrowDown},
+                {ftxui::Event::ArrowLeft, common::input::Key::ArrowLeft},
+                {ftxui::Event::ArrowRight, common::input::Key::ArrowRight},
+                {ftxui::Event::PageUp, common::input::Key::PageUp},
+                {ftxui::Event::PageDown, common::input::Key::PageDown},
             };
 
             const auto named = NAMED_KEYS.find(event);
@@ -32,28 +32,28 @@ namespace cpp_warships::head {
                 return named->second;
             }
 
-            return event.is_character() ? Key::Character : Key::None;
+            return event.is_character() ? common::input::Key::Character : common::input::Key::None;
         }
 
-        [[nodiscard]] PointerButton buttonOf(const ftxui::Mouse& mouse) {
-            static const std::map<ftxui::Mouse::Button, PointerButton> BUTTONS = {
-                {ftxui::Mouse::Left, PointerButton::Left},
-                {ftxui::Mouse::Right, PointerButton::Right},
-                {ftxui::Mouse::Middle, PointerButton::Middle},
-                {ftxui::Mouse::WheelUp, PointerButton::WheelUp},
-                {ftxui::Mouse::WheelDown, PointerButton::WheelDown},
+        [[nodiscard]] common::input::PointerButton buttonOf(const ftxui::Mouse& mouse) {
+            static const std::map<ftxui::Mouse::Button, common::input::PointerButton> BUTTONS = {
+                {ftxui::Mouse::Left, common::input::PointerButton::Left},
+                {ftxui::Mouse::Right, common::input::PointerButton::Right},
+                {ftxui::Mouse::Middle, common::input::PointerButton::Middle},
+                {ftxui::Mouse::WheelUp, common::input::PointerButton::WheelUp},
+                {ftxui::Mouse::WheelDown, common::input::PointerButton::WheelDown},
             };
 
             const auto button = BUTTONS.find(mouse.button);
-            return button == BUTTONS.end() ? PointerButton::None : button->second;
+            return button == BUTTONS.end() ? common::input::PointerButton::None : button->second;
         }
 
         /** @brief Paints a frame that was drawn elsewhere, taking up exactly
          * its own size. */
         class FrameNode final : public ftxui::Node {
-           public:
-            explicit FrameNode(Frame frame) : frame_(std::move(frame)) {
-            }
+        public:
+            explicit FrameNode(common::render::Frame frame)
+                : frame_(std::move(frame)) {}
 
             void ComputeRequirement() override {
                 requirement_.min_x = frame_.width();
@@ -68,7 +68,7 @@ namespace cpp_warships::head {
                 }
             }
 
-           private:
+        private:
             void paintCell(ftxui::Screen& screen, const int column, const int row) const {
                 const int screenX = box_.x_min + column;
                 const int screenY = box_.y_min + row;
@@ -76,7 +76,7 @@ namespace cpp_warships::head {
                     return;
                 }
 
-                const FrameCell& cell = frame_.at(column, row);
+                const common::render::FrameCell& cell = frame_.at(column, row);
                 ftxui::Cell& target = screen.PixelAt(screenX, screenY);
 
                 target.character = cell.glyph;
@@ -89,15 +89,15 @@ namespace cpp_warships::head {
                 }
             }
 
-            Frame frame_;
+            common::render::Frame frame_;
         };
     }  // namespace
 
-    Keystroke keystrokeOf(ftxui::Event event) {
+    common::input::Keystroke keystrokeOf(ftxui::Event event) {
         if (event.is_mouse()) {
             const ftxui::Mouse& mouse = event.mouse();
-            return Keystroke{
-                .key = Key::Pointer,
+            return common::input::Keystroke{
+                .key = common::input::Key::Pointer,
                 .button = buttonOf(mouse),
                 .isPressed = mouse.motion == ftxui::Mouse::Pressed,
                 .pointerX = mouse.x,
@@ -105,17 +105,20 @@ namespace cpp_warships::head {
             };
         }
 
-        return Keystroke{
+        return common::input::Keystroke{
             .key = keyOf(event),
             .character = event.is_character() ? event.character() : std::string{}
         };
     }
 
-    ftxui::Element elementOfFrame(const Frame& frame) {
+    ftxui::Element elementOfFrame(const common::render::Frame& frame) {
         return std::make_shared<FrameNode>(frame);
     }
 
-    Frame FtxuiRenderer::render(const int availableWidth, const int availableHeight) {
+    common::render::Frame FtxuiRenderer::render(
+        const int availableWidth,
+        const int availableHeight
+    ) {
         const int width = availableWidth > 0 ? availableWidth : DEFAULT_FRAME_WIDTH;
         const int height = availableHeight > 0 ? availableHeight : DEFAULT_FRAME_HEIGHT;
 
@@ -124,11 +127,11 @@ namespace cpp_warships::head {
             ftxui::Screen::Create(ftxui::Dimension::Fixed(width), ftxui::Dimension::Fixed(height));
         ftxui::Render(screen, element);
 
-        Frame frame{width, height};
+        common::render::Frame frame{width, height};
         for (int row = 0; row < height; ++row) {
             for (int column = 0; column < width; ++column) {
                 const ftxui::Cell& painted = screen.PixelAt(column, row);
-                FrameCell& cell = frame.at(column, row);
+                common::render::FrameCell& cell = frame.at(column, row);
 
                 cell.glyph = painted.character.empty() ? " " : painted.character;
                 cell.isBold = painted.bold;
@@ -139,4 +142,4 @@ namespace cpp_warships::head {
 
         return frame;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::tui

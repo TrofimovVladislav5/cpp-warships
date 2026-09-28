@@ -6,15 +6,16 @@
 #include <string>
 
 using namespace cpp_warships::serialization;
+using namespace cpp_warships::serialization::example;
 
 int main() {
-    examples::TestClass test_class;
+    example::TestClass test_class;
     test_class.stringPublicField = "changed";
 
     SerializerAggregator<std::string> test_serializer;
     test_serializer.setSerializers(
-        new examples::TestClassStringSerializer{},
-        new examples::ImplicitTestClassStringSerializer{}
+        new example::TestClassStringSerializer{},
+        new example::ImplicitTestClassStringSerializer{}
     );
 
     test_class.implicitClass.stringPublicField = "changed-public";
@@ -27,8 +28,7 @@ int main() {
     std::cout << "---- SERIALIZATION FINISHED ----" << std::endl << std::endl;
 
     std::cout << "---- DESERIALIZATION RESULT ----" << std::endl;
-    auto deserialized_test_class =
-        test_serializer.deserialize<examples::TestClass>(serialized_data);
+    auto deserialized_test_class = test_serializer.deserialize<example::TestClass>(serialized_data);
     std::cout << deserialized_test_class << std::endl;
 
     return 0;

@@ -1,3 +1,4 @@
+#include <application/flow/Match.h>
 #include <application/persistence/MatchSnapshot.h>
 
 #include <utility>
@@ -15,20 +16,21 @@ namespace cpp_warships::persistence {
         flow::AiMemory opponentMemory,
         flow::MatchEventLog journal
     )
-        : settings_(std::move(settings)),
-          playerBoard_(std::move(playerBoard)),
-          computerBoard_(std::move(computerBoard)),
-          bankedSkills_(std::move(bankedSkills)),
-          roundNumber_(roundNumber),
-          phase_(phase),
-          currentTurn_(currentTurn),
-          isDoubleDamageArmed_(isDoubleDamageArmed),
-          opponentMemory_(std::move(opponentMemory)),
-          journal_(std::move(journal)) {
-    }
+        : settings_(std::move(settings))
+        , playerBoard_(std::move(playerBoard))
+        , computerBoard_(std::move(computerBoard))
+        , bankedSkills_(std::move(bankedSkills))
+        , roundNumber_(roundNumber)
+        , phase_(phase)
+        , currentTurn_(currentTurn)
+        , isDoubleDamageArmed_(isDoubleDamageArmed)
+        , opponentMemory_(std::move(opponentMemory))
+        , journal_(std::move(journal)) {}
 
-    MatchSnapshot
-    MatchSnapshot::capture(const flow::Match& match, const flow::MatchEventLog& journal) {
+    MatchSnapshot MatchSnapshot::capture(
+        const flow::Match& match,
+        const flow::MatchEventLog& journal
+    ) {
         return MatchSnapshot{
             match.settings(),
             match.playerBoard(),

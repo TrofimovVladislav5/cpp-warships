@@ -7,7 +7,6 @@
 #include <application/flow/AiOpponent.h>
 #include <application/flow/AttackOutcomeBehaviour.h>
 #include <application/flow/EventLog.h>
-#include <application/flow/MatchEvent.h>
 #include <application/flow/MatchPhase.h>
 #include <application/flow/PlacementPlan.h>
 #include <application/flow/RandomEngine.h>
@@ -18,6 +17,10 @@
 
 #include <deque>
 #include <optional>
+
+namespace cpp_warships::flow {
+    struct MatchEvent;
+}
 
 namespace cpp_warships::flow {
     /** @brief Everything a match needs to carry on from where a save left off. */
@@ -56,7 +59,7 @@ namespace cpp_warships::flow {
         bool shufflePlayerFleet();
 
         /** @brief Leaves placement and starts the battle, laying out the computer fleet.
-         *  @return false when the player's fleet is not fully placed. */
+         * @return false when the player's fleet is not fully placed. */
         bool beginBattle();
 
         [[nodiscard]] bool isPlayerTurn() const noexcept;
@@ -82,7 +85,7 @@ namespace cpp_warships::flow {
         [[nodiscard]] bool nextSkillNeedsTarget() const;
 
         /** @brief Applies the next banked skill; @p scanTarget is needed only by Scanner.
-         *  @return false when nothing is banked, or a needed target is missing. */
+         * @return false when nothing is banked, or a needed target is missing. */
         bool applyNextSkill(std::optional<core::Coordinate> scanTarget = std::nullopt);
 
         /** @brief Returns everything that happened since the last call and clears the log. */
@@ -96,7 +99,7 @@ namespace cpp_warships::flow {
         void recordSkillEvent(const MatchEvent& event) override;
 
         /** @brief Fires a single computer shot at the player's board.
-         *  @return whether the computer still holds the turn and should fire again. */
+         * @return whether the computer still holds the turn and should fire again. */
         bool takeComputerShot();
 
         /** @brief Settles a shot of the player's: records it and banks any skill it earned. */

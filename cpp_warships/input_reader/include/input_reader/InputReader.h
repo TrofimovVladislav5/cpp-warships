@@ -5,7 +5,7 @@
 namespace cpp_warships::input_reader {
     template <typename T = std::string>
     class InputReader {
-       public:
+    public:
         virtual ~InputReader() = default;
 
         virtual T readCommand() = 0;

@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::model {
     typedef std::map<std::string, std::string> ParsedOptions;
 
     template <typename T>
@@ -24,23 +24,21 @@ namespace cpp_warships::input_parser {
             bool resolveAllFlags,
             ParseCallback<void> printHelp
         )
-            : resolveAllFlags(resolveAllFlags),
-              description(std::move(description)),
-              parameters(std::move(parameters)),
-              executable(std::move(function)),
-              displayError(std::move(displayError)),
-              printHelp(std::move(printHelp)) {
-        }
+            : resolveAllFlags(resolveAllFlags)
+            , description(std::move(description))
+            , parameters(std::move(parameters))
+            , executable(std::move(function))
+            , displayError(std::move(displayError))
+            , printHelp(std::move(printHelp)) {}
 
         ParserCommandInfoConfig(
             std::string description,
             std::vector<ParserParameter> parameters,
             ParseCallback<T> function
         )
-            : description(std::move(description)),
-              parameters(std::move(parameters)),
-              executable(std::move(function)) {
-        }
+            : description(std::move(description))
+            , parameters(std::move(parameters))
+            , executable(std::move(function)) {}
 
         bool resolveAllFlags = false;
         std::string description;
@@ -52,12 +50,12 @@ namespace cpp_warships::input_parser {
 
     template <typename T>
     class ParserCommandInfo {
-       private:
+    private:
         ParserCommandInfoConfig<T> config;
 
-       public:
-        explicit ParserCommandInfo(ParserCommandInfoConfig<T> config) : config(std::move(config)) {
-        }
+    public:
+        explicit ParserCommandInfo(ParserCommandInfoConfig<T> config)
+            : config(std::move(config)) {}
         [[nodiscard]] std::string getDescription() const {
             return this->config.description;
         }
@@ -82,4 +80,4 @@ namespace cpp_warships::input_parser {
             return this->config.printHelp;
         }
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::model

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace cpp_warships::model {
+namespace cpp_warships::model::events {
     /** @brief When a handler is listening. */
     enum class EventScope {
         Always,
@@ -8,4 +8,4 @@ namespace cpp_warships::model {
         Placement,
         Battle,
     };
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::events

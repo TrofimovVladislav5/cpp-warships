@@ -1,6 +1,6 @@
 #include <application/core/errors/ErrorLayer.h>
 
-namespace cpp_warships::core {
+namespace cpp_warships::core::errors {
     std::string_view nameOf(const ErrorLayer layer) noexcept {
         switch (layer) {
             case ErrorLayer::Core:
@@ -17,4 +17,4 @@ namespace cpp_warships::core {
 
         return "unknown";
     }
-}  // namespace cpp_warships::core
+}  // namespace cpp_warships::core::errors

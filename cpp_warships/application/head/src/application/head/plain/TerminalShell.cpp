@@ -10,7 +10,7 @@
 #include <ostream>
 #include <string>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::plain {
     namespace {
         const std::string PROMPT = "> ";
 
@@ -37,44 +37,47 @@ namespace cpp_warships::head {
 
         /** @brief The keystroke @p command stands for: a name for the keys that
          * cannot be typed as text, and otherwise the first letter typed. */
-        [[nodiscard]] Keystroke keystrokeFromCommand(const std::string& command) {
-            static const std::map<std::string, Key> NAMED_KEYS = {
-                {"", Key::Enter},
-                {"enter", Key::Enter},
-                {"up", Key::ArrowUp},
-                {"down", Key::ArrowDown},
-                {"left", Key::ArrowLeft},
-                {"right", Key::ArrowRight},
-                {"esc", Key::Escape},
-                {"tab", Key::Tab},
-                {"back", Key::Backspace},
-                {"pgup", Key::PageUp},
-                {"pgdn", Key::PageDown},
+        [[nodiscard]] common::input::Keystroke keystrokeFromCommand(const std::string& command) {
+            static const std::map<std::string, common::input::Key> NAMED_KEYS = {
+                {"", common::input::Key::Enter},
+                {"enter", common::input::Key::Enter},
+                {"up", common::input::Key::ArrowUp},
+                {"down", common::input::Key::ArrowDown},
+                {"left", common::input::Key::ArrowLeft},
+                {"right", common::input::Key::ArrowRight},
+                {"esc", common::input::Key::Escape},
+                {"tab", common::input::Key::Tab},
+                {"back", common::input::Key::Backspace},
+                {"pgup", common::input::Key::PageUp},
+                {"pgdn", common::input::Key::PageDown},
             };
 
             const auto namedKey = NAMED_KEYS.find(command);
             if (namedKey != NAMED_KEYS.end()) {
-                return Keystroke{.key = namedKey->second};
+                return common::input::Keystroke{.key = namedKey->second};
             }
 
-            return Keystroke{.key = Key::Character, .character = command.substr(0, 1)};
+            return common::input::Keystroke{
+                .key = common::input::Key::Character,
+                .character = command.substr(0, 1)
+            };
         }
     }  // namespace
 
     TerminalShell::TerminalShell(std::istream& input, std::ostream& output)
-        : input_(input), output_(output) {
-    }
+        : input_(input)
+        , output_(output) {}
 
     void TerminalShell::run(
-        PresentationContext& context,
-        RendererSet& renderers,
-        EventPipeline& pipeline,
-        const SessionFinishedQuery& isFinished
+        common::PresentationContext& context,
+        common::render::RendererSet& renderers,
+        common::input::EventPipeline& pipeline,
+        const common::host::SessionFinishedQuery& isFinished
     ) {
         while (!isFinished()) {
             drawFrame(renderers, context.currentScreen());
 
-            const std::optional<Keystroke> stroke = readKeystroke();
+            const std::optional<common::input::Keystroke> stroke = readKeystroke();
             if (!stroke.has_value()) {
                 return;
             }
@@ -84,12 +87,15 @@ namespace cpp_warships::head {
         }
     }
 
-    void TerminalShell::drawFrame(RendererSet& renderers, const ScreenKind screen) const {
-        output_ << frameToText(renderers.render(screen, 0, 0)) << PROMPT;
+    void TerminalShell::drawFrame(
+        common::render::RendererSet& renderers,
+        const common::ScreenKind screen
+    ) const {
+        output_ << common::render::frameToText(renderers.render(screen, 0, 0)) << PROMPT;
         output_.flush();
     }
 
-    std::optional<Keystroke> TerminalShell::readKeystroke() const {
+    std::optional<common::input::Keystroke> TerminalShell::readKeystroke() const {
         std::string command;
         if (!std::getline(input_, command)) {
             return std::nullopt;
@@ -97,4 +103,4 @@ namespace cpp_warships::head {
 
         return keystrokeFromCommand(normalised(command));
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::plain

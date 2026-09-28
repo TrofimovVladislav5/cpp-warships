@@ -18,8 +18,7 @@ namespace cpp_warships::flow {
     }
 
     int ShotStrength::nextShotDamage() const noexcept {
-        return isDoubleDamageArmed_ ? baseDamage_ * DOUBLE_DAMAGE_MULTIPLIER
-                                    : baseDamage_;
+        return isDoubleDamageArmed_ ? baseDamage_ * DOUBLE_DAMAGE_MULTIPLIER : baseDamage_;
     }
 
     bool ShotStrength::isDoubleDamageArmed() const noexcept {

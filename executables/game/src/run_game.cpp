@@ -1,6 +1,7 @@
 #include <application/head/common/PresentationContext.h>
 #include <application/head/common/input/EventPipeline.h>
 #include <application/model/ApplicationContext.h>
+#include <application/model/events/EventQueue.h>
 #include <application/model/intents/IntentFactory.h>
 #include <application/model/intents/IntentProcessor.h>
 #include <application/model/scenarios/SyncScenarioQueue.h>
@@ -20,22 +21,23 @@ namespace cpp_warships::application {
         const std::unique_ptr<model::WarshipsGame> game = buildGame(randomEngine, *saves.archive);
 
         model::ApplicationContext application{*game};
-        const model::IntentFactory intents{application};
-        model::IntentProcessor processor{application};
-        model::SyncScenarioQueue scenarios{processor};
+        const model::intents::IntentFactory intents{application};
+        model::intents::IntentProcessor processor{application};
+        model::scenarios::SyncScenarioQueue scenarios{processor};
 
-        head::PresentationContext context{application};
+        head::common::PresentationContext context{application};
         const SessionQueries queries = buildQueries(*game, context.themeSelection());
 
-        head::RendererSet renderers = buildRenderers(shellKind, context);
-        const std::unique_ptr<head::Shell> shell = buildShell(shellKind, queries.theme);
+        head::common::render::RendererSet renderers = buildRenderers(shellKind, context);
+        const std::unique_ptr<head::common::host::Shell> shell =
+            buildShell(shellKind, queries.theme);
 
-        model::EventQueue events;
-        const std::unique_ptr<head::EventBus> bus = buildEventBus(context);
-        const std::unique_ptr<model::EventRouter> router =
+        model::events::EventQueue events;
+        const std::unique_ptr<head::common::input::EventBus> bus = buildEventBus(context);
+        const std::unique_ptr<model::events::EventRouter> router =
             buildEventRouter(intents, scenarios, context, queries);
 
-        head::EventPipeline pipeline{context, *bus, events, *router, scenarios};
+        head::common::input::EventPipeline pipeline{context, *bus, events, *router, scenarios};
 
         shell->run(context, renderers, pipeline, [&application] {
             return application.isFinished();

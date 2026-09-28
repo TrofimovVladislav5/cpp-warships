@@ -1,3 +1,5 @@
+#include <application/core/Board.h>
+#include <application/flow/MatchEvent.h>
 #include <application/flow/SkillBehaviour.h>
 
 #include <unordered_map>
@@ -25,10 +27,7 @@ namespace cpp_warships::flow {
 
             std::optional<core::Coordinate> chosen;
             if (!available.empty()) {
-                std::uniform_int_distribution<std::size_t> distribution{
-                    0,
-                    available.size() - 1
-                };
+                std::uniform_int_distribution<std::size_t> distribution{0, available.size() - 1};
                 chosen = available[distribution(randomEngine)];
             }
 
@@ -79,7 +78,7 @@ namespace cpp_warships::flow {
         };
 
         /** @brief Fires at a random enemy cell, which may well miss.
-         *  The shot reports itself, so this adds no event of its own. */
+         * The shot reports itself, so this adds no event of its own. */
         class RandomStrikeBehaviour final : public SkillBehaviour {
         public:
             [[nodiscard]] bool needsTarget() const override {
@@ -87,10 +86,8 @@ namespace cpp_warships::flow {
             }
 
             void apply(SkillContext& context, std::optional<core::Coordinate>) const override {
-                const std::optional<core::Coordinate> targetCell = pickRandomUnattackedCell(
-                    context.enemyBoard(),
-                    context.randomEngine()
-                );
+                const std::optional<core::Coordinate> targetCell =
+                    pickRandomUnattackedCell(context.enemyBoard(), context.randomEngine());
 
                 if (targetCell.has_value()) {
                     context.strikeEnemyCell(*targetCell);
@@ -103,9 +100,9 @@ namespace cpp_warships::flow {
         const RandomStrikeBehaviour RANDOM_STRIKE_BEHAVIOUR;
 
         const std::unordered_map<SkillKind, const SkillBehaviour*> BEHAVIOUR_BY_SKILL{
-                    {SkillKind::Scanner, &SCANNER_BEHAVIOUR},
-                    {SkillKind::DoubleDamage, &DOUBLE_DAMAGE_BEHAVIOUR},
-                    {SkillKind::RandomStrike, &RANDOM_STRIKE_BEHAVIOUR}
+            {SkillKind::Scanner, &SCANNER_BEHAVIOUR},
+            {SkillKind::DoubleDamage, &DOUBLE_DAMAGE_BEHAVIOUR},
+            {SkillKind::RandomStrike, &RANDOM_STRIKE_BEHAVIOUR}
         };
     }  // namespace
 

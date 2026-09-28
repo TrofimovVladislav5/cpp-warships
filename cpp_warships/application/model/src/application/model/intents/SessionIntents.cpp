@@ -1,8 +1,10 @@
+#include <application/model/ApplicationContext.h>
+#include <application/model/behaviors/SaveBehavior.h>
 #include <application/model/intents/SessionIntents.h>
 
-namespace cpp_warships::model {
-    SaveMatchIntent::SaveMatchIntent(SaveBehavior& saves) noexcept : saves_(saves) {
-    }
+namespace cpp_warships::model::intents {
+    SaveMatchIntent::SaveMatchIntent(behaviors::SaveBehavior& saves) noexcept
+        : saves_(saves) {}
 
     std::string SaveMatchIntent::name() const {
         return "saving the match";
@@ -10,19 +12,19 @@ namespace cpp_warships::model {
 
     IntentResult SaveMatchIntent::apply() const {
         switch (saves_.saveMatch()) {
-            case SaveOutcome::Saved:
+            case behaviors::SaveOutcome::Saved:
                 return IntentResult::succeeded();
-            case SaveOutcome::NoMatchInPlay:
+            case behaviors::SaveOutcome::NoMatchInPlay:
                 return IntentResult::failed("there is no match to save");
-            case SaveOutcome::CouldNotWrite:
+            case behaviors::SaveOutcome::CouldNotWrite:
                 return IntentResult::failed("the save could not be written");
         }
 
         return IntentResult::failed("the match could not be saved");
     }
 
-    LoadMatchIntent::LoadMatchIntent(SaveBehavior& saves) noexcept : saves_(saves) {
-    }
+    LoadMatchIntent::LoadMatchIntent(behaviors::SaveBehavior& saves) noexcept
+        : saves_(saves) {}
 
     std::string LoadMatchIntent::name() const {
         return "loading the match";
@@ -37,8 +39,7 @@ namespace cpp_warships::model {
     }
 
     FinishSessionIntent::FinishSessionIntent(ApplicationContext& application) noexcept
-        : application_(application) {
-    }
+        : application_(application) {}
 
     std::string FinishSessionIntent::name() const {
         return "finishing the session";
@@ -48,4 +49,4 @@ namespace cpp_warships::model {
         application_.finish();
         return IntentResult::succeeded();
     }
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::intents

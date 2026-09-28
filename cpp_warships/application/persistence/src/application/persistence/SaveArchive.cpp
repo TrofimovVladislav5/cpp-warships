@@ -1,4 +1,5 @@
 #include <application/persistence/SaveArchive.h>
+#include <application/persistence/SaveStorage.h>
 #include <application/persistence/serializers/MatchSnapshotJsonSerializer.h>
 
 #include <exception>
@@ -11,12 +12,12 @@ namespace cpp_warships::persistence {
         constexpr int SAVE_INDENTATION = 4;
 
         /** @brief A snapshot serializer with its children wired up. */
-        MatchSnapshotJsonSerializer makeSnapshotSerializer() {
-            MatchSnapshotJsonSerializer serializer;
-            BoardJsonSerializer boardSerializer;
-            MatchSettingsJsonSerializer settingsSerializer;
-            ShipJsonSerializer shipSerializer;
-            SegmentJsonSerializer segmentSerializer;
+        serializers::MatchSnapshotJsonSerializer makeSnapshotSerializer() {
+            serializers::MatchSnapshotJsonSerializer serializer;
+            serializers::BoardJsonSerializer boardSerializer;
+            serializers::MatchSettingsJsonSerializer settingsSerializer;
+            serializers::ShipJsonSerializer shipSerializer;
+            serializers::SegmentJsonSerializer segmentSerializer;
 
             shipSerializer.setChildrenSerializers(&segmentSerializer);
             boardSerializer.setChildrenSerializers(&shipSerializer);
@@ -26,15 +27,15 @@ namespace cpp_warships::persistence {
         }
     }  // namespace
 
-    SaveArchive::SaveArchive(SaveStorage& storage) : storage_(storage) {
-    }
+    SaveArchive::SaveArchive(SaveStorage& storage)
+        : storage_(storage) {}
 
     std::vector<std::string> SaveArchive::listSaves() const {
         return storage_.list();
     }
 
     bool SaveArchive::save(const std::string& name, const MatchSnapshot& snapshot) {
-        MatchSnapshotJsonSerializer serializer = makeSnapshotSerializer();
+        serializers::MatchSnapshotJsonSerializer serializer = makeSnapshotSerializer();
         MatchSnapshot writableSnapshot = snapshot;
         bool isSaved = false;
 
@@ -53,7 +54,7 @@ namespace cpp_warships::persistence {
         std::optional<MatchSnapshot> snapshot;
 
         if (contents.has_value()) {
-            MatchSnapshotJsonSerializer serializer = makeSnapshotSerializer();
+            serializers::MatchSnapshotJsonSerializer serializer = makeSnapshotSerializer();
             try {
                 snapshot = serializer.deserialize(nlohmann::json::parse(*contents));
             } catch (const std::exception&) {

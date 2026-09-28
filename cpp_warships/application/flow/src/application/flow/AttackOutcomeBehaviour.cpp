@@ -1,3 +1,4 @@
+#include <application/core/Board.h>
 #include <application/flow/AiOpponent.h>
 #include <application/flow/AttackOutcomeBehaviour.h>
 
@@ -105,8 +106,7 @@ namespace cpp_warships::flow {
                 return MatchEventKind::ShotRejected;
             }
 
-            void updateHunt(AiOpponent&, core::Coordinate, const core::Board&) const override {
-            }
+            void updateHunt(AiOpponent&, core::Coordinate, const core::Board&) const override {}
         };
 
         const MissBehaviour MISS_BEHAVIOUR;
@@ -116,11 +116,11 @@ namespace cpp_warships::flow {
 
         const std::unordered_map<core::AttackOutcome, const AttackOutcomeBehaviour*>
             BEHAVIOUR_BY_OUTCOME{
-                    {core::AttackOutcome::Miss, &MISS_BEHAVIOUR},
-                    {core::AttackOutcome::Hit, &HIT_BEHAVIOUR},
-                    {core::AttackOutcome::Sunk, &SUNK_BEHAVIOUR},
-                    {core::AttackOutcome::AlreadyAttacked, &REJECTED_BEHAVIOUR},
-                    {core::AttackOutcome::OutOfBounds, &REJECTED_BEHAVIOUR}
+                {core::AttackOutcome::Miss, &MISS_BEHAVIOUR},
+                {core::AttackOutcome::Hit, &HIT_BEHAVIOUR},
+                {core::AttackOutcome::Sunk, &SUNK_BEHAVIOUR},
+                {core::AttackOutcome::AlreadyAttacked, &REJECTED_BEHAVIOUR},
+                {core::AttackOutcome::OutOfBounds, &REJECTED_BEHAVIOUR}
             };
     }  // namespace
 

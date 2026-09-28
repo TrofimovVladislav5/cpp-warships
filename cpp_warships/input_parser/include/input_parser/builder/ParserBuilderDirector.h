@@ -1,15 +1,14 @@
 #pragma once
 #include <input_parser/builder/ConfigCommandBuilder.h>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::builder {
     template <typename T>
     class ParserBuilderDirector {
-       private:
+    private:
         ParserCommandBuilder<T>& commandBuilder;
 
-       public:
+    public:
         explicit ParserBuilderDirector(ParserCommandBuilder<T>& commandBuilder)
-            : commandBuilder(commandBuilder) {
-        }
+            : commandBuilder(commandBuilder) {}
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::builder

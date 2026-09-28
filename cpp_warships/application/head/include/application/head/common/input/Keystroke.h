@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::input {
     /** @brief A key the player pressed, named for what it means rather than
      * what sent it. */
     enum class Key {
@@ -23,9 +23,7 @@ namespace cpp_warships::head {
         Pointer,
     };
 
-    /** @brief Which part of a pointing device was used, when one was used at
-     * all.
-     */
+    /** @brief Which part of a pointing device was used, when one was used at all. */
     enum class PointerButton {
         None,
         Left,
@@ -35,9 +33,7 @@ namespace cpp_warships::head {
         WheelDown,
     };
 
-    /** @brief One thing the player did, in terms no particular terminal library
-     * owns. Whatever is hosting the game translates its own events into these,
-     * once. */
+    /** @brief One thing the player did, in terms no particular terminal library owns. */
     struct Keystroke {
         Key key = Key::None;
 
@@ -58,4 +54,4 @@ namespace cpp_warships::head {
 
     /** @brief Whether @p stroke is the wheel being rolled either way. */
     [[nodiscard]] bool isWheelRolled(const Keystroke& stroke);
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::input

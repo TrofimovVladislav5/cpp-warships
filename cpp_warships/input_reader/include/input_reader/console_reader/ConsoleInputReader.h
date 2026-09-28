@@ -6,7 +6,7 @@
 
 namespace cpp_warships::input_reader::console_reader {
     class ConsoleInputReader : public InputReader<> {
-       public:
+    public:
         std::string readCommand() override;
     };
 }  // namespace cpp_warships::input_reader::console_reader

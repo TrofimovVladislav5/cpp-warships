@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
-namespace cpp_warships::persistence {
+namespace cpp_warships::persistence::serializers {
     bool BoardJsonSerializer::isRelated(nlohmann::json item) {
         return item.contains("width") && item.contains("height") && item.contains("ships") &&
                item.contains("attackedCells");
@@ -57,4 +57,4 @@ namespace cpp_warships::persistence {
             std::move(attackedCells)
         };
     }
-}  // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence::serializers

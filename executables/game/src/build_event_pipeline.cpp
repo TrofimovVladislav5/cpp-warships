@@ -1,82 +1,112 @@
+#include <application/head/common/PresentationContext.h>
 #include <application/head/common/input/BattleInput.h>
 #include <application/head/common/input/MenuInput.h>
 #include <application/head/common/input/PlacementInput.h>
 #include <application/head/common/input/handlers/BattleHandlers.h>
 #include <application/head/common/input/handlers/PlacementHandlers.h>
 #include <application/head/common/input/handlers/SessionHandlers.h>
+#include <application/model/intents/IntentFactory.h>
+#include <application/model/scenarios/ScenarioQueue.h>
 #include <build_event_pipeline.h>
 
 namespace cpp_warships::application {
-    std::unique_ptr<head::EventBus> buildEventBus(head::PresentationContext& context) {
-        auto bus = std::make_unique<head::EventBus>();
+    std::unique_ptr<head::common::input::EventBus> buildEventBus(
+        head::common::PresentationContext& context
+    ) {
+        auto bus = std::make_unique<head::common::input::EventBus>();
 
-        bus->readScreenWith(head::ScreenKind::Menu, std::make_unique<head::MenuInput>(context));
         bus->readScreenWith(
-            head::ScreenKind::Placement,
-            std::make_unique<head::PlacementInput>(context)
+            head::common::ScreenKind::Menu,
+            std::make_unique<head::common::input::MenuInput>(context)
         );
-        bus->readScreenWith(head::ScreenKind::Battle, std::make_unique<head::BattleInput>(context));
+        bus->readScreenWith(
+            head::common::ScreenKind::Placement,
+            std::make_unique<head::common::input::PlacementInput>(context)
+        );
+        bus->readScreenWith(
+            head::common::ScreenKind::Battle,
+            std::make_unique<head::common::input::BattleInput>(context)
+        );
 
         return bus;
     }
 
-    std::unique_ptr<model::EventRouter> buildEventRouter(
-        const model::IntentFactory& intents,
-        model::ScenarioQueue& scenarios,
-        head::PresentationContext& context,
+    std::unique_ptr<model::events::EventRouter> buildEventRouter(
+        const model::intents::IntentFactory& intents,
+        model::scenarios::ScenarioQueue& scenarios,
+        head::common::PresentationContext& context,
         const SessionQueries& queries
     ) {
-        auto router = std::make_unique<model::EventRouter>();
-        const head::HandlerParts parts{.intents = intents, .scenarios = scenarios};
-
-        router->subscribe(model::EventScope::Always, std::make_shared<head::QuitHandler>(parts));
-        router->subscribe(
-            model::EventScope::Always,
-            std::make_shared<head::ReturnToMenuHandler>(context.state())
-        );
+        auto router = std::make_unique<model::events::EventRouter>();
+        const head::common::input::handlers::HandlerParts parts{
+            .intents = intents,
+            .scenarios = scenarios
+        };
 
         router->subscribe(
-            model::EventScope::Menu,
-            std::make_shared<head::SaveAndQuitHandler>(parts)
-        );
-
-        router->subscribe(
-            model::EventScope::Menu,
-            std::make_shared<head::StartMatchHandler>(parts, context.state())
+            model::events::EventScope::Always,
+            std::make_shared<head::common::input::handlers::QuitHandler>(parts)
         );
         router->subscribe(
-            model::EventScope::Menu,
-            std::make_shared<head::ResumeMatchHandler>(context.state(), queries.hasMatch)
-        );
-        router->subscribe(
-            model::EventScope::Menu,
-            std::make_shared<head::LoadMatchHandler>(parts, context.state(), queries.hasSavedMatch)
+            model::events::EventScope::Always,
+            std::make_shared<head::common::input::handlers::ReturnToMenuHandler>(context.state())
         );
 
         router->subscribe(
-            model::EventScope::Placement,
-            std::make_shared<head::PlaceShipHandler>(parts)
-        );
-        router->subscribe(
-            model::EventScope::Placement,
-            std::make_shared<head::RemoveShipHandler>(parts)
-        );
-        router->subscribe(
-            model::EventScope::Placement,
-            std::make_shared<head::ShuffleFleetHandler>(parts)
-        );
-        router->subscribe(
-            model::EventScope::Placement,
-            std::make_shared<head::BeginBattleHandler>(parts, queries.match)
+            model::events::EventScope::Menu,
+            std::make_shared<head::common::input::handlers::SaveAndQuitHandler>(parts)
         );
 
         router->subscribe(
-            model::EventScope::Battle,
-            std::make_shared<head::FireHandler>(parts, queries.match)
+            model::events::EventScope::Menu,
+            std::make_shared<head::common::input::handlers::StartMatchHandler>(
+                parts,
+                context.state()
+            )
         );
         router->subscribe(
-            model::EventScope::Battle,
-            std::make_shared<head::UseSkillHandler>(parts, queries.match)
+            model::events::EventScope::Menu,
+            std::make_shared<head::common::input::handlers::ResumeMatchHandler>(
+                context.state(),
+                queries.hasMatch
+            )
+        );
+        router->subscribe(
+            model::events::EventScope::Menu,
+            std::make_shared<head::common::input::handlers::LoadMatchHandler>(
+                parts,
+                context.state(),
+                queries.hasSavedMatch
+            )
+        );
+
+        router->subscribe(
+            model::events::EventScope::Placement,
+            std::make_shared<head::common::input::handlers::PlaceShipHandler>(parts)
+        );
+        router->subscribe(
+            model::events::EventScope::Placement,
+            std::make_shared<head::common::input::handlers::RemoveShipHandler>(parts)
+        );
+        router->subscribe(
+            model::events::EventScope::Placement,
+            std::make_shared<head::common::input::handlers::ShuffleFleetHandler>(parts)
+        );
+        router->subscribe(
+            model::events::EventScope::Placement,
+            std::make_shared<head::common::input::handlers::BeginBattleHandler>(
+                parts,
+                queries.match
+            )
+        );
+
+        router->subscribe(
+            model::events::EventScope::Battle,
+            std::make_shared<head::common::input::handlers::FireHandler>(parts, queries.match)
+        );
+        router->subscribe(
+            model::events::EventScope::Battle,
+            std::make_shared<head::common::input::handlers::UseSkillHandler>(parts, queries.match)
         );
 
         return router;

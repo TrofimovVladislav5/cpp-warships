@@ -2,9 +2,12 @@
 
 #include <application/core/Coordinate.h>
 #include <application/core/Direction.h>
-#include <application/flow/PlacementPlan.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::flow {
+    class PlacementPlan;
+}
+
+namespace cpp_warships::head::common::state {
     /** @brief Where the player is aiming on their board and how the ship in
      * hand lies. */
     struct PlacementState {
@@ -15,10 +18,12 @@ namespace cpp_warships::head {
 
     /** @brief The length in hand: the player's pick while any of it is left,
      * else the longest. */
-    [[nodiscard]] int
-    shipLengthInHand(const flow::PlacementPlan& plan, const PlacementState& state);
+    [[nodiscard]] int shipLengthInHand(
+        const flow::PlacementPlan& plan,
+        const PlacementState& state
+    );
 
     /** @brief The next longer length still waiting to be placed, wrapping to
      * the shortest. */
     [[nodiscard]] int nextShipLength(const flow::PlacementPlan& plan, int currentLength);
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::state

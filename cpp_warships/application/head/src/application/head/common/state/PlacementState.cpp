@@ -1,6 +1,7 @@
+#include <application/flow/PlacementPlan.h>
 #include <application/head/common/state/PlacementState.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::state {
     namespace {
         int longestLengthLeft(const flow::PlacementPlan& plan) {
             int longest = 0;
@@ -41,4 +42,4 @@ namespace cpp_warships::head {
 
         return shortestLengthLeft(plan);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::state

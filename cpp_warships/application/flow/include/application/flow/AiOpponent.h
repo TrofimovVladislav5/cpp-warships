@@ -1,12 +1,16 @@
 #pragma once
 
-#include <application/core/Board.h>
 #include <application/core/Coordinate.h>
+#include <application/core/Outcomes.h>
 #include <application/flow/RandomEngine.h>
 
 #include <optional>
 #include <unordered_set>
 #include <vector>
+
+namespace cpp_warships::core {
+    class Board;
+}
 
 namespace cpp_warships::flow {
     /** @brief What the computer has learned so far: where it has already fired,
@@ -29,11 +33,11 @@ namespace cpp_warships::flow {
         [[nodiscard]] AiMemory memory() const;
 
         /** @brief Picks the next cell to attack on @p board.
-         *  @return nullopt when every cell has already been attempted. */
+         * @return nullopt when every cell has already been attempted. */
         [[nodiscard]] std::optional<core::Coordinate> chooseTarget(const core::Board& board);
 
         /** @brief Feeds back what the chosen shot did, shaping the next choice.
-         *  Delegates to the outcome's behaviour rather than branching on it here. */
+         * Delegates to the outcome's behaviour rather than branching on it here. */
         void recordOutcome(
             core::Coordinate coordinate,
             core::AttackOutcome outcome,

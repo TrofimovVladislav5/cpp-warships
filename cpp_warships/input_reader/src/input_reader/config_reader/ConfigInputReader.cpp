@@ -7,9 +7,9 @@
 
 namespace cpp_warships::input_reader::config_reader {
     ConfigInputReader::ConfigInputReader(const std::string& filename)
-        : fileContents({}),
-          shadowReader(new console_reader::ConsoleInputReader()),
-          linesExecuted(0) {
+        : fileContents({})
+        , shadowReader(new console_reader::ConsoleInputReader())
+        , linesExecuted(0) {
         std::ifstream file(filename);
 
         std::vector<std::string> fileContents;

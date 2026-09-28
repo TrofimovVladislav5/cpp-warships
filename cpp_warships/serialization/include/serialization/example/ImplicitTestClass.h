@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-namespace cpp_warships::serialization::examples {
+namespace cpp_warships::serialization::example {
     using namespace helpers::serializers;
 
     inline char ImplicitTestClassTypeName[] = "ImplicitTestClass";
@@ -15,10 +15,10 @@ namespace cpp_warships::serialization::examples {
     class ImplicitTestClassStringSerializer;
 
     class ImplicitTestClass : public ISerializable<ImplicitTestClassTypeName> {
-       private:
+    private:
         std::string stringPrivateField = "default-private";
 
-       public:
+    public:
         friend ImplicitTestClassStringSerializer;
         friend std::ostream& operator<<(std::ostream& os, const ImplicitTestClass& obj);
 
@@ -28,7 +28,7 @@ namespace cpp_warships::serialization::examples {
 
     class ImplicitTestClassStringSerializer
         : public ISerializer<std::string, ImplicitTestClass, ImplicitTestClassTypeName> {
-       public:
+    public:
         bool isRelated(std::string item) override {
             return JsonStringSerializer::isIncludeFields(
                 item,
@@ -73,4 +73,4 @@ namespace cpp_warships::serialization::examples {
 
         return os;
     }
-}  // namespace cpp_warships::serialization::examples
+}  // namespace cpp_warships::serialization::example

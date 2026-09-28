@@ -1,3 +1,4 @@
+#include <application/head/common/PresentationContext.h>
 #include <application/head/common/render/Notices.h>
 #include <application/head/plain/PlainFrame.h>
 #include <application/head/plain/PlainMenuView.h>
@@ -6,11 +7,11 @@
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::head {
-    PlainMenuView::PlainMenuView(const PresentationContext& context) noexcept : context_(context) {
-    }
+namespace cpp_warships::head::plain {
+    PlainMenuView::PlainMenuView(const common::PresentationContext& context) noexcept
+        : context_(context) {}
 
-    Frame PlainMenuView::render(int, int) {
+    common::render::Frame PlainMenuView::render(int, int) {
         const std::string boardSize = std::to_string(context_.state().menu.selectedBoardSize);
 
         std::vector<std::string> lines{
@@ -36,10 +37,10 @@ namespace cpp_warships::head {
         lines.push_back(plainKeyLine("q", "quit"));
         lines.emplace_back("");
 
-        for (const std::string& notice : noticesToShow(context_.application())) {
+        for (const std::string& notice : common::render::noticesToShow(context_.application())) {
             lines.push_back("  ! " + notice);
         }
 
-        return frameOfLines(lines);
+        return common::render::frameOfLines(lines);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::plain

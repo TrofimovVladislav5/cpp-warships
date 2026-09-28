@@ -1,9 +1,10 @@
 #include <application/core/MatchSettings.h>
+#include <application/model/MatchInPlay.h>
 #include <application/model/behaviors/MatchBehavior.h>
 
-namespace cpp_warships::model {
-    MatchBehavior::MatchBehavior(MatchInPlay& inPlay) noexcept : inPlay_(inPlay) {
-    }
+namespace cpp_warships::model::behaviors {
+    MatchBehavior::MatchBehavior(MatchInPlay& inPlay) noexcept
+        : inPlay_(inPlay) {}
 
     void MatchBehavior::startNewMatch(const int boardSize) {
         inPlay_.replaceWith(
@@ -72,4 +73,4 @@ namespace cpp_warships::model {
         inPlay_.editableMatch().concludeTurn();
         inPlay_.recordEvents();
     }
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::behaviors

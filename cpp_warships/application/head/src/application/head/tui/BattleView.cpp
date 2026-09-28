@@ -1,8 +1,9 @@
+#include <application/head/common/PresentationContext.h>
 #include <application/head/common/render/EventNarration.h>
-#include <application/head/ftxui/BattleView.h>
-#include <application/head/ftxui/FtxuiNotices.h>
-#include <application/head/ftxui/FtxuiPalette.h>
-#include <application/head/ftxui/KeyHint.h>
+#include <application/head/tui/BattleView.h>
+#include <application/head/tui/FtxuiNotices.h>
+#include <application/head/tui/FtxuiPalette.h>
+#include <application/head/tui/KeyHint.h>
 
 #include <algorithm>
 #include <cstddef>
@@ -12,12 +13,12 @@
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::tui {
     namespace {
         constexpr int SIDE_PANEL_WIDTH = 46;
         constexpr int SKILL_ORDER_LINES = 4;
 
-        ftxui::Element standing(const Theme& theme, const flow::Match& match) {
+        ftxui::Element standing(const common::Theme& theme, const flow::Match& match) {
             if (match.phase() == flow::MatchPhase::Finished) {
                 return ftxui::text("YOUR FLEET IS GONE") | ftxui::bold | color(theme.danger);
             }
@@ -29,7 +30,7 @@ namespace cpp_warships::head {
             return ftxui::text("the enemy fires") | ftxui::bold | color(theme.danger);
         }
 
-        ftxui::Element header(const Theme& theme, const flow::Match& match) {
+        ftxui::Element header(const common::Theme& theme, const flow::Match& match) {
             std::vector<ftxui::Element> parts{
                 ftxui::text("BATTLE") | ftxui::bold | color(theme.accent),
                 ftxui::filler(),
@@ -47,8 +48,11 @@ namespace cpp_warships::head {
             return ftxui::hbox(std::move(parts));
         }
 
-        ftxui::Element
-        titledBoard(const Theme& theme, const std::string& title, ftxui::Element board) {
+        ftxui::Element titledBoard(
+            const common::Theme& theme,
+            const std::string& title,
+            ftxui::Element board
+        ) {
             return ftxui::vbox(
                 {ftxui::text(title) | ftxui::bold | color(theme.textMuted),
                  ftxui::separator() | color(theme.border),
@@ -74,14 +78,14 @@ namespace cpp_warships::head {
 
         /** @brief What the next skill will do when spent, said where the queue
          * can show it. */
-        ftxui::Element nextMarker(const Theme& theme, const flow::Match& match) {
+        ftxui::Element nextMarker(const common::Theme& theme, const flow::Match& match) {
             const std::string label = match.nextSkillNeedsTarget() ? "next, where you aim" : "next";
             return ftxui::text(label) | color(theme.accent);
         }
 
         /** @brief One row saying how many of each kind are held, whatever order
          * they sit in. */
-        ftxui::Element skillCounts(const Theme& theme, const flow::Match& match) {
+        ftxui::Element skillCounts(const common::Theme& theme, const flow::Match& match) {
             if (match.skills().isEmpty()) {
                 return ftxui::text("none banked") | color(theme.textMuted);
             }
@@ -92,7 +96,9 @@ namespace cpp_warships::head {
                     chips.push_back(ftxui::text("  "));
                 }
 
-                chips.push_back(ftxui::text(skillName(kind)) | color(theme.textMuted));
+                chips.push_back(
+                    ftxui::text(common::render::skillName(kind)) | color(theme.textMuted)
+                );
                 chips.push_back(
                     ftxui::text(" " + std::to_string(held)) | ftxui::bold | color(theme.accent)
                 );
@@ -101,10 +107,8 @@ namespace cpp_warships::head {
             return ftxui::hbox(std::move(chips));
         }
 
-        /** @brief The bank in the order it will be spent, oldest first, the
-         * next one marked. Always the same height: a long bank gives up its
-         * tail to a line counting the rest. */
-        ftxui::Element skillOrder(const Theme& theme, const flow::Match& match) {
+        /** @brief The bank in the order it will be spent, oldest first, the next one marked. */
+        ftxui::Element skillOrder(const common::Theme& theme, const flow::Match& match) {
             const std::deque<flow::SkillKind>& banked = match.skills().pending();
             const auto fits = static_cast<std::size_t>(SKILL_ORDER_LINES);
             const std::size_t listed = banked.size() > fits ? fits - 1 : banked.size();
@@ -115,7 +119,7 @@ namespace cpp_warships::head {
                 rows.push_back(
                     ftxui::hbox(
                         {ftxui::text(std::to_string(position + 1) + "  ") | color(theme.textMuted),
-                         ftxui::text(skillName(banked[position])) |
+                         ftxui::text(common::render::skillName(banked[position])) |
                              color(isNext ? theme.text : theme.textMuted),
                          ftxui::filler(),
                          isNext ? nextMarker(theme, match) : ftxui::text("")}
@@ -136,7 +140,7 @@ namespace cpp_warships::head {
                    ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, SKILL_ORDER_LINES);
         }
 
-        ftxui::Element skillBank(const Theme& theme, const flow::Match& match) {
+        ftxui::Element skillBank(const common::Theme& theme, const flow::Match& match) {
             return ftxui::vbox(
                 {ftxui::text("SKILLS") | ftxui::bold | color(theme.accent),
                  skillCounts(theme, match),
@@ -144,35 +148,40 @@ namespace cpp_warships::head {
             );
         }
 
-        /** @brief A fixed window on the story so far, newest first, scrolled
-         * back by @p skipped. It keeps its height whether the log is empty or a
-         * hundred lines long. */
-        ftxui::Element
-        journalLines(const Theme& theme, const model::BattleJournal& journal, int skipped) {
+        /** @brief A fixed window on the story so far, newest first, scrolled back by @p skipped. */
+        ftxui::Element journalLines(
+            const common::Theme& theme,
+            const model::BattleJournal& journal,
+            int skipped
+        ) {
             const std::deque<flow::MatchEvent>& entries = journal.entries();
             const int total = static_cast<int>(entries.size());
-            const int from = std::clamp(skipped, 0, furthestLogScroll(total));
+            const int from = std::clamp(skipped, 0, common::state::furthestLogScroll(total));
 
             std::vector<ftxui::Element> lines;
-            for (int step = 0; step < LOG_VISIBLE_LINES; ++step) {
+            for (int step = 0; step < common::state::LOG_VISIBLE_LINES; ++step) {
                 const int index = total - 1 - from - step;
                 if (index < 0) {
                     lines.push_back(ftxui::text(""));
                     continue;
                 }
 
-                const EventLine line = narrate(entries[static_cast<std::size_t>(index)], theme);
+                const common::render::EventLine line =
+                    common::render::narrate(entries[static_cast<std::size_t>(index)], theme);
                 lines.push_back(ftxui::text(line.text) | color(line.color));
             }
 
             return ftxui::vbox(std::move(lines)) |
-                   ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, LOG_VISIBLE_LINES);
+                   ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, common::state::LOG_VISIBLE_LINES);
         }
 
-        ftxui::Element
-        journalHeading(const Theme& theme, const model::BattleJournal& journal, int skipped) {
+        ftxui::Element journalHeading(
+            const common::Theme& theme,
+            const model::BattleJournal& journal,
+            int skipped
+        ) {
             const int total = static_cast<int>(journal.entries().size());
-            const int from = std::clamp(skipped, 0, furthestLogScroll(total));
+            const int from = std::clamp(skipped, 0, common::state::furthestLogScroll(total));
 
             std::vector<ftxui::Element> parts{
                 ftxui::text("LOG") | ftxui::bold | color(theme.accent),
@@ -188,7 +197,7 @@ namespace cpp_warships::head {
             return ftxui::hbox(std::move(parts));
         }
 
-        ftxui::Element legend(const Theme& theme, const flow::Match& match) {
+        ftxui::Element legend(const common::Theme& theme, const flow::Match& match) {
             if (match.phase() == flow::MatchPhase::Finished) {
                 return keyLegend({keyHint(theme, "esc", "back to the menu")});
             }
@@ -207,12 +216,14 @@ namespace cpp_warships::head {
         }
     }  // namespace
 
-    BattleView::BattleView(const PresentationContext& context, GridGeometry& geometry) noexcept
-        : context_(context),
-          ownWatersView_(geometry, ScreenRegion::OwnWaters),
-          enemyWatersView_(geometry, ScreenRegion::EnemyWaters),
-          geometry_(geometry) {
-    }
+    BattleView::BattleView(
+        const common::PresentationContext& context,
+        common::input::GridGeometry& geometry
+    ) noexcept
+        : context_(context)
+        , ownWatersView_(geometry, common::input::ScreenRegion::OwnWaters)
+        , enemyWatersView_(geometry, common::input::ScreenRegion::EnemyWaters)
+        , geometry_(geometry) {}
 
     void BattleView::publishLogGeometry() const {
         if (logBox_.x_max < logBox_.x_min) {
@@ -230,10 +241,10 @@ namespace cpp_warships::head {
     ftxui::Element BattleView::renderElement() {
         publishLogGeometry();
 
-        const Theme& theme = context_.theme();
+        const common::Theme& theme = context_.theme();
         const flow::Match& match = context_.game().match();
         const model::BattleJournal& journal = context_.game().journal();
-        const BattleState& state = context_.state().battle;
+        const common::state::BattleState& state = context_.state().battle;
 
         BoardOverlay ownOverlay;
         BoardOverlay enemyOverlay;
@@ -268,4 +279,4 @@ namespace cpp_warships::head {
                ) |
                ftxui::border | color(theme.border) | bgcolor(theme.background) | ftxui::flex;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::tui

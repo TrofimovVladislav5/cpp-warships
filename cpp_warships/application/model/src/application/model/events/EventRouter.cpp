@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace cpp_warships::model {
+namespace cpp_warships::model::events {
     void EventRouter::subscribe(const EventScope scope, EventHandlerPointer handler) {
         subscriptions_.push_back({.scope = scope, .handler = std::move(handler)});
     }
@@ -31,4 +31,4 @@ namespace cpp_warships::model {
     bool EventRouter::isInScope(const EventScope scope) const noexcept {
         return scope == EventScope::Always || scope == currentScope_;
     }
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::events

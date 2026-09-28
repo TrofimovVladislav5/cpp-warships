@@ -5,7 +5,7 @@
 
 namespace cpp_warships::core {
     /** @brief Immutable rules a match is played under.
-     *  Transient combat state, such as an armed double-damage shot, lives in the flow library. */
+     * Transient combat state, such as an armed double-damage shot, lives in the flow library. */
     class MatchSettings {
     public:
         MatchSettings(

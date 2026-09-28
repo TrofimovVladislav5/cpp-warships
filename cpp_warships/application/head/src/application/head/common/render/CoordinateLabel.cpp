@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::render {
     namespace {
         const std::string COLUMN_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     }  // namespace
@@ -18,4 +18,4 @@ namespace cpp_warships::head {
     std::string coordinateLabel(const core::Coordinate coordinate) {
         return columnLabel(coordinate.x) + std::to_string(coordinate.y + 1);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::render

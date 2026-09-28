@@ -1,16 +1,16 @@
+#include <application/core/Board.h>
 #include <application/head/plain/PlainBoardGrid.h>
 
 #include <cstddef>
 #include <map>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::plain {
     namespace {
         constexpr int CELL_INTERIOR_WIDTH = 3;
         constexpr char FIRST_COLUMN_LETTER = 'A';
 
-        /** @brief The letter a cell is drawn as, as close to the old console
-         * game as the newer states allow: a hull still holding is told apart
-         * from one finished off. */
+        /** @brief The letter a cell is drawn as, as close to the old console game as the newer
+         * states allow: a hull still holding is told apart from one finished off. */
         [[nodiscard]] char glyphOf(const core::CellState state) {
             static const std::map<core::CellState, char> GLYPHS = {
                 {core::CellState::Water, ' '},
@@ -98,4 +98,4 @@ namespace cpp_warships::head {
     std::string plainBoardLegend() {
         return "# ship   x hit   X destroyed   % sunk   o miss";
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::plain

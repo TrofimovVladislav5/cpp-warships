@@ -2,7 +2,7 @@
 
 namespace cpp_warships::flow {
     /** @brief How much damage the next shot deals, including any armed bonus.
-     *  A bonus survives rejected shots and is spent by the first shot actually taken. */
+     * A bonus survives rejected shots and is spent by the first shot actually taken. */
     class ShotStrength {
     public:
         explicit ShotStrength(int baseDamage);
@@ -19,6 +19,7 @@ namespace cpp_warships::flow {
         void armDoubleDamage() noexcept;
         /** @brief Consumes any armed bonus, called once a shot has actually been taken. */
         void spend() noexcept;
+
     private:
         int baseDamage_;
         bool isDoubleDamageArmed_;

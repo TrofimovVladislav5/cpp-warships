@@ -7,23 +7,18 @@
 #include <optional>
 
 namespace cpp_warships::model {
-    /** @brief The match being played and the story of it: the one thing every
-     * behaviour works on. Holding them together is what keeps the log and the
-     * board from drifting. */
+    /** @brief The match being played and the story of it: the one thing every behaviour works
+     * on. */
     class MatchInPlay {
-       public:
+    public:
         explicit MatchInPlay(flow::RandomEngine& randomEngine) noexcept;
 
         [[nodiscard]] bool hasMatch() const noexcept;
 
-        /** @brief The match in play. Throws NoMatchInPlayException when there
-         * is none, so a caller that forgot to ask hasMatch first is told rather
-         * than left guessing. */
+        /** @brief The match in play. */
         [[nodiscard]] const flow::Match& match() const;
 
-        /** @brief The match in play, to act on. Only a behaviour reaches for
-         * this.
-         */
+        /** @brief The match in play, to act on. */
         [[nodiscard]] flow::Match& editableMatch();
 
         [[nodiscard]] const BattleJournal& journal() const noexcept;
@@ -33,15 +28,14 @@ namespace cpp_warships::model {
          * fresh log. */
         void replaceWith(flow::Match match);
 
-        /** @brief Puts @p match in play carrying @p story, which is how a
-         * loaded game comes back with the log it was saved with rather than
-         * starting silent. */
+        /** @brief Puts @p match in play carrying @p story, which is how a loaded game comes back
+         * with the log it was saved with rather than starting silent. */
         void replaceWith(flow::Match match, const flow::MatchEventLog& story);
 
         /** @brief Moves whatever the match has to say into the log. */
         void recordEvents();
 
-       private:
+    private:
         flow::RandomEngine& randomEngine_;
         std::optional<flow::Match> match_;
         BattleJournal journal_;

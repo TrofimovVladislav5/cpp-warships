@@ -2,9 +2,9 @@
 #include <input_parser/builder/ParserParameterBuilder.h>
 #include <input_parser/model/ParserParameter.h>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::builder {
     class DefaultParameterBuilder : public ParserParameterBuilder {
-       public:
+    public:
         ~DefaultParameterBuilder() override = default;
 
         DefaultParameterBuilder& addFlag(std::string flag) override {
@@ -27,15 +27,15 @@ namespace cpp_warships::input_parser {
             return *this;
         }
 
-        ParserParameter build() {
-            return ParserParameter({flags, validator, description, necessary});
+        model::ParserParameter build() {
+            return model::ParserParameter({flags, validator, description, necessary});
         }
 
-        ParserParameter buildAndReset() {
-            ParserParameter parameter = this->build();
+        model::ParserParameter buildAndReset() {
+            model::ParserParameter parameter = this->build();
             this->reset();
 
             return parameter;
         }
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::builder

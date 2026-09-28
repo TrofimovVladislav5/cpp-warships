@@ -4,31 +4,31 @@
 #include <application/head/common/input/handlers/SessionHandlers.h>
 #include <application/model/events/EventHandler.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::input::handlers {
     /** @brief Fires on a cell, but only while it is the player's turn to. */
-    class FireHandler final : public model::EventHandler {
-       public:
+    class FireHandler final : public model::events::EventHandler {
+    public:
         FireHandler(HandlerParts parts, MatchQuery match) noexcept;
 
-        [[nodiscard]] bool isHandled(const model::GameEvent& event) const override;
-        void handleEvent(const model::GameEvent& event) override;
+        [[nodiscard]] bool isHandled(const model::events::GameEvent& event) const override;
+        void handleEvent(const model::events::GameEvent& event) override;
 
-       private:
+    private:
         HandlerParts parts_;
         MatchQuery match_;
     };
 
     /** @brief Spends the next banked skill, if there is one and it is the
      * player's turn. */
-    class UseSkillHandler final : public model::EventHandler {
-       public:
+    class UseSkillHandler final : public model::events::EventHandler {
+    public:
         UseSkillHandler(HandlerParts parts, MatchQuery match) noexcept;
 
-        [[nodiscard]] bool isHandled(const model::GameEvent& event) const override;
-        void handleEvent(const model::GameEvent& event) override;
+        [[nodiscard]] bool isHandled(const model::events::GameEvent& event) const override;
+        void handleEvent(const model::events::GameEvent& event) override;
 
-       private:
+    private:
         HandlerParts parts_;
         MatchQuery match_;
     };
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::input::handlers

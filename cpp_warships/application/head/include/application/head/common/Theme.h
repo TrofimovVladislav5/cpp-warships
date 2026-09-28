@@ -5,10 +5,8 @@
 #include <string>
 #include <vector>
 
-namespace cpp_warships::head {
-    /** @brief A filled board cell: the colour of the tile and the ink of the
-     * glyph on it. Board cells are drawn as rectangles, so every tile colour
-     * needs a legible partner. */
+namespace cpp_warships::head::common {
+    /** @brief A filled board cell: the colour of the tile and the ink of the glyph on it. */
     struct CellColors {
         Color fill;
         Color ink;
@@ -45,8 +43,6 @@ namespace cpp_warships::head {
     /** @brief The theme used until the player picks another. */
     [[nodiscard]] const Theme& defaultTheme();
 
-    /** @brief The theme called @p name, or the default when there is no such
-     * theme.
-     */
+    /** @brief The theme called @p name, or the default when there is no such theme. */
     [[nodiscard]] const Theme& themeNamed(const std::string& name);
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common

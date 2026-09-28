@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace cpp_warships::input_parser {
-    void DefaultHelp::PrintParam(const ParserParameter& param) {
+    void DefaultHelp::PrintParam(const model::ParserParameter& param) {
         std::string flagsOutput;
         for (const auto& flag : param.getFlags()) {
             flagsOutput += flag + " ";

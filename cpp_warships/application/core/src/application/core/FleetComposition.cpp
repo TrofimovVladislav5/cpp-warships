@@ -17,8 +17,7 @@ namespace cpp_warships::core {
     }  // namespace
 
     FleetComposition::FleetComposition(std::map<int, int> countsByLength)
-        : countsByLength_(std::move(countsByLength)) {
-    }
+        : countsByLength_(std::move(countsByLength)) {}
 
     FleetComposition FleetComposition::forBoardSize(int boardSize) {
         if (boardSize <= 0) {
@@ -59,12 +58,7 @@ namespace cpp_warships::core {
             return sum + entry.second;
         };
 
-        return std::accumulate(
-            countsByLength_.begin(),
-            countsByLength_.end(),
-            0,
-            addShipCount
-        );
+        return std::accumulate(countsByLength_.begin(), countsByLength_.end(), 0, addShipCount);
     }
 
     int FleetComposition::totalCells() const {
@@ -72,12 +66,7 @@ namespace cpp_warships::core {
             return sum + entry.first * entry.second;
         };
 
-        return std::accumulate(
-            countsByLength_.begin(),
-            countsByLength_.end(),
-            0,
-            addOccupiedCells
-        );
+        return std::accumulate(countsByLength_.begin(), countsByLength_.end(), 0, addOccupiedCells);
     }
 
     bool FleetComposition::isEmpty() const noexcept {

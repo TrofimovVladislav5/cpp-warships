@@ -3,7 +3,7 @@
 
 #include <map>
 
-namespace cpp_warships::persistence {
+namespace cpp_warships::persistence::serializers {
     bool MatchSettingsJsonSerializer::isRelated(nlohmann::json item) {
         return item.contains("boardSize") && item.contains("fleet") &&
                item.contains("baseDamage") && item.contains("segmentHealth");
@@ -43,4 +43,4 @@ namespace cpp_warships::persistence {
             item["segmentHealth"].get<int>()
         };
     }
-}  // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence::serializers

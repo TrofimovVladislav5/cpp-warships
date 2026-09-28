@@ -9,7 +9,7 @@
 
 namespace cpp_warships::core {
     /** @brief A placed ship: its origin, orientation and per-cell segments.
-     *  Coordinates derive from origin and direction, so index and cell always agree. */
+     * Coordinates derive from origin and direction, so index and cell always agree. */
     class Ship {
     public:
         /** @brief Rebuilds a ship with segments already part-damaged, as when
@@ -48,4 +48,4 @@ namespace cpp_warships::core {
         Direction direction_;
         std::vector<Segment> segments_;
     };
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

@@ -2,8 +2,7 @@
 
 namespace cpp_warships::flow {
     Participant opponentOf(Participant participant) {
-        return participant == Participant::Player ? Participant::Computer
-                                                  : Participant::Player;
+        return participant == Participant::Player ? Participant::Computer : Participant::Player;
     }
 
     TurnOrder::TurnOrder(Participant startingParticipant)

@@ -1,18 +1,19 @@
-#include <application/head/ftxui/FtxuiNotices.h>
-#include <application/head/ftxui/FtxuiPalette.h>
-#include <application/head/ftxui/KeyHint.h>
-#include <application/head/ftxui/MenuView.h>
+#include <application/head/common/PresentationContext.h>
+#include <application/head/tui/FtxuiNotices.h>
+#include <application/head/tui/FtxuiPalette.h>
+#include <application/head/tui/KeyHint.h>
+#include <application/head/tui/MenuView.h>
 
 #include <ftxui/component/event.hpp>
 #include <string>
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::tui {
     namespace {
         constexpr int MINIMUM_PANEL_WIDTH = 46;
 
-        ftxui::Element titleBlock(const Theme& theme) {
+        ftxui::Element titleBlock(const common::Theme& theme) {
             return ftxui::vbox(
                 {ftxui::text("CPP WARSHIPS") | ftxui::bold | color(theme.accent) | ftxui::hcenter,
                  ftxui::text("a terminal fleet engagement") | color(theme.textMuted) |
@@ -21,12 +22,12 @@ namespace cpp_warships::head {
         }
     }  // namespace
 
-    MenuView::MenuView(const PresentationContext& context) noexcept : context_(context) {
-    }
+    MenuView::MenuView(const common::PresentationContext& context) noexcept
+        : context_(context) {}
 
     ftxui::Element MenuView::renderElement() {
-        const Theme& theme = context_.theme();
-        const MenuState& state = context_.state().menu;
+        const common::Theme& theme = context_.theme();
+        const common::state::MenuState& state = context_.state().menu;
         const bool hasMatchInProgress = context_.game().hasMatch();
 
         std::vector<ftxui::Element> rows{
@@ -68,4 +69,4 @@ namespace cpp_warships::head {
                ftxui::size(ftxui::WIDTH, ftxui::GREATER_THAN, MINIMUM_PANEL_WIDTH) | ftxui::center |
                ftxui::border | color(theme.border) | bgcolor(theme.background) | ftxui::flex;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::tui

@@ -1,5 +1,5 @@
-#include <application/head/ftxui/TuiShell.h>
 #include <application/head/plain/TerminalShell.h>
+#include <application/head/tui/TuiShell.h>
 #include <build_shell.h>
 
 #include <algorithm>
@@ -23,11 +23,14 @@ namespace cpp_warships::application {
         return wantsPlainTerminal ? ShellKind::PlainTerminal : ShellKind::InteractiveTerminal;
     }
 
-    std::unique_ptr<head::Shell> buildShell(const ShellKind kind, head::ThemeQuery theme) {
+    std::unique_ptr<head::common::host::Shell> buildShell(
+        const ShellKind kind,
+        head::common::ThemeQuery theme
+    ) {
         if (kind == ShellKind::PlainTerminal) {
-            return std::make_unique<head::TerminalShell>(std::cin, std::cout);
+            return std::make_unique<head::plain::TerminalShell>(std::cin, std::cout);
         }
 
-        return std::make_unique<head::TuiShell>(std::move(theme));
+        return std::make_unique<head::tui::TuiShell>(std::move(theme));
     }
 }  // namespace cpp_warships::application

@@ -7,10 +7,10 @@
 
 namespace cpp_warships::input_reader::command_reader {
     class CommandInputReader : public InputReader<> {
-       private:
+    private:
         std::map<std::string, std::string> keymap;
 
-       public:
+    public:
         explicit CommandInputReader(const std::string& filename, char delimiter = ';');
         std::string readCommand() override;
     };

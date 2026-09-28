@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::render {
     void RendererSet::drawScreenWith(const ScreenKind screen, RendererPointer renderer) {
         renderers_[screen] = std::move(renderer);
     }
@@ -19,4 +19,4 @@ namespace cpp_warships::head {
 
         return drawing->second->render(availableWidth, availableHeight);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::render

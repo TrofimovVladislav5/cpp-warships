@@ -6,11 +6,8 @@ namespace cpp_warships::serialization::helpers::serializers {
     /** @brief JsonStringSerializer is a utility class that provides methods to
      * extract field values from a serialized string representation. */
     class JsonStringSerializer {
-       public:
-        /** @brief Extracts the value of a specified field from a serialized
-         * string.
-         *  @return A pointer to a string containing the field value, or nullptr
-         * if the field is not found. */
+    public:
+        /** @brief Extracts the value of a specified field from a serialized string. */
         static std::string* extractFieldValue(
             std::string& data,
             const std::string& fieldName,
@@ -34,7 +31,7 @@ namespace cpp_warships::serialization::helpers::serializers {
         }
 
         /** @brief Sets the value for a specified field in a serialized string.
-         *  @return True if the field was found and set, false otherwise. */
+         * @return True if the field was found and set, false otherwise. */
         template <typename T = std::string>
         static bool setFieldValue(
             T* field,
@@ -51,10 +48,8 @@ namespace cpp_warships::serialization::helpers::serializers {
             return false;
         }
 
-        /** @brief Checks if the serialized string contains all specified
-         * fields.
-         *  @return True if all specified fields are present, false otherwise.
-         */
+        /** @brief Checks if the serialized string contains all specified fields.          * @return
+         * True if all specified fields are present, false otherwise. */
         template <typename... Fields>
         static bool isIncludeFields(const std::string& item, Fields... fields) {
             for (const std::string& field : {fields...}) {
@@ -69,15 +64,14 @@ namespace cpp_warships::serialization::helpers::serializers {
         }
 
         /** @brief Checks if the string is an item serialized in a class format.
-         *  @return True if an argument is a related item, false otherwise. */
+         * @return True if an argument is a related item, false otherwise. */
         static bool isRelatedItem(const std::string& item) {
             return item.find('{') != std::string::npos && item.find('}') != std::string::npos &&
                    item.find(':') != std::string::npos;
         }
 
-        /** @brief Serializes a map of fields into a string representation.
-         *  @return A string representation of the serialized fields in a
-         * JSON-like format. */
+        /** @brief Serializes a map of fields into a string representation.          *  @return A
+         * string representation of the serialized fields in a JSON-like format. */
         static std::string serializeFields(
             const std::unordered_map<std::string, std::string>& fields
         ) {

@@ -4,23 +4,25 @@
 #include <functional>
 
 namespace cpp_warships::input_parser {
-    class VoidParser : Parser<> {
-       private:
-        void printCommandsHelp(ParsedOptions options);
+    class VoidParser : model::Parser<> {
+    private:
+        void printCommandsHelp(model::ParsedOptions options);
 
-       public:
-        explicit VoidParser(const SchemeMap<void>& scheme);
+    public:
+        explicit VoidParser(const model::SchemeMap<void>& scheme);
 
         VoidParser(
-            const SchemeMap<void>& scheme,
-            const ParseCallback<void>& displayError,
-            const SchemeHelpCallback<void>& printHelp = nullptr
+            const model::SchemeMap<void>& scheme,
+            const model::ParseCallback<void>& displayError,
+            const model::SchemeHelpCallback<void>& printHelp = nullptr
         );
 
-        BindedParseCallback<void> bindedParse(const std::string& input) override;
+        model::BindedParseCallback<void> bindedParse(const std::string& input) override;
         void executedParse(const std::string& input) override;
-        std::pair<ParseCallback<void>, ParsedOptions> getCommandError() override;
-        std::pair<ParseCallback<void>, ParsedOptions>
-        getOptionsError(ParserCommandInfo<void> command, ParsedOptions arguments) override;
+        std::pair<model::ParseCallback<void>, model::ParsedOptions> getCommandError() override;
+        std::pair<model::ParseCallback<void>, model::ParsedOptions> getOptionsError(
+            model::ParserCommandInfo<void> command,
+            model::ParsedOptions arguments
+        ) override;
     };
 }  // namespace cpp_warships::input_parser

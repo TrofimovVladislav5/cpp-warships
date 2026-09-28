@@ -1,9 +1,9 @@
 #include <application/head/common/PresentationContext.h>
 #include <application/head/common/input/EventPipeline.h>
 #include <application/head/common/render/RendererSet.h>
-#include <application/head/ftxui/FtxuiPalette.h>
-#include <application/head/ftxui/FtxuiView.h>
-#include <application/head/ftxui/TuiShell.h>
+#include <application/head/tui/FtxuiPalette.h>
+#include <application/head/tui/FtxuiView.h>
+#include <application/head/tui/TuiShell.h>
 #include <unistd.h>
 
 #include <cstdio>
@@ -15,7 +15,7 @@
 #include <iostream>
 #include <utility>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::tui {
     namespace {
         /** @brief Blanks the alternate screen before the library switches into
          * it. */
@@ -28,21 +28,22 @@ namespace cpp_warships::head {
         }
     }  // namespace
 
-    TuiShell::TuiShell(ThemeQuery theme)
-        : interactiveScreen_(ftxui::ScreenInteractive::Fullscreen()), theme_(std::move(theme)) {
-    }
+    TuiShell::TuiShell(common::ThemeQuery theme)
+        : interactiveScreen_(ftxui::ScreenInteractive::Fullscreen())
+        , theme_(std::move(theme)) {}
 
     void TuiShell::run(
-        PresentationContext& context,
-        RendererSet& renderers,
-        EventPipeline& pipeline,
-        const SessionFinishedQuery& isFinished
+        common::PresentationContext& context,
+        common::render::RendererSet& renderers,
+        common::input::EventPipeline& pipeline,
+        const common::host::SessionFinishedQuery& isFinished
     ) {
         blankAlternateScreen();
 
         const auto renderActiveScreen = [&context, &renderers] {
             const auto [dimx, dimy] = ftxui::Terminal::Size();
-            const Frame frame = renderers.render(context.currentScreen(), dimx, dimy);
+            const common::render::Frame frame =
+                renderers.render(context.currentScreen(), dimx, dimy);
 
             return elementOfFrame(frame) | bgcolor(context.theme().background);
         };
@@ -60,4 +61,4 @@ namespace cpp_warships::head {
 
         interactiveScreen_.Loop(ftxui::CatchEvent(ftxui::Renderer(renderActiveScreen), routeEvent));
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::tui

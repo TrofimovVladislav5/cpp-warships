@@ -16,19 +16,17 @@ namespace cpp_warships::serialization {
     template <char* TName = nullptr>
     class ISerializable;
 
-    /** @brief Pure virtual base class that doesn't use any template parameters.
-     */
+    /** @brief Pure virtual base class that doesn't use any template parameters. */
     class ISerializableBase {
-       public:
+    public:
         virtual ~ISerializableBase() = default;
         [[nodiscard]] virtual std::string getType() = 0;
     };
 
-    /** @brief Base class for typed serializers implementing the getType method.
-     */
+    /** @brief Base class for typed serializers implementing the getType method. */
     template <char* TName>
     class ISerializableTyped : public ISerializableBase {
-       public:
+    public:
         [[nodiscard]] std::string getType() override {
             if constexpr (TName != nullptr) {
                 return TName;
@@ -44,11 +42,11 @@ namespace cpp_warships::serialization {
     /** @brief Trait to check if a type is a derivative of ISerializableBase. */
     template <typename T>
     struct is_serializable_derivative {
-       private:
+    private:
         static std::true_type test(ISerializableBase*);
         static std::false_type test(...);
 
-       public:
+    public:
         static constexpr bool value = decltype(test(std::declval<T*>()))::value;
     };
 

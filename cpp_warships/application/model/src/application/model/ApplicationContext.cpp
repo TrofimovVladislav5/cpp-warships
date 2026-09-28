@@ -1,18 +1,17 @@
 #include <application/model/ApplicationContext.h>
+#include <application/model/WarshipsGame.h>
 
 #include <cstddef>
 #include <utility>
 
 namespace cpp_warships::model {
     namespace {
-        /** @brief How many notices are worth keeping. Older ones have been on
-         * screen long enough to have been read, or long enough not to matter.
-         */
+        /** @brief How many notices are worth keeping. */
         constexpr std::size_t MOST_NOTICES_KEPT = 8;
     }  // namespace
 
-    ApplicationContext::ApplicationContext(WarshipsGame& game) noexcept : game_(game) {
-    }
+    ApplicationContext::ApplicationContext(WarshipsGame& game) noexcept
+        : game_(game) {}
 
     WarshipsGame& ApplicationContext::game() noexcept {
         return game_;

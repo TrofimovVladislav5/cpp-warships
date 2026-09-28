@@ -6,7 +6,7 @@
 #include <serialization/helpers/serializers/JsonStringSerializer.h>
 #include <serialization/helpers/type_converters/StringTypeConverter.h>
 
-namespace cpp_warships::serialization::examples {
+namespace cpp_warships::serialization::example {
     using namespace helpers::serializers;
     using namespace helpers::type_converters;
 
@@ -15,15 +15,16 @@ namespace cpp_warships::serialization::examples {
     class TestClassStringSerializer;
 
     class TestClass : public ISerializable<TestClassTypeName> {
-       private:
+    private:
         int intPrivateField = 0;
         std::string stringPrivateField = "default";
 
-       public:
+    public:
         friend TestClassStringSerializer;
         friend std::ostream& operator<<(std::ostream& os, const TestClass& obj);
 
-        TestClass() : implicitClass({}) {};
+        TestClass()
+            : implicitClass({}) {};
         int intPublicField = 0;
         std::string stringPublicField = "default";
         ImplicitTestClass implicitClass;
@@ -34,7 +35,7 @@ namespace cpp_warships::serialization::examples {
                                           TestClass,
                                           TestClassTypeName,
                                           ImplicitTestClassStringSerializer> {
-       public:
+    public:
         using ISerializer::ISerializer;
         bool isRelated(std::string item) override {
             return JsonStringSerializer::isIncludeFields(
@@ -64,22 +65,22 @@ namespace cpp_warships::serialization::examples {
             auto* testClass = new TestClass();
 
             try {
-                JsonStringSerializer::setFieldValue<int>(
+                helpers::serializers::JsonStringSerializer::setFieldValue<int>(
                     &testClass->intPublicField,
                     data,
                     "intPublicField",
-                    StringTypeConverter::stringToInt
+                    helpers::type_converters::StringTypeConverter::stringToInt
                 );
                 JsonStringSerializer::setFieldValue(
                     &testClass->stringPublicField,
                     data,
                     "stringPublicField"
                 );
-                JsonStringSerializer::setFieldValue<int>(
+                helpers::serializers::JsonStringSerializer::setFieldValue<int>(
                     &testClass->intPrivateField,
                     data,
                     "intPrivateField",
-                    StringTypeConverter::stringToInt
+                    helpers::type_converters::StringTypeConverter::stringToInt
                 );
                 JsonStringSerializer::setFieldValue(
                     &testClass->stringPrivateField,
@@ -112,4 +113,4 @@ namespace cpp_warships::serialization::examples {
 
         return os;
     }
-}  // namespace cpp_warships::serialization::examples
+}  // namespace cpp_warships::serialization::example

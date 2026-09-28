@@ -1,4 +1,5 @@
 #include <application/flow/Match.h>
+#include <application/flow/MatchEvent.h>
 
 #include <utility>
 
@@ -77,12 +78,15 @@ namespace cpp_warships::flow {
     bool Match::beginBattle() {
         if (phase_ != MatchPhase::Placement || !playerPlacementPlan().isComplete()) {
             return false;
-        } else if (!placeFleetRandomly(
+        }
+
+        bool randomFleetPlaced = placeFleetRandomly(
             computerBoard_,
             settings_.fleet(),
             randomEngine_,
             settings_.segmentHealth()
-        )) {
+        );
+        if (!randomFleetPlaced) {
             return false;
         }
 
@@ -96,12 +100,7 @@ namespace cpp_warships::flow {
     }
 
     void Match::startNextRound() {
-        events_.record(
-            {
-                .kind = MatchEventKind::RoundWon,
-                .actor = Participant::Player
-            }
-        );
+        events_.record({.kind = MatchEventKind::RoundWon, .actor = Participant::Player});
 
         placeFleetRandomly(
             computerBoard_,
@@ -114,34 +113,25 @@ namespace cpp_warships::flow {
     }
 
     void Match::concludeAsLoss() {
-        events_.record(
-            {
-                .kind = MatchEventKind::MatchLost,
-                .actor = Participant::Computer
-            }
-        );
+        events_.record({.kind = MatchEventKind::MatchLost, .actor = Participant::Computer});
         phase_ = MatchPhase::Finished;
     }
 
-    void
-    Match::recordPlayerShot(const core::AttackOutcome outcome, const core::Coordinate coordinate) {
+    void Match::recordPlayerShot(
+        const core::AttackOutcome outcome,
+        const core::Coordinate coordinate
+    ) {
         const AttackOutcomeBehaviour& behaviour = behaviourFor(outcome);
         events_.record(
-            {
-                .kind = behaviour.eventKind(),
-                .actor = Participant::Player,
-                .coordinate = coordinate
-            }
+            {.kind = behaviour.eventKind(), .actor = Participant::Player, .coordinate = coordinate}
         );
 
         if (behaviour.grantsSkill()) {
             const SkillKind granted = skillManager_.grantRandom();
             events_.record(
-                {
-                    .kind = MatchEventKind::SkillGranted,
-                     .actor = Participant::Player,
-                     .skill = granted
-                }
+                {.kind = MatchEventKind::SkillGranted,
+                 .actor = Participant::Player,
+                 .skill = granted}
             );
         }
     }
@@ -152,12 +142,7 @@ namespace cpp_warships::flow {
         }
 
         turnOrder_.pass();
-        events_.record(
-            {
-                .kind = MatchEventKind::TurnPassed,
-                .actor = turnOrder_.current()
-            }
-        );
+        events_.record({.kind = MatchEventKind::TurnPassed, .actor = turnOrder_.current()});
     }
 
     core::AttackOutcome Match::fireAt(core::Coordinate coordinate) {
@@ -165,10 +150,8 @@ namespace cpp_warships::flow {
             return core::AttackOutcome::AlreadyAttacked;
         }
 
-        const core::AttackOutcome outcome = computerBoard_.attack(
-            coordinate,
-            shotStrength_.nextShotDamage()
-        );
+        const core::AttackOutcome outcome =
+            computerBoard_.attack(coordinate, shotStrength_.nextShotDamage());
         if (behaviourFor(outcome).isShotSpent()) {
             shotStrength_.spend();
         }
@@ -187,20 +170,16 @@ namespace cpp_warships::flow {
         bool keepsTurn = false;
 
         if (targetCell.has_value()) {
-            const core::AttackOutcome outcome = playerBoard_.attack(
-                *targetCell,
-                settings_.baseDamage()
-            );
+            const core::AttackOutcome outcome =
+                playerBoard_.attack(*targetCell, settings_.baseDamage());
             aiOpponent_.recordOutcome(*targetCell, outcome, playerBoard_);
 
             const AttackOutcomeBehaviour& behaviour = behaviourFor(outcome);
             keepsTurn = behaviour.keepsTurn() && behaviour.isShotSpent();
             events_.record(
-                {
-                    .kind = behaviour.eventKind(),
-                     .actor = Participant::Computer,
-                     .coordinate = *targetCell
-                }
+                {.kind = behaviour.eventKind(),
+                 .actor = Participant::Computer,
+                 .coordinate = *targetCell}
             );
         }
 
@@ -223,12 +202,7 @@ namespace cpp_warships::flow {
             concludeAsLoss();
         } else {
             turnOrder_.giveTo(Participant::Player);
-            events_.record(
-                {
-                    .kind = MatchEventKind::TurnPassed,
-                    .actor = Participant::Player
-                }
-            );
+            events_.record({.kind = MatchEventKind::TurnPassed, .actor = Participant::Player});
         }
     }
 
@@ -271,10 +245,8 @@ namespace cpp_warships::flow {
     }
 
     void Match::strikeEnemyCell(core::Coordinate coordinate) {
-        const core::AttackOutcome outcome = computerBoard_.attack(
-            coordinate,
-            shotStrength_.baseDamage()
-        );
+        const core::AttackOutcome outcome =
+            computerBoard_.attack(coordinate, shotStrength_.baseDamage());
 
         recordPlayerShot(outcome, coordinate);
         if (computerBoard_.allShipsSunk()) {

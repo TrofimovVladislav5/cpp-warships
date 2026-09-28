@@ -2,19 +2,20 @@
 
 #include <input_parser/builder/ParserCommandBuilder.h>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::builder {
     template <typename T>
     class CommandBuildDirector {
-       private:
+    private:
         ParserCommandBuilder<T>& commandBuilder;
 
-       public:
+    public:
         explicit CommandBuildDirector(ParserCommandBuilder<T>* commandBuilder)
-            : commandBuilder(*commandBuilder) {
-        }
+            : commandBuilder(*commandBuilder) {}
 
-        ParserCommandBuilder<T>&
-        buildBasicCommand(ParseCallback<T> function, std::string description) const {
+        ParserCommandBuilder<T>& buildBasicCommand(
+            model::ParseCallback<T> function,
+            std::string description
+        ) const {
             commandBuilder.setDescription(std::move(description));
             commandBuilder.setCallback(std::move(function));
 
@@ -25,4 +26,4 @@ namespace cpp_warships::input_parser {
             commandBuilder.reset();
         }
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::builder

@@ -5,8 +5,7 @@
 
 namespace cpp_warships::model {
     MatchInPlay::MatchInPlay(flow::RandomEngine& randomEngine) noexcept
-        : randomEngine_(randomEngine) {
-    }
+        : randomEngine_(randomEngine) {}
 
     bool MatchInPlay::hasMatch() const noexcept {
         return match_.has_value();
@@ -14,7 +13,7 @@ namespace cpp_warships::model {
 
     const flow::Match& MatchInPlay::match() const {
         if (!match_.has_value()) {
-            throw NoMatchInPlayException();
+            throw errors::NoMatchInPlayException();
         }
 
         return *match_;
@@ -22,7 +21,7 @@ namespace cpp_warships::model {
 
     flow::Match& MatchInPlay::editableMatch() {
         if (!match_.has_value()) {
-            throw NoMatchInPlayException();
+            throw errors::NoMatchInPlayException();
         }
 
         return *match_;

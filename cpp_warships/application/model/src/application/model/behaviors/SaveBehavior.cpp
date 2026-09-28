@@ -1,9 +1,11 @@
+#include <application/model/MatchInPlay.h>
 #include <application/model/behaviors/SaveBehavior.h>
 #include <application/persistence/MatchSnapshot.h>
+#include <application/persistence/SaveArchive.h>
 
 #include <optional>
 
-namespace cpp_warships::model {
+namespace cpp_warships::model::behaviors {
     namespace {
         /** @brief The one slot a session saves into. Several would want a
          * screen to pick from. */
@@ -11,8 +13,8 @@ namespace cpp_warships::model {
     }  // namespace
 
     SaveBehavior::SaveBehavior(MatchInPlay& inPlay, persistence::SaveArchive& saveArchive) noexcept
-        : inPlay_(inPlay), saveArchive_(saveArchive) {
-    }
+        : inPlay_(inPlay)
+        , saveArchive_(saveArchive) {}
 
     bool SaveBehavior::hasSavedMatch() const {
         return saveArchive_.load(SAVE_SLOT_NAME).has_value();
@@ -45,4 +47,4 @@ namespace cpp_warships::model {
         inPlay_.replaceWith(saved->restore(inPlay_.randomEngine()), saved->journal());
         return true;
     }
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::behaviors

@@ -1,3 +1,5 @@
+#include <application/core/Board.h>
+#include <application/core/FleetComposition.h>
 #include <application/flow/PlacementPlan.h>
 
 #include <algorithm>
@@ -12,7 +14,7 @@ namespace cpp_warships::flow {
     }  // namespace
 
     PlacementPlan::PlacementPlan(
-        const core::FleetComposition &composition,
+        const core::FleetComposition& composition,
         const core::Board& board
     )
         : remaining_(composition.countsByLength()) {
@@ -39,12 +41,7 @@ namespace cpp_warships::flow {
             return total + entry.second;
         };
 
-        return std::accumulate(
-            remaining_.begin(),
-            remaining_.end(),
-            0,
-            addRemaining
-        );
+        return std::accumulate(remaining_.begin(), remaining_.end(), 0, addRemaining);
     }
 
     bool PlacementPlan::isComplete() const {
@@ -68,11 +65,11 @@ namespace cpp_warships::flow {
                 rowDistribution(randomEngine)
             };
             const auto direction = directionDistribution(randomEngine) == 0
-               ? core::Direction::Horizontal
-               : core::Direction::Vertical;
+                                       ? core::Direction::Horizontal
+                                       : core::Direction::Vertical;
 
             isPlaced = board.place(origin, direction, shipLength, segmentHealth) ==
-                core::PlacementError::None;
+                       core::PlacementError::None;
         }
 
         return isPlaced;
@@ -88,23 +85,13 @@ namespace cpp_warships::flow {
 
         std::vector<int> lengthsToPlace;
         for (const auto& [length, count] : composition.countsByLength()) {
-            lengthsToPlace.insert(
-                lengthsToPlace.end(),
-                static_cast<std::size_t>(count),
-                length
-            );
+            lengthsToPlace.insert(lengthsToPlace.end(), static_cast<std::size_t>(count), length);
         }
-        std::sort(
-            lengthsToPlace.begin(),
-            lengthsToPlace.end(),
-            std::greater<>()
-        );
+        std::sort(lengthsToPlace.begin(), lengthsToPlace.end(), std::greater<>());
 
         for (const int length : lengthsToPlace) {
-            if (
-                bool isPlaced = placeSingleShip(board, segmentHealth, length, randomEngine);
-                !isPlaced
-            ) {
+            if (bool isPlaced = placeSingleShip(board, segmentHealth, length, randomEngine);
+                !isPlaced) {
                 board.clear();
                 return false;
             }

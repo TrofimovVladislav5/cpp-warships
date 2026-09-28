@@ -1,11 +1,11 @@
+#include <application/model/intents/IntentProcessor.h>
 #include <application/model/scenarios/SyncScenarioQueue.h>
 
 #include <utility>
 
-namespace cpp_warships::model {
-    SyncScenarioQueue::SyncScenarioQueue(IntentProcessor& processor) noexcept
-        : processor_(processor) {
-    }
+namespace cpp_warships::model::scenarios {
+    SyncScenarioQueue::SyncScenarioQueue(intents::IntentProcessor& processor) noexcept
+        : processor_(processor) {}
 
     void SyncScenarioQueue::submit(ScenarioPointer scenario) {
         if (scenario != nullptr) {
@@ -21,10 +21,9 @@ namespace cpp_warships::model {
         }
     }
 
-    void SyncScenarioQueue::join() {
-    }
+    void SyncScenarioQueue::join() {}
 
     bool SyncScenarioQueue::isIdle() const {
         return waiting_.empty();
     }
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::scenarios

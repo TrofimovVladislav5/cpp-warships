@@ -10,7 +10,7 @@
 
 namespace cpp_warships::flow {
     /** @brief Owns a player's banked skills and applies them.
-     *  The match asks for a skill to be used; which skill and what it does live here. */
+     * The match asks for a skill to be used; which skill and what it does live here. */
     class SkillManager {
     public:
         explicit SkillManager(RandomEngine& randomEngine);
@@ -28,7 +28,7 @@ namespace cpp_warships::flow {
         [[nodiscard]] bool nextNeedsTarget() const;
 
         /** @brief Applies and consumes the next banked skill.
-         *  @return false when nothing is banked, or a needed target is missing. */
+         * @return false when nothing is banked, or a needed target is missing. */
         bool applyNext(SkillContext& context, std::optional<core::Coordinate> target);
 
     private:

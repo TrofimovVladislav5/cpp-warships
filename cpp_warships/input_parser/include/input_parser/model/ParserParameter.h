@@ -3,15 +3,15 @@
 #include <string>
 #include <vector>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::model {
     class ParserParameter {
-       private:
+    private:
         std::regex validator;
         std::string description;
         std::vector<std::string> flags;
         bool necessary = false;
 
-       public:
+    public:
         ParserParameter() = default;
         ParserParameter(
             std::vector<std::string> flags,
@@ -19,10 +19,10 @@ namespace cpp_warships::input_parser {
             std::string description,
             bool necessary
         )
-            : validator(std::move(validator)),
-              description(std::move(description)),
-              flags(std::move(flags)),
-              necessary(necessary) {};
+            : validator(std::move(validator))
+            , description(std::move(description))
+            , flags(std::move(flags))
+            , necessary(necessary) {};
 
         [[nodiscard]] std::string getDescription() const {
             return this->description;
@@ -52,4 +52,4 @@ namespace cpp_warships::input_parser {
             return std::make_pair(isValid, input);
         }
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::model

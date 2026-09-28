@@ -1,13 +1,14 @@
+#include <application/model/ApplicationContext.h>
+#include <application/model/WarshipsGame.h>
 #include <application/model/intents/IntentFactory.h>
 #include <application/model/intents/MatchIntents.h>
 #include <application/model/intents/SessionIntents.h>
 
 #include <memory>
 
-namespace cpp_warships::model {
+namespace cpp_warships::model::intents {
     IntentFactory::IntentFactory(ApplicationContext& application) noexcept
-        : application_(application) {
-    }
+        : application_(application) {}
 
     GameIntentPointer IntentFactory::startMatch(const int boardSize) const {
         return std::make_shared<StartMatchIntent>(application_.game().play(), boardSize);
@@ -57,4 +58,4 @@ namespace cpp_warships::model {
     GameIntentPointer IntentFactory::finishSession() const {
         return std::make_shared<FinishSessionIntent>(application_);
     }
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::intents

@@ -1,10 +1,11 @@
 #include <application/flow/MatchPhase.h>
 #include <application/head/common/PresentationContext.h>
+#include <application/model/ApplicationContext.h>
+#include <application/model/WarshipsGame.h>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common {
     PresentationContext::PresentationContext(const model::ApplicationContext& application) noexcept
-        : application_(application) {
-    }
+        : application_(application) {}
 
     const model::ApplicationContext& PresentationContext::application() const noexcept {
         return application_;
@@ -22,19 +23,19 @@ namespace cpp_warships::head {
         return theme_;
     }
 
-    PresentationState& PresentationContext::state() noexcept {
+    state::PresentationState& PresentationContext::state() noexcept {
         return state_;
     }
 
-    const PresentationState& PresentationContext::state() const noexcept {
+    const state::PresentationState& PresentationContext::state() const noexcept {
         return state_;
     }
 
-    GridGeometry& PresentationContext::geometry() noexcept {
+    input::GridGeometry& PresentationContext::geometry() noexcept {
         return geometry_;
     }
 
-    const GridGeometry& PresentationContext::geometry() const noexcept {
+    const input::GridGeometry& PresentationContext::geometry() const noexcept {
         return geometry_;
     }
 
@@ -46,4 +47,4 @@ namespace cpp_warships::head {
         return game().match().phase() == flow::MatchPhase::Placement ? ScreenKind::Placement
                                                                      : ScreenKind::Battle;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common

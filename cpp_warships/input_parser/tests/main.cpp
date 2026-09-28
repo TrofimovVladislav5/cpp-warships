@@ -3,7 +3,7 @@
 #include <string>
 
 TEST(Group1, Test1) {
-    EXPECT_EQ("Input Parser Tests", "Input Parser Tests");
+    EXPECT_EQ("Input input_parser::model::Parser Tests", "Input input_parser::model::Parser Tests");
 }
 
 TEST(Group1, Test2) {

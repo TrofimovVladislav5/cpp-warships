@@ -5,32 +5,39 @@
 #include <utilities/TypesHelper.h>
 
 namespace cpp_warships::input_parser {
-    using ParseResult = std::pair<ParseCallback<ParserCommand*>, ParsedOptions>;
+    using ParseResult =
+        std::pair<model::ParseCallback<command::ParserCommand*>, model::ParsedOptions>;
 
-    class CommandParser : Parser<ParserCommand*> {
-       private:
-        ParserCommand* printCommandsHelp(ParsedOptions options);
-        ParserCommand* printCommandsError(ParsedOptions options);
-        ParserCommand*
-        printArgumentsError(ParserCommandInfo<ParserCommand*> command, ParsedOptions options);
+    class CommandParser : model::Parser<command::ParserCommand*> {
+    private:
+        command::ParserCommand* printCommandsHelp(model::ParsedOptions options);
+        command::ParserCommand* printCommandsError(model::ParsedOptions options);
+        command::ParserCommand* printArgumentsError(
+            model::ParserCommandInfo<command::ParserCommand*> command,
+            model::ParsedOptions options
+        );
 
-       public:
-        explicit CommandParser(const SchemeMap<ParserCommand*>& scheme);
+    public:
+        explicit CommandParser(const model::SchemeMap<command::ParserCommand*>& scheme);
 
         CommandParser(
-            const SchemeMap<ParserCommand*>& scheme,
-            const ParseCallback<void>& displayError,
-            const SchemeHelpCallback<void>& printHelp = nullptr
+            const model::SchemeMap<command::ParserCommand*>& scheme,
+            const model::ParseCallback<void>& displayError,
+            const model::SchemeHelpCallback<void>& printHelp = nullptr
         );
 
         ~CommandParser() override = default;
 
         void executedParse(const std::string& input) override;
-        std::pair<ParseCallback<ParserCommand*>, ParsedOptions> getCommandError() override;
-        BindedParseCallback<ParserCommand*> bindedParse(const std::string& input) override;
-        std::pair<ParseCallback<ParserCommand*>, ParsedOptions> getOptionsError(
-            ParserCommandInfo<ParserCommand*> command,
-            ParsedOptions arguments
+        std::pair<model::ParseCallback<command::ParserCommand*>, model::ParsedOptions>
+        getCommandError() override;
+        model::BindedParseCallback<command::ParserCommand*> bindedParse(
+            const std::string& input
+        ) override;
+        std::pair<model::ParseCallback<command::ParserCommand*>, model::ParsedOptions>
+        getOptionsError(
+            model::ParserCommandInfo<command::ParserCommand*> command,
+            model::ParsedOptions arguments
         ) override;
     };
 }  // namespace cpp_warships::input_parser

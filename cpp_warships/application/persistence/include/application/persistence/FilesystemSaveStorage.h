@@ -6,9 +6,9 @@
 
 namespace cpp_warships::persistence {
     /** @brief Keeps saves as .json files in one directory.
-     *  The only part of the project that touches the filesystem. */
+     * The only part of the project that touches the filesystem. */
     class FilesystemSaveStorage final : public SaveStorage {
-       public:
+    public:
         explicit FilesystemSaveStorage(std::string directoryPath);
 
         /** @brief A storage rooted at the current working directory. */
@@ -21,7 +21,7 @@ namespace cpp_warships::persistence {
 
         [[nodiscard]] const std::string& directoryPath() const noexcept;
 
-       private:
+    private:
         [[nodiscard]] std::string pathFor(const std::string& name) const;
 
         std::string directoryPath_;

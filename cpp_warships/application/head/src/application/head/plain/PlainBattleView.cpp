@@ -1,3 +1,4 @@
+#include <application/head/common/PresentationContext.h>
 #include <application/head/common/render/CoordinateLabel.h>
 #include <application/head/common/render/EventNarration.h>
 #include <application/head/common/render/Notices.h>
@@ -12,7 +13,7 @@
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::plain {
     namespace {
         [[nodiscard]] std::string skillBankLine(const flow::Match& match) {
             const std::deque<flow::SkillKind>& banked = match.skills().pending();
@@ -23,33 +24,36 @@ namespace cpp_warships::head {
             std::string line = "SKILLS  ";
             for (std::size_t position = 0; position < banked.size(); ++position) {
                 line += position > 0 ? ", " : "";
-                line += skillName(banked[position]);
+                line += common::render::skillName(banked[position]);
             }
 
             return line;
         }
 
-        /** @brief The window on the story, newest first and scrolled back the
-         * same way the interactive log scrolls, so the paging keys mean the
-         * same thing here. */
-        [[nodiscard]] std::vector<std::string>
-        journalLines(const model::BattleJournal& journal, const Theme& theme, const int skipped) {
+        /** @brief The window on the story, newest first and scrolled back the same way the
+         * interactive log scrolls, so the paging keys mean the same thing here. */
+        [[nodiscard]] std::vector<std::string> journalLines(
+            const model::BattleJournal& journal,
+            const common::Theme& theme,
+            const int skipped
+        ) {
             const std::deque<flow::MatchEvent>& entries = journal.entries();
             const auto total = static_cast<int>(entries.size());
-            const int from = std::clamp(skipped, 0, furthestLogScroll(total));
+            const int from = std::clamp(skipped, 0, common::state::furthestLogScroll(total));
 
             std::vector<std::string> lines{
                 from > 0 ? "LOG  (" + std::to_string(from) + " back)" : "LOG"
             };
 
-            for (int step = 0; step < LOG_VISIBLE_LINES; ++step) {
+            for (int step = 0; step < common::state::LOG_VISIBLE_LINES; ++step) {
                 const int index = total - 1 - from - step;
                 if (index < 0) {
                     break;
                 }
 
                 lines.push_back(
-                    "  " + narrate(entries[static_cast<std::size_t>(index)], theme).text
+                    "  " +
+                    common::render::narrate(entries[static_cast<std::size_t>(index)], theme).text
                 );
             }
 
@@ -57,14 +61,13 @@ namespace cpp_warships::head {
         }
     }  // namespace
 
-    PlainBattleView::PlainBattleView(const PresentationContext& context) noexcept
-        : context_(context) {
-    }
+    PlainBattleView::PlainBattleView(const common::PresentationContext& context) noexcept
+        : context_(context) {}
 
-    Frame PlainBattleView::render(int, int) {
+    common::render::Frame PlainBattleView::render(int, int) {
         const flow::Match& match = context_.game().match();
         const model::BattleJournal& journal = context_.game().journal();
-        const BattleState& state = context_.state().battle;
+        const common::state::BattleState& state = context_.state().battle;
         const bool isFinished = match.phase() == flow::MatchPhase::Finished;
         const std::string turn = isFinished             ? "YOUR FLEET IS GONE"
                                  : match.isPlayerTurn() ? "your turn"
@@ -91,7 +94,7 @@ namespace cpp_warships::head {
         lines.emplace_back("");
         lines.push_back(plainBoardLegend());
         lines.emplace_back("");
-        lines.push_back("  aiming at " + coordinateLabel(state.target));
+        lines.push_back("  aiming at " + common::render::coordinateLabel(state.target));
         lines.emplace_back("");
         lines.push_back(skillBankLine(match));
         lines.emplace_back("");
@@ -112,10 +115,10 @@ namespace cpp_warships::head {
         lines.push_back(plainKeyLine("esc", "back to the menu"));
         lines.emplace_back("");
 
-        for (const std::string& notice : noticesToShow(context_.application())) {
+        for (const std::string& notice : common::render::noticesToShow(context_.application())) {
             lines.push_back("  ! " + notice);
         }
 
-        return frameOfLines(lines);
+        return common::render::frameOfLines(lines);
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::plain

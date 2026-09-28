@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace cpp_warships::persistence {
+namespace cpp_warships::persistence::serializers {
     namespace {
         constexpr const char* HORIZONTAL_DIRECTION = "horizontal";
         constexpr const char* VERTICAL_DIRECTION = "vertical";
@@ -54,4 +54,4 @@ namespace cpp_warships::persistence {
 
         return core::Ship{origin, direction, std::move(segments)};
     }
-}  // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence::serializers

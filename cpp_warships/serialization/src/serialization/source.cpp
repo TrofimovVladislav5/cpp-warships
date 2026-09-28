@@ -11,10 +11,7 @@
 #include <serialization/helpers/type_converters/StringTypeConverter.h>
 
 namespace cpp_warships::serialization {
-    /** @brief The one symbol this library defines. An archive with no symbols
-     * at all makes ranlib warn on every build, and the check above is worth
-     * keeping.
-     */
+    /** @brief The one symbol this library defines. */
     const char* libraryName() noexcept {
         return "serialization";
     }

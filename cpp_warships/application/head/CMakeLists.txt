@@ -22,6 +22,19 @@ add_library(warships_head
         include/application/head/common/input/Keystroke.h src/application/head/common/input/Keystroke.cpp
         include/application/head/common/input/GridGeometry.h src/application/head/common/input/GridGeometry.cpp
         include/application/head/common/input/ScreenInput.h
+        include/application/head/common/input/InputKey.h
+        include/application/head/common/input/BoundScreenInput.h
+        src/application/head/common/input/BoundScreenInput.cpp
+        include/application/head/common/input/keys/MoveCursorKey.h
+        src/application/head/common/input/keys/MoveCursorKey.cpp
+        include/application/head/common/input/keys/LeaveToMenuKey.h
+        src/application/head/common/input/keys/LeaveToMenuKey.cpp
+        include/application/head/common/input/keys/MenuKeys.h
+        src/application/head/common/input/keys/MenuKeys.cpp
+        include/application/head/common/input/keys/PlacementKeys.h
+        src/application/head/common/input/keys/PlacementKeys.cpp
+        include/application/head/common/input/keys/BattleKeys.h
+        src/application/head/common/input/keys/BattleKeys.cpp
         include/application/head/common/input/MenuInput.h src/application/head/common/input/MenuInput.cpp
         include/application/head/common/input/PlacementInput.h src/application/head/common/input/PlacementInput.cpp
         include/application/head/common/input/BattleInput.h src/application/head/common/input/BattleInput.cpp
@@ -52,18 +65,18 @@ add_library(warships_head
         include/application/head/plain/TerminalShell.h src/application/head/plain/TerminalShell.cpp
 )
 
-# warships_head_ftxui is the only place in the project that names FTXUI.
-add_library(warships_head_ftxui
-        include/application/head/ftxui/FtxuiPalette.h src/application/head/ftxui/FtxuiPalette.cpp
-        include/application/head/ftxui/FtxuiView.h src/application/head/ftxui/FtxuiView.cpp
-        include/application/head/ftxui/FtxuiNotices.h src/application/head/ftxui/FtxuiNotices.cpp
-        include/application/head/ftxui/CellAppearance.h src/application/head/ftxui/CellAppearance.cpp
-        include/application/head/ftxui/KeyHint.h src/application/head/ftxui/KeyHint.cpp
-        include/application/head/ftxui/BoardView.h src/application/head/ftxui/BoardView.cpp
-        include/application/head/ftxui/MenuView.h src/application/head/ftxui/MenuView.cpp
-        include/application/head/ftxui/PlacementView.h src/application/head/ftxui/PlacementView.cpp
-        include/application/head/ftxui/BattleView.h src/application/head/ftxui/BattleView.cpp
-        include/application/head/ftxui/TuiShell.h src/application/head/ftxui/TuiShell.cpp
+# warships_head_tui is the only place in the project that names FTXUI.
+add_library(warships_head_tui
+        include/application/head/tui/FtxuiPalette.h src/application/head/tui/FtxuiPalette.cpp
+        include/application/head/tui/FtxuiView.h src/application/head/tui/FtxuiView.cpp
+        include/application/head/tui/FtxuiNotices.h src/application/head/tui/FtxuiNotices.cpp
+        include/application/head/tui/CellAppearance.h src/application/head/tui/CellAppearance.cpp
+        include/application/head/tui/KeyHint.h src/application/head/tui/KeyHint.cpp
+        include/application/head/tui/BoardView.h src/application/head/tui/BoardView.cpp
+        include/application/head/tui/MenuView.h src/application/head/tui/MenuView.cpp
+        include/application/head/tui/PlacementView.h src/application/head/tui/PlacementView.cpp
+        include/application/head/tui/BattleView.h src/application/head/tui/BattleView.cpp
+        include/application/head/tui/TuiShell.h src/application/head/tui/TuiShell.cpp
 )
 
 # Tests setup
@@ -76,13 +89,13 @@ endif()
 
 # Expose settings
 target_include_directories(warships_head PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(warships_head_ftxui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(warships_head_tui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Link dependencies. Note what is missing from warships_head: no drawing library appears
 # here or anywhere below it.
 target_link_libraries(warships_head
         PUBLIC warships_core warships_flow warships_persistence warships_model cxx_setup
 )
-target_link_libraries(warships_head_ftxui
+target_link_libraries(warships_head_tui
         PUBLIC warships_head ftxui::ftxui cxx_setup
 )

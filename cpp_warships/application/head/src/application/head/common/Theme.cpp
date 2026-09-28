@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common {
     namespace {
         Theme makeMidnightTheme() {
             return Theme{
@@ -64,4 +64,4 @@ namespace cpp_warships::head {
 
         return found == themes.end() ? defaultTheme() : *found;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common

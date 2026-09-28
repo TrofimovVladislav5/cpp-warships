@@ -15,10 +15,7 @@ namespace cpp_warships::core {
         , segmentHealth_(segmentHealth) {}
 
     MatchSettings MatchSettings::forBoardSize(int boardSize) {
-        return MatchSettings{
-            boardSize,
-            FleetComposition::forBoardSize(boardSize)
-        };
+        return MatchSettings{boardSize, FleetComposition::forBoardSize(boardSize)};
     }
 
     int MatchSettings::boardSize() const noexcept {

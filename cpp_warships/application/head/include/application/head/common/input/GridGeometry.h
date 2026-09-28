@@ -4,7 +4,7 @@
 
 #include <optional>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::input {
     /** @brief A part of the screen a pointer can be over, named in the game's
      * terms. */
     enum class ScreenRegion {
@@ -17,11 +17,9 @@ namespace cpp_warships::head {
     /** @brief Where things landed the last time they were drawn, so that a
      * pointer position can be turned back into a cell. */
     class GridGeometry {
-       public:
-        /** @brief Notes that @p region was drawn as a @p boardWidth by @p
-         * boardHeight grid filling the patch from
-         *  (@p left, @p top) across @p width and down @p height, with each cell
-         * starting @p columnPitch across and */
+    public:
+        /** @brief Notes that @p region was drawn as a @p boardWidth by @p boardHeight grid
+         * filling the patch from (@p left, @p top) across @p width and down @p height. */
         void rememberBoard(
             ScreenRegion region,
             int left,
@@ -46,10 +44,13 @@ namespace cpp_warships::head {
 
         /** @brief The cell of @p region under (@p screenX, @p screenY), if it
          * is over it. */
-        [[nodiscard]] std::optional<core::Coordinate>
-        cellAt(ScreenRegion region, int screenX, int screenY) const;
+        [[nodiscard]] std::optional<core::Coordinate> cellAt(
+            ScreenRegion region,
+            int screenX,
+            int screenY
+        ) const;
 
-       private:
+    private:
         /** @brief One drawn patch, and the grid that was drawn into it. */
         struct Patch {
             bool isKnown = false;
@@ -74,4 +75,4 @@ namespace cpp_warships::head {
         Patch log_;
         Patch elsewhere_;
     };
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::input

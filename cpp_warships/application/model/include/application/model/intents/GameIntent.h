@@ -5,12 +5,10 @@
 #include <memory>
 #include <string>
 
-namespace cpp_warships::model {
-    /** @brief One simple thing the game can be made to do. An intent is built
-     * holding only the part of the game it needs, so what it cannot reach, it
-     * cannot change. */
+namespace cpp_warships::model::intents {
+    /** @brief One simple thing the game can be made to do. */
     class GameIntent {
-       public:
+    public:
         virtual ~GameIntent() = default;
 
         /** @brief What this is called, for saying which step of a scenario went
@@ -23,4 +21,4 @@ namespace cpp_warships::model {
     };
 
     using GameIntentPointer = std::shared_ptr<const GameIntent>;
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::intents

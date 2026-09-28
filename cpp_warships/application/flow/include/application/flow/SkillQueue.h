@@ -17,7 +17,7 @@ namespace cpp_warships::flow {
         SkillKind grantRandom(RandomEngine& randomEngine);
 
         /** @brief Banks one of every skill, in random order.
-         *  A match opens with the full set; sinking ships tops it up from there. */
+         * A match opens with the full set; sinking ships tops it up from there. */
         void grantAllShuffled(RandomEngine& randomEngine);
         void grant(SkillKind skill);
 

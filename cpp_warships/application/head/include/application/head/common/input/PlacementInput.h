@@ -1,30 +1,16 @@
 #pragma once
 
-#include <application/head/common/PresentationContext.h>
-#include <application/head/common/input/ScreenInput.h>
+#include <application/head/common/input/BoundScreenInput.h>
 
-namespace cpp_warships::head {
-    /** @brief Laying out a fleet, read in the game's terms. Where the player is
-     * aiming and which way the ship in hand lies are settled here: the game
-     * hears only the finished ask. */
-    class PlacementInput final : public ScreenInput {
-       public:
-        /** @brief Reads onto @p context, which must outlive it. */
-        explicit PlacementInput(PresentationContext& context) noexcept;
+namespace cpp_warships::head::common {
+    class PresentationContext;
+}
 
-        [[nodiscard]] std::optional<model::GameEvent> interpret(const Keystroke& stroke) override;
-
-       private:
-        [[nodiscard]] std::optional<model::GameEvent> interpretPointer(const Keystroke& stroke);
-
-        /** @brief The ask to lay the ship in hand where the cursor rests, if
-         * one is in hand. */
-        [[nodiscard]] std::optional<model::GameEvent> layShipInHand() const;
-
-        void moveCursor(const Keystroke& stroke);
-        void turnShip();
-        void pickNextShipLength();
-
-        PresentationContext& context_;
+namespace cpp_warships::head::common::input {
+    /** @brief Laying a fleet out, read in the game's terms. Where the player is aiming and
+     * which way the ship lies are settled here: the game hears only the finished ask. */
+    class PlacementInput final : public BoundScreenInput {
+    public:
+        explicit PlacementInput(PresentationContext& context);
     };
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::input

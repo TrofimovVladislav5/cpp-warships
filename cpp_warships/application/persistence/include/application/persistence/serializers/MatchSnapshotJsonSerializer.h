@@ -7,7 +7,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace cpp_warships::persistence {
+namespace cpp_warships::persistence::serializers {
     /** @brief Writes a whole match: its settings, both boards and where play
      * had got to. */
     class MatchSnapshotJsonSerializer final : public serialization::ISerializer<
@@ -16,9 +16,9 @@ namespace cpp_warships::persistence {
                                                   MATCH_SNAPSHOT_NAME,
                                                   BoardJsonSerializer,
                                                   MatchSettingsJsonSerializer> {
-       public:
+    public:
         bool isRelated(nlohmann::json item) override;
         nlohmann::json serialize(MatchSnapshot& item) override;
         MatchSnapshot deserialize(nlohmann::json item) override;
     };
-}  // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence::serializers

@@ -8,19 +8,19 @@
 
 namespace cpp_warships::input_parser {
     class DefaultHelp {
-       public:
-        static void PrintParam(const ParserParameter& param);
+    public:
+        static void PrintParam(const model::ParserParameter& param);
 
         template <typename T>
         static void PrintCommand(
-            std::pair<std::string, ParserCommandInfo<T>> command,
-            std::function<void(ParserParameter)> printParam
+            std::pair<std::string, model::ParserCommandInfo<T>> command,
+            std::function<void(model::ParserParameter)> printParam
         ) {
-            ParserCommandInfo currentCommand = command.second;
+            model::ParserCommandInfo currentCommand = command.second;
             ViewHelper::consoleOut("print '" + command.first + "': ", 1);
             ViewHelper::consoleOut("├── description: " + currentCommand.getDescription(), 1);
 
-            std::vector<ParserParameter> params = currentCommand.getParams();
+            std::vector<model::ParserParameter> params = currentCommand.getParams();
             if (params.empty()) {
                 ViewHelper::consoleOut("└── params: empty", 1);
             } else {

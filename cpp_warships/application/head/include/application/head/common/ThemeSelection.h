@@ -4,12 +4,10 @@
 
 #include <string>
 
-namespace cpp_warships::head {
-    /** @brief Which palette everything is dressed in. This is presentation
-     * state through and through: the rules neither set it nor care, so the
-     * model never sees it. */
+namespace cpp_warships::head::common {
+    /** @brief Which palette everything is dressed in. */
     class ThemeSelection {
-       public:
+    public:
         ThemeSelection();
 
         [[nodiscard]] const Theme& current() const noexcept;
@@ -18,7 +16,7 @@ namespace cpp_warships::head {
          * is one. */
         void change(const std::string& themeName);
 
-       private:
+    private:
         Theme theme_;
     };
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common

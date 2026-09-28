@@ -5,7 +5,7 @@
 #endif
 
 class Initials {
-   public:
+public:
     static void consoleOutInitials() {
 #ifdef WIN32
         system("chcp 65001");

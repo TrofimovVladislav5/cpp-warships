@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::plain {
     namespace {
         constexpr std::size_t KEY_COLUMN_WIDTH = 8;
     }  // namespace
@@ -12,4 +12,4 @@ namespace cpp_warships::head {
             key.size() < KEY_COLUMN_WIDTH ? KEY_COLUMN_WIDTH - key.size() : 1;
         return "  " + key + std::string(padding, ' ') + description;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::plain

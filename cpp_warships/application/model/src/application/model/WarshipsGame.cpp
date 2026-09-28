@@ -1,12 +1,16 @@
+#include <application/flow/Match.h>
+#include <application/model/BattleJournal.h>
 #include <application/model/WarshipsGame.h>
+#include <application/persistence/SaveArchive.h>
 
 namespace cpp_warships::model {
     WarshipsGame::WarshipsGame(
         flow::RandomEngine& randomEngine,
         persistence::SaveArchive& saveArchive
     ) noexcept
-        : inPlay_(randomEngine), play_(inPlay_), saves_(inPlay_, saveArchive) {
-    }
+        : inPlay_(randomEngine)
+        , play_(inPlay_)
+        , saves_(inPlay_, saveArchive) {}
 
     bool WarshipsGame::hasMatch() const noexcept {
         return inPlay_.hasMatch();
@@ -20,15 +24,15 @@ namespace cpp_warships::model {
         return inPlay_.journal();
     }
 
-    MatchBehavior& WarshipsGame::play() noexcept {
+    behaviors::MatchBehavior& WarshipsGame::play() noexcept {
         return play_;
     }
 
-    SaveBehavior& WarshipsGame::saves() noexcept {
+    behaviors::SaveBehavior& WarshipsGame::saves() noexcept {
         return saves_;
     }
 
-    const SaveBehavior& WarshipsGame::saves() const noexcept {
+    const behaviors::SaveBehavior& WarshipsGame::saves() const noexcept {
         return saves_;
     }
 }  // namespace cpp_warships::model

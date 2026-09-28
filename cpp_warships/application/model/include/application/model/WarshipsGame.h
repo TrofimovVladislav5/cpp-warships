@@ -1,19 +1,27 @@
 #pragma once
 
-#include <application/flow/Match.h>
 #include <application/flow/RandomEngine.h>
-#include <application/model/BattleJournal.h>
 #include <application/model/MatchInPlay.h>
 #include <application/model/behaviors/MatchBehavior.h>
 #include <application/model/behaviors/SaveBehavior.h>
-#include <application/persistence/SaveArchive.h>
+
+namespace cpp_warships::flow {
+    class Match;
+}
 
 namespace cpp_warships::model {
-    /** @brief The game being played: what it currently is, and everything that
-     * can be done to it. Reading is offered here directly; changing it goes
-     * through a behaviour. */
+    class BattleJournal;
+}
+
+namespace cpp_warships::persistence {
+    class SaveArchive;
+}
+
+namespace cpp_warships::model {
+    /** @brief The game being played: what it currently is, and everything that can be done to
+     * it. */
     class WarshipsGame {
-       public:
+    public:
         /** @brief A game played out with @p randomEngine and saved into @p
          * saveArchive, both of which must outlive it. */
         WarshipsGame(
@@ -21,9 +29,8 @@ namespace cpp_warships::model {
             persistence::SaveArchive& saveArchive
         ) noexcept;
 
-        /** @brief The behaviours hold references to state inside this object,
-         * so a copy would leave them pointing at the original. There is one
-         * game, in one place. */
+        /** @brief The behaviours hold references to state inside this object, so a copy would
+         * leave them pointing at the original. */
         WarshipsGame(const WarshipsGame&) = delete;
         WarshipsGame& operator=(const WarshipsGame&) = delete;
         WarshipsGame(WarshipsGame&&) = delete;
@@ -35,15 +42,15 @@ namespace cpp_warships::model {
         [[nodiscard]] const BattleJournal& journal() const noexcept;
 
         /** @brief Starting a match, laying out a fleet, and fighting it. */
-        [[nodiscard]] MatchBehavior& play() noexcept;
+        [[nodiscard]] behaviors::MatchBehavior& play() noexcept;
 
         /** @brief Putting a match away and picking it back up. */
-        [[nodiscard]] SaveBehavior& saves() noexcept;
-        [[nodiscard]] const SaveBehavior& saves() const noexcept;
+        [[nodiscard]] behaviors::SaveBehavior& saves() noexcept;
+        [[nodiscard]] const behaviors::SaveBehavior& saves() const noexcept;
 
-       private:
+    private:
         MatchInPlay inPlay_;
-        MatchBehavior play_;
-        SaveBehavior saves_;
+        behaviors::MatchBehavior play_;
+        behaviors::SaveBehavior saves_;
     };
 }  // namespace cpp_warships::model

@@ -12,8 +12,7 @@ namespace cpp_warships::persistence {
     }  // namespace
 
     FilesystemSaveStorage::FilesystemSaveStorage(std::string directoryPath)
-        : directoryPath_(std::move(directoryPath)) {
-    }
+        : directoryPath_(std::move(directoryPath)) {}
 
     FilesystemSaveStorage FilesystemSaveStorage::inCurrentDirectory() {
         return FilesystemSaveStorage{std::filesystem::current_path().string()};

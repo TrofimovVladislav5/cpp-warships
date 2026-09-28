@@ -1,7 +1,7 @@
 #include <application/persistence/serializers/SegmentJsonSerializer.h>
 #include <serialization/exceptions/DeserializationException.h>
 
-namespace cpp_warships::persistence {
+namespace cpp_warships::persistence::serializers {
     bool SegmentJsonSerializer::isRelated(nlohmann::json item) {
         return item.contains("maximumHealth") && item.contains("health");
     }
@@ -20,4 +20,4 @@ namespace cpp_warships::persistence {
 
         return core::Segment{item["maximumHealth"].get<int>(), item["health"].get<int>()};
     }
-}  // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence::serializers

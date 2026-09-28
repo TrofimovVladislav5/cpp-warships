@@ -2,10 +2,10 @@
 
 #include <string>
 
-namespace cpp_warships::model {
+namespace cpp_warships::model::intents {
     /** @brief How an intent went. */
     class IntentResult {
-       public:
+    public:
         [[nodiscard]] static IntentResult succeeded();
 
         /** @brief A step that did not happen, and @p reason in words a player
@@ -15,10 +15,10 @@ namespace cpp_warships::model {
         [[nodiscard]] bool isSucceeded() const noexcept;
         [[nodiscard]] const std::string& reason() const noexcept;
 
-       private:
+    private:
         IntentResult(bool isSucceeded, std::string reason);
 
         bool isSucceeded_;
         std::string reason_;
     };
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::intents

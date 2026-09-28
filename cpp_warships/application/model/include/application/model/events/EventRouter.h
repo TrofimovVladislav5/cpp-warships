@@ -5,12 +5,10 @@
 
 #include <vector>
 
-namespace cpp_warships::model {
-    /** @brief Who is listening for what, and where. Offers an event to the
-     * handlers that are in scope, in the order they subscribed, and stops at
-     * the first to claim it. */
+namespace cpp_warships::model::events {
+    /** @brief Who is listening for what, and where. */
     class EventRouter {
-       public:
+    public:
         /** @brief Registers @p handler to hear events while @p scope is the one
          * in play. */
         void subscribe(EventScope scope, EventHandlerPointer handler);
@@ -20,10 +18,10 @@ namespace cpp_warships::model {
         [[nodiscard]] EventScope currentScope() const noexcept;
 
         /** @brief Gives @p event to the first handler in scope that claims it.
-         *  @return whether any handler took it. */
+         * @return whether any handler took it. */
         bool dispatch(const GameEvent& event);
 
-       private:
+    private:
         struct Subscription {
             EventScope scope;
             EventHandlerPointer handler;
@@ -34,4 +32,4 @@ namespace cpp_warships::model {
         std::vector<Subscription> subscriptions_;
         EventScope currentScope_ = EventScope::Menu;
     };
-}  // namespace cpp_warships::model
+}  // namespace cpp_warships::model::events

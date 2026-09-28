@@ -20,8 +20,7 @@ namespace cpp_warships::core {
     Ship::Ship(Coordinate origin, Direction direction, std::vector<Segment> segments)
         : origin_(origin)
         , direction_(direction)
-        , segments_(std::move(segments)) {
-    }
+        , segments_(std::move(segments)) {}
 
     Coordinate Ship::origin() const noexcept {
         return origin_;
@@ -93,11 +92,7 @@ namespace cpp_warships::core {
             return segment.isDestroyed();
         };
 
-        return std::all_of(
-            segments_.begin(),
-            segments_.end(),
-            isSegmentDestroyed
-        );
+        return std::all_of(segments_.begin(), segments_.end(), isSegmentDestroyed);
     }
 
     const std::vector<Segment>& Ship::segments() const noexcept {

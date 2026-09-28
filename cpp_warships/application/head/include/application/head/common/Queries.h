@@ -5,10 +5,9 @@
 
 #include <functional>
 
-namespace cpp_warships::head {
-    /** @brief Read-only reach into the match in play, so a screen can draw it
-     * but never change it. Changing the match is an intent's job, and this
-     * const reference is what enforces that. */
+namespace cpp_warships::head::common {
+    /** @brief Read-only reach into the match in play, so a screen can draw it but never change
+     * it. */
     using MatchQuery = std::function<const flow::Match&()>;
 
     /** @brief Whether there is a match to go back to, asked without reaching
@@ -22,4 +21,4 @@ namespace cpp_warships::head {
     /** @brief The colours everything is dressed in, asked afresh so a change is
      * picked up. */
     using ThemeQuery = std::function<const Theme&()>;
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common

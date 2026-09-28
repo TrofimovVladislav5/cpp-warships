@@ -10,7 +10,7 @@
 
 namespace cpp_warships::core {
     /** @brief A player's grid: the ships on it and the cells attacked so far.
-     *  Owns its ships by value and performs no input or output. */
+     * Owns its ships by value and performs no input or output. */
     class Board {
     public:
         Board(int width, int height);
@@ -28,11 +28,14 @@ namespace cpp_warships::core {
         [[nodiscard]] bool contains(Coordinate coordinate) const noexcept;
 
         /** @brief Whether a ship of @p length fits at @p origin, and why not when it does not. */
-        [[nodiscard]] PlacementError
-        canPlace(Coordinate origin, Direction direction, int length) const;
+        [[nodiscard]] PlacementError canPlace(
+            Coordinate origin,
+            Direction direction,
+            int length
+        ) const;
 
         /** @brief Places a ship when the placement is legal.
-         *  @return PlacementError::None on success, leaving the board untouched otherwise. */
+         * @return PlacementError::None on success, leaving the board untouched otherwise. */
         PlacementError place(
             Coordinate origin,
             Direction direction,
@@ -53,7 +56,7 @@ namespace cpp_warships::core {
         [[nodiscard]] bool hasShipWithin(Coordinate center, int radius) const;
 
         /** @brief Whether the board holds ships and every one of them is sunk.
-         *  An empty board reports false: it is not set up yet, rather than lost. */
+         * An empty board reports false: it is not set up yet, rather than lost. */
         [[nodiscard]] bool allShipsSunk() const;
         [[nodiscard]] bool hasShips() const noexcept;
         [[nodiscard]] const std::vector<Ship>& ships() const noexcept;

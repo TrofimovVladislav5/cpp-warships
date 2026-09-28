@@ -1,7 +1,10 @@
+#include <application/core/Board.h>
+#include <application/head/common/Theme.h>
+#include <application/head/common/input/GridGeometry.h>
 #include <application/head/common/render/CoordinateLabel.h>
-#include <application/head/ftxui/BoardView.h>
-#include <application/head/ftxui/CellAppearance.h>
-#include <application/head/ftxui/FtxuiPalette.h>
+#include <application/head/tui/BoardView.h>
+#include <application/head/tui/CellAppearance.h>
+#include <application/head/tui/FtxuiPalette.h>
 
 #include <algorithm>
 #include <cstddef>
@@ -9,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::tui {
     namespace {
         constexpr int ROW_LABEL_WIDTH = 3;
         std::string rowLabel(int row) {
@@ -26,11 +29,11 @@ namespace cpp_warships::head {
 
         /** @brief The colours a cell is painted in, with the overlay having its
          * say first. */
-        CellColors colorsOf(
+        common::CellColors colorsOf(
             const core::Board& board,
             core::Coordinate coordinate,
             core::Visibility visibility,
-            const Theme& theme,
+            const common::Theme& theme,
             const BoardOverlay& overlay
         ) {
             if (overlay.marked.contains(coordinate)) {
@@ -47,7 +50,7 @@ namespace cpp_warships::head {
             const core::Board& board,
             core::Coordinate coordinate,
             core::Visibility visibility,
-            const Theme& theme,
+            const common::Theme& theme,
             const BoardOverlay& overlay
         ) {
             if (overlay.marked.contains(coordinate)) {
@@ -57,24 +60,27 @@ namespace cpp_warships::head {
             return appearanceOf(board.stateAt(coordinate, visibility), theme).glyph;
         }
 
-        ftxui::Element tileElement(const std::string& glyph, const CellColors& colors) {
+        ftxui::Element tileElement(const std::string& glyph, const common::CellColors& colors) {
             return ftxui::text(centredInTile(glyph)) | color(colors.ink) | bgcolor(colors.fill);
         }
 
-        ftxui::Element spacer(int width, const Theme& theme) {
+        ftxui::Element spacer(int width, const common::Theme& theme) {
             return ftxui::text(std::string(static_cast<std::size_t>(width), ' ')) |
                    bgcolor(theme.background);
         }
     }  // namespace
 
-    BoardView::BoardView(GridGeometry& geometry, const ScreenRegion region) noexcept
-        : geometry_(geometry), region_(region) {
-    }
+    BoardView::BoardView(
+        common::input::GridGeometry& geometry,
+        const common::input::ScreenRegion region
+    ) noexcept
+        : geometry_(geometry)
+        , region_(region) {}
 
     ftxui::Element BoardView::render(
         const core::Board& board,
         core::Visibility visibility,
-        const Theme& theme,
+        const common::Theme& theme,
         const BoardOverlay& overlay
     ) {
         publishGeometry();
@@ -91,7 +97,9 @@ namespace cpp_warships::head {
             const auto trailing =
                 static_cast<std::size_t>(isLast ? 0 : BOARD_COLUMN_PITCH - BOARD_TILE_WIDTH);
             columnHeaders.push_back(
-                ftxui::text(centredInTile(columnLabel(column)) + std::string(trailing, ' ')) |
+                ftxui::text(
+                    centredInTile(common::render::columnLabel(column)) + std::string(trailing, ' ')
+                ) |
                 color(theme.textMuted)
             );
         }
@@ -149,4 +157,4 @@ namespace cpp_warships::head {
             BOARD_ROW_PITCH
         );
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::tui

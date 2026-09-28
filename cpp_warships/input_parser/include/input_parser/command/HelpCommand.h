@@ -2,14 +2,14 @@
 #include <input_parser/command/ParserCommand.h>
 #include <input_parser/model/Parser.h>
 
-namespace cpp_warships::input_parser {
+namespace cpp_warships::input_parser::command {
     class HelpCommand : public ParserCommand {
-       private:
-        SchemeMap<ParserCommand*> scheme;
+    private:
+        model::SchemeMap<ParserCommand*> scheme;
 
-       public:
-        explicit HelpCommand(SchemeMap<ParserCommand*> scheme);
+    public:
+        explicit HelpCommand(model::SchemeMap<ParserCommand*> scheme);
 
-        void execute(ParsedOptions options) override;
+        void execute(model::ParsedOptions options) override;
     };
-}  // namespace cpp_warships::input_parser
+}  // namespace cpp_warships::input_parser::command

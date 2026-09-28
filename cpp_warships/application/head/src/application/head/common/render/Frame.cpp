@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 
-namespace cpp_warships::head {
+namespace cpp_warships::head::common::render {
     namespace {
         constexpr const char* STYLE_RESET = "\033[0m";
 
@@ -17,19 +17,16 @@ namespace cpp_warships::head {
                    ";" + std::to_string(color.blue) + "m";
         }
 
-        /** @brief Whether a cell asks for anything the terminal would not do by
-         * itself.
-         */
+        /** @brief Whether a cell asks for anything the terminal would not do by itself. */
         [[nodiscard]] bool isStyled(const FrameCell& cell) {
             return cell.fill.has_value() || cell.ink.has_value() || cell.isBold;
         }
     }  // namespace
 
     Frame::Frame(const int width, const int height)
-        : width_(std::max(0, width)),
-          height_(std::max(0, height)),
-          cells_(static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_)) {
-    }
+        : width_(std::max(0, width))
+        , height_(std::max(0, height))
+        , cells_(static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_)) {}
 
     int Frame::width() const noexcept {
         return width_;
@@ -118,4 +115,4 @@ namespace cpp_warships::head {
 
         return text;
     }
-}  // namespace cpp_warships::head
+}  // namespace cpp_warships::head::common::render
