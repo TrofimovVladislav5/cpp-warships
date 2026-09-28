@@ -5,6 +5,7 @@
 #include <application/model/intents/GameIntent.h>
 
 #include <optional>
+#include <string>
 
 namespace cpp_warships::model {
     class ApplicationContext;
@@ -31,8 +32,9 @@ namespace cpp_warships::model::intents {
         [[nodiscard]] GameIntentPointer fireAt(core::Coordinate coordinate) const;
         [[nodiscard]] GameIntentPointer useSkill(std::optional<core::Coordinate> target) const;
 
-        [[nodiscard]] GameIntentPointer saveMatch() const;
-        [[nodiscard]] GameIntentPointer loadMatch() const;
+        [[nodiscard]] GameIntentPointer saveMatch(std::string name) const;
+        [[nodiscard]] GameIntentPointer loadMatch(std::string slot) const;
+        [[nodiscard]] GameIntentPointer deleteSave(std::string slot) const;
         [[nodiscard]] GameIntentPointer finishSession() const;
 
     private:

@@ -2,9 +2,13 @@
 #include <application/head/plain/PlainBattleView.h>
 #include <application/head/plain/PlainMenuView.h>
 #include <application/head/plain/PlainPlacementView.h>
+#include <application/head/plain/PlainSaveBrowserView.h>
+#include <application/head/plain/PlainSaveNamingView.h>
 #include <application/head/tui/BattleView.h>
 #include <application/head/tui/MenuView.h>
 #include <application/head/tui/PlacementView.h>
+#include <application/head/tui/SaveBrowserView.h>
+#include <application/head/tui/SaveNamingView.h>
 #include <build_renderers.h>
 
 #include <memory>
@@ -30,6 +34,14 @@ namespace cpp_warships::application {
                 head::common::ScreenKind::Battle,
                 std::make_unique<head::tui::BattleView>(context, context.geometry())
             );
+            renderers.drawScreenWith(
+                head::common::ScreenKind::Saves,
+                std::make_unique<head::tui::SaveBrowserView>(context)
+            );
+            renderers.drawScreenWith(
+                head::common::ScreenKind::SaveNaming,
+                std::make_unique<head::tui::SaveNamingView>(context)
+            );
 
             return renderers;
         }
@@ -51,6 +63,14 @@ namespace cpp_warships::application {
             renderers.drawScreenWith(
                 head::common::ScreenKind::Battle,
                 std::make_unique<head::plain::PlainBattleView>(context)
+            );
+            renderers.drawScreenWith(
+                head::common::ScreenKind::Saves,
+                std::make_unique<head::plain::PlainSaveBrowserView>(context)
+            );
+            renderers.drawScreenWith(
+                head::common::ScreenKind::SaveNaming,
+                std::make_unique<head::plain::PlainSaveNamingView>(context)
             );
 
             return renderers;

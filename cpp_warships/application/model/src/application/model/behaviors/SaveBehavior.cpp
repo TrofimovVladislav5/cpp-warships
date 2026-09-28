@@ -4,23 +4,30 @@
 #include <application/persistence/SaveArchive.h>
 
 #include <optional>
+#include <utility>
 
 namespace cpp_warships::model::behaviors {
-    namespace {
-        /** @brief The one slot a session saves into. Several would want a
-         * screen to pick from. */
-        const std::string SAVE_SLOT_NAME = "quicksave";
-    }  // namespace
-
     SaveBehavior::SaveBehavior(MatchInPlay& inPlay, persistence::SaveArchive& saveArchive) noexcept
         : inPlay_(inPlay)
         , saveArchive_(saveArchive) {}
 
     bool SaveBehavior::hasSavedMatch() const {
-        return saveArchive_.load(SAVE_SLOT_NAME).has_value();
+        return !saveArchive_.listSaves().empty();
     }
 
-    SaveOutcome SaveBehavior::saveMatch() {
+    std::vector<persistence::SaveSummary> SaveBehavior::savedMatches() const {
+        return saveArchive_.listSaves();
+    }
+
+    std::string SaveBehavior::nameInPlay() const {
+        if (!inPlay_.loadedFrom().has_value()) {
+            return {};
+        }
+
+        return saveArchive_.nameOf(*inPlay_.loadedFrom()).value_or(std::string{});
+    }
+
+    SaveOutcome SaveBehavior::saveMatch(const std::string& name) {
         if (!inPlay_.hasMatch()) {
             return SaveOutcome::NoMatchInPlay;
         }
@@ -29,22 +36,33 @@ namespace cpp_warships::model::behaviors {
             inPlay_.journal().entries().begin(),
             inPlay_.journal().entries().end()
         };
+        const std::string slot =
+            inPlay_.loadedFrom().value_or(persistence::SaveArchive::idForNow());
 
         const bool isStored = saveArchive_.save(
-            SAVE_SLOT_NAME,
+            slot,
+            name,
             persistence::MatchSnapshot::capture(inPlay_.match(), story)
         );
+        if (!isStored) {
+            return SaveOutcome::CouldNotWrite;
+        }
 
-        return isStored ? SaveOutcome::Saved : SaveOutcome::CouldNotWrite;
+        inPlay_.rememberSlot(slot);
+        return SaveOutcome::Saved;
     }
 
-    bool SaveBehavior::loadMatch() {
-        const std::optional<persistence::MatchSnapshot> saved = saveArchive_.load(SAVE_SLOT_NAME);
+    bool SaveBehavior::loadMatch(const std::string& name) {
+        const std::optional<persistence::MatchSnapshot> saved = saveArchive_.load(name);
         if (!saved.has_value()) {
             return false;
         }
 
-        inPlay_.replaceWith(saved->restore(inPlay_.randomEngine()), saved->journal());
+        inPlay_.replaceWith(saved->restore(inPlay_.randomEngine()), saved->journal(), name);
         return true;
+    }
+
+    bool SaveBehavior::deleteSave(const std::string& name) {
+        return saveArchive_.remove(name);
     }
 }  // namespace cpp_warships::model::behaviors

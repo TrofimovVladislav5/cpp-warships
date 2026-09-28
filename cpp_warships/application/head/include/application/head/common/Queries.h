@@ -4,6 +4,7 @@
 #include <application/head/common/Theme.h>
 
 #include <functional>
+#include <string>
 
 namespace cpp_warships::head::common {
     /** @brief Read-only reach into the match in play, so a screen can draw it but never change
@@ -17,6 +18,9 @@ namespace cpp_warships::head::common {
     /** @brief Whether a saved match is there to pick back up, asked without
      * reading it. */
     using SavedMatchQuery = std::function<bool()>;
+
+    /** @brief What the match in play is already called, when it came from a save. */
+    using SaveNameQuery = std::function<std::string()>;
 
     /** @brief The colours everything is dressed in, asked afresh so a change is
      * picked up. */

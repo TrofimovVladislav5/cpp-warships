@@ -1,8 +1,8 @@
-#include <application/head/common/input/keys/MoveCursorKey.h>
-#include <application/head/common/input/Keystroke.h>
 #include <application/core/Board.h>
 #include <application/core/Coordinate.h>
 #include <application/head/common/PresentationContext.h>
+#include <application/head/common/input/Keystroke.h>
+#include <application/head/common/input/keys/MoveCursorKey.h>
 
 #include <algorithm>
 

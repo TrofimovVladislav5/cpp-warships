@@ -5,7 +5,7 @@
 namespace cpp_warships::core {
     class Board;
     struct Coordinate;
-}
+}  // namespace cpp_warships::core
 
 namespace cpp_warships::head::common {
     class PresentationContext;

@@ -14,25 +14,40 @@ namespace cpp_warships::model::intents {
     /** @brief Puts the match in play away. */
     class SaveMatchIntent final : public GameIntent {
     public:
-        explicit SaveMatchIntent(behaviors::SaveBehavior& saves) noexcept;
+        SaveMatchIntent(behaviors::SaveBehavior& saves, std::string name) noexcept;
 
         [[nodiscard]] std::string name() const override;
         [[nodiscard]] IntentResult apply() const override;
 
     private:
         behaviors::SaveBehavior& saves_;
+        std::string name_;
     };
 
-    /** @brief Picks the saved match back up, in place of whatever was in play. */
+    /** @brief Picks a named save back up, in place of whatever was in play. */
     class LoadMatchIntent final : public GameIntent {
     public:
-        explicit LoadMatchIntent(behaviors::SaveBehavior& saves) noexcept;
+        LoadMatchIntent(behaviors::SaveBehavior& saves, std::string slot) noexcept;
 
         [[nodiscard]] std::string name() const override;
         [[nodiscard]] IntentResult apply() const override;
 
     private:
         behaviors::SaveBehavior& saves_;
+        std::string slot_;
+    };
+
+    /** @brief Throws a named save away. */
+    class DeleteSaveIntent final : public GameIntent {
+    public:
+        DeleteSaveIntent(behaviors::SaveBehavior& saves, std::string slot) noexcept;
+
+        [[nodiscard]] std::string name() const override;
+        [[nodiscard]] IntentResult apply() const override;
+
+    private:
+        behaviors::SaveBehavior& saves_;
+        std::string slot_;
     };
 
     /** @brief Marks the session as over. */

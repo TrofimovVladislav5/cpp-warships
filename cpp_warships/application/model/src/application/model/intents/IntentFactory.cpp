@@ -5,6 +5,7 @@
 #include <application/model/intents/SessionIntents.h>
 
 #include <memory>
+#include <utility>
 
 namespace cpp_warships::model::intents {
     IntentFactory::IntentFactory(ApplicationContext& application) noexcept
@@ -47,12 +48,16 @@ namespace cpp_warships::model::intents {
         return std::make_shared<UseSkillIntent>(application_.game().play(), target);
     }
 
-    GameIntentPointer IntentFactory::saveMatch() const {
-        return std::make_shared<SaveMatchIntent>(application_.game().saves());
+    GameIntentPointer IntentFactory::saveMatch(std::string name) const {
+        return std::make_shared<SaveMatchIntent>(application_.game().saves(), std::move(name));
     }
 
-    GameIntentPointer IntentFactory::loadMatch() const {
-        return std::make_shared<LoadMatchIntent>(application_.game().saves());
+    GameIntentPointer IntentFactory::loadMatch(std::string slot) const {
+        return std::make_shared<LoadMatchIntent>(application_.game().saves(), std::move(slot));
+    }
+
+    GameIntentPointer IntentFactory::deleteSave(std::string slot) const {
+        return std::make_shared<DeleteSaveIntent>(application_.game().saves(), std::move(slot));
     }
 
     GameIntentPointer IntentFactory::finishSession() const {

@@ -2,6 +2,8 @@
 #include <application/head/common/input/BattleInput.h>
 #include <application/head/common/input/MenuInput.h>
 #include <application/head/common/input/PlacementInput.h>
+#include <application/head/common/input/SaveBrowserInput.h>
+#include <application/head/common/input/SaveNamingInput.h>
 #include <application/head/common/input/handlers/BattleHandlers.h>
 #include <application/head/common/input/handlers/PlacementHandlers.h>
 #include <application/head/common/input/handlers/SessionHandlers.h>
@@ -26,6 +28,14 @@ namespace cpp_warships::application {
         bus->readScreenWith(
             head::common::ScreenKind::Battle,
             std::make_unique<head::common::input::BattleInput>(context)
+        );
+        bus->readScreenWith(
+            head::common::ScreenKind::Saves,
+            std::make_unique<head::common::input::SaveBrowserInput>(context)
+        );
+        bus->readScreenWith(
+            head::common::ScreenKind::SaveNaming,
+            std::make_unique<head::common::input::SaveNamingInput>(context)
         );
 
         return bus;
@@ -53,8 +63,11 @@ namespace cpp_warships::application {
         );
 
         router->subscribe(
-            model::events::EventScope::Menu,
-            std::make_shared<head::common::input::handlers::SaveAndQuitHandler>(parts)
+            model::events::EventScope::SaveNaming,
+            std::make_shared<head::common::input::handlers::SaveAndQuitHandler>(
+                parts,
+                context.state()
+            )
         );
 
         router->subscribe(
@@ -73,10 +86,32 @@ namespace cpp_warships::application {
         );
         router->subscribe(
             model::events::EventScope::Menu,
+            std::make_shared<head::common::input::handlers::OpenSaveNamingHandler>(
+                context.state(),
+                queries.hasMatch,
+                queries.nameInPlay
+            )
+        );
+        router->subscribe(
+            model::events::EventScope::Menu,
+            std::make_shared<head::common::input::handlers::OpenSaveBrowserHandler>(
+                context.state(),
+                queries.hasMatch,
+                queries.hasSavedMatch
+            )
+        );
+        router->subscribe(
+            model::events::EventScope::Saves,
             std::make_shared<head::common::input::handlers::LoadMatchHandler>(
                 parts,
-                context.state(),
-                queries.hasSavedMatch
+                context.state()
+            )
+        );
+        router->subscribe(
+            model::events::EventScope::Saves,
+            std::make_shared<head::common::input::handlers::DeleteSaveHandler>(
+                parts,
+                context.state()
             )
         );
 

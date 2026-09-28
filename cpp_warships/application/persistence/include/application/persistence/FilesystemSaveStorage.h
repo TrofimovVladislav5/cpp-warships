@@ -18,6 +18,7 @@ namespace cpp_warships::persistence {
         [[nodiscard]] std::optional<std::string> read(const std::string& name) const override;
         bool write(const std::string& name, const std::string& contents) override;
         [[nodiscard]] bool contains(const std::string& name) const override;
+        bool remove(const std::string& name) override;
 
         [[nodiscard]] const std::string& directoryPath() const noexcept;
 

@@ -49,12 +49,12 @@ namespace cpp_warships::head::common::input::handlers {
         MatchInProgressQuery hasMatch_;
     };
 
-    /** @brief Picks the saved match back up, and leaves the menu behind. */
-    class LoadMatchHandler final : public model::events::EventHandler {
+    /** @brief Opens the list of saved games, if there is anything in it. */
+    class OpenSaveBrowserHandler final : public model::events::EventHandler {
     public:
-        LoadMatchHandler(
-            HandlerParts parts,
+        OpenSaveBrowserHandler(
             state::PresentationState& state,
+            MatchInProgressQuery hasMatch,
             SavedMatchQuery hasSavedMatch
         ) noexcept;
 
@@ -62,21 +62,67 @@ namespace cpp_warships::head::common::input::handlers {
         void handleEvent(const model::events::GameEvent& event) override;
 
     private:
-        HandlerParts parts_;
         state::PresentationState& state_;
+        MatchInProgressQuery hasMatch_;
         SavedMatchQuery hasSavedMatch_;
     };
 
-    /** @brief Puts the match away and then stops, as one thing. */
-    class SaveAndQuitHandler final : public model::events::EventHandler {
+    /** @brief Picks a chosen save back up, and leaves the browser behind. */
+    class LoadMatchHandler final : public model::events::EventHandler {
     public:
-        explicit SaveAndQuitHandler(HandlerParts parts) noexcept;
+        LoadMatchHandler(HandlerParts parts, state::PresentationState& state) noexcept;
 
         [[nodiscard]] bool isHandled(const model::events::GameEvent& event) const override;
         void handleEvent(const model::events::GameEvent& event) override;
 
     private:
         HandlerParts parts_;
+        state::PresentationState& state_;
+    };
+
+    /** @brief Throws a chosen save away, leaving the player in the browser. */
+    class DeleteSaveHandler final : public model::events::EventHandler {
+    public:
+        DeleteSaveHandler(HandlerParts parts, state::PresentationState& state) noexcept;
+
+        [[nodiscard]] bool isHandled(const model::events::GameEvent& event) const override;
+        void handleEvent(const model::events::GameEvent& event) override;
+
+    private:
+        HandlerParts parts_;
+        state::PresentationState& state_;
+    };
+
+    /** @brief Opens the prompt asking what to call the match, filled in with what it is
+     * already called when it came from a save. */
+    class OpenSaveNamingHandler final : public model::events::EventHandler {
+    public:
+        OpenSaveNamingHandler(
+            state::PresentationState& state,
+            MatchInProgressQuery hasMatch,
+            SaveNameQuery nameInPlay
+        ) noexcept;
+
+        [[nodiscard]] bool isHandled(const model::events::GameEvent& event) const override;
+        void handleEvent(const model::events::GameEvent& event) override;
+
+    private:
+        state::PresentationState& state_;
+        MatchInProgressQuery hasMatch_;
+        SaveNameQuery nameInPlay_;
+    };
+
+    /** @brief Puts the match away and then stops, as one thing. */
+    class SaveAndQuitHandler final : public model::events::EventHandler {
+    public:
+        SaveAndQuitHandler(HandlerParts parts, state::PresentationState& state) noexcept;
+
+        [[nodiscard]] bool isHandled(const model::events::GameEvent& event) const override;
+        void handleEvent(const model::events::GameEvent& event) override;
+
+    private:
+        HandlerParts parts_;
+        state::PresentationState& state_;
     };
 
     /** @brief Steps back out to the menu, leaving the match as it stands. */

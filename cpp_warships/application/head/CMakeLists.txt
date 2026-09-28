@@ -17,6 +17,8 @@ add_library(warships_head
         include/application/head/common/state/MenuState.h
         include/application/head/common/state/PlacementState.h src/application/head/common/state/PlacementState.cpp
         include/application/head/common/state/BattleState.h src/application/head/common/state/BattleState.cpp
+        include/application/head/common/state/SaveBrowserState.h
+        include/application/head/common/state/SaveNamingState.h
         include/application/head/common/state/PresentationState.h
         # Reading input: raw strokes in, asks in the game's own words out
         include/application/head/common/input/Keystroke.h src/application/head/common/input/Keystroke.cpp
@@ -35,9 +37,17 @@ add_library(warships_head
         src/application/head/common/input/keys/PlacementKeys.cpp
         include/application/head/common/input/keys/BattleKeys.h
         src/application/head/common/input/keys/BattleKeys.cpp
+        include/application/head/common/input/keys/SaveBrowserKeys.h
+        src/application/head/common/input/keys/SaveBrowserKeys.cpp
+        include/application/head/common/input/keys/SaveNamingKeys.h
+        src/application/head/common/input/keys/SaveNamingKeys.cpp
         include/application/head/common/input/MenuInput.h src/application/head/common/input/MenuInput.cpp
         include/application/head/common/input/PlacementInput.h src/application/head/common/input/PlacementInput.cpp
         include/application/head/common/input/BattleInput.h src/application/head/common/input/BattleInput.cpp
+        include/application/head/common/input/SaveBrowserInput.h
+        src/application/head/common/input/SaveBrowserInput.cpp
+        include/application/head/common/input/SaveNamingInput.h
+        src/application/head/common/input/SaveNamingInput.cpp
         include/application/head/common/input/EventBus.h src/application/head/common/input/EventBus.cpp
         include/application/head/common/input/EventPipeline.h src/application/head/common/input/EventPipeline.cpp
         # ... and what the game does about them
@@ -62,6 +72,10 @@ add_library(warships_head
         include/application/head/plain/PlainMenuView.h src/application/head/plain/PlainMenuView.cpp
         include/application/head/plain/PlainPlacementView.h src/application/head/plain/PlainPlacementView.cpp
         include/application/head/plain/PlainBattleView.h src/application/head/plain/PlainBattleView.cpp
+        include/application/head/plain/PlainSaveBrowserView.h
+        src/application/head/plain/PlainSaveBrowserView.cpp
+        include/application/head/plain/PlainSaveNamingView.h
+        src/application/head/plain/PlainSaveNamingView.cpp
         include/application/head/plain/TerminalShell.h src/application/head/plain/TerminalShell.cpp
 )
 
@@ -76,6 +90,8 @@ add_library(warships_head_tui
         include/application/head/tui/MenuView.h src/application/head/tui/MenuView.cpp
         include/application/head/tui/PlacementView.h src/application/head/tui/PlacementView.cpp
         include/application/head/tui/BattleView.h src/application/head/tui/BattleView.cpp
+        include/application/head/tui/SaveBrowserView.h src/application/head/tui/SaveBrowserView.cpp
+        include/application/head/tui/SaveNamingView.h src/application/head/tui/SaveNamingView.cpp
         include/application/head/tui/TuiShell.h src/application/head/tui/TuiShell.cpp
 )
 

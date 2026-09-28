@@ -40,6 +40,12 @@ namespace cpp_warships::head::common {
     }
 
     ScreenKind PresentationContext::currentScreen() const {
+        if (state_.isNamingSave) {
+            return ScreenKind::SaveNaming;
+        }
+        if (state_.isBrowsingSaves) {
+            return ScreenKind::Saves;
+        }
         if (state_.isAtMenu || !game().hasMatch()) {
             return ScreenKind::Menu;
         }

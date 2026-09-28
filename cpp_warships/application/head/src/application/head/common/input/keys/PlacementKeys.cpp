@@ -1,6 +1,6 @@
-#include <application/head/common/input/keys/PlacementKeys.h>
-#include <application/head/common/input/Keystroke.h>
 #include <application/head/common/PresentationContext.h>
+#include <application/head/common/input/Keystroke.h>
+#include <application/head/common/input/keys/PlacementKeys.h>
 
 namespace cpp_warships::head::common::input::keys {
     namespace {

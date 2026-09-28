@@ -11,6 +11,7 @@ namespace cpp_warships::application {
             .match = [&game]() -> const flow::Match& { return game.match(); },
             .hasMatch = [&game] { return game.hasMatch(); },
             .hasSavedMatch = [&game] { return game.saves().hasSavedMatch(); },
+            .nameInPlay = [&game] { return game.saves().nameInPlay(); },
             .theme = [&theme]() -> const head::common::Theme& { return theme.current(); }
         };
     }

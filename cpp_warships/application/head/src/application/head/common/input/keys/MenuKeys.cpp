@@ -1,6 +1,6 @@
-#include <application/head/common/input/keys/MenuKeys.h>
-#include <application/head/common/input/Keystroke.h>
 #include <application/head/common/PresentationContext.h>
+#include <application/head/common/input/Keystroke.h>
+#include <application/head/common/input/keys/MenuKeys.h>
 
 #include <algorithm>
 #include <cstddef>
@@ -65,7 +65,7 @@ namespace cpp_warships::head::common::input::keys {
     }
 
     std::optional<model::events::GameEvent> LoadMatchKey::interpret(const Keystroke&) {
-        return model::events::MatchLoadRequested{};
+        return model::events::SaveBrowserRequested{};
     }
 
     bool SaveAndQuitKey::matches(const Keystroke& stroke) const {
@@ -73,7 +73,7 @@ namespace cpp_warships::head::common::input::keys {
     }
 
     std::optional<model::events::GameEvent> SaveAndQuitKey::interpret(const Keystroke&) {
-        return model::events::MatchSaveAndQuitRequested{};
+        return model::events::SaveNamingRequested{};
     }
 
     bool QuitKey::matches(const Keystroke& stroke) const {

@@ -17,6 +17,7 @@ namespace cpp_warships::application {
         head::common::MatchQuery match;
         head::common::MatchInProgressQuery hasMatch;
         head::common::SavedMatchQuery hasSavedMatch;
+        head::common::SaveNameQuery nameInPlay;
         head::common::ThemeQuery theme;
     };
 

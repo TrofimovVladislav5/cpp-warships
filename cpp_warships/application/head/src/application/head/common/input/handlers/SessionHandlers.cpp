@@ -4,6 +4,7 @@
 #include <application/model/scenarios/ScenarioQueue.h>
 #include <application/model/scenarios/SequenceScenario.h>
 
+#include <algorithm>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -46,39 +47,98 @@ namespace cpp_warships::head::common::input::handlers {
         state_.isAtMenu = false;
     }
 
-    LoadMatchHandler::LoadMatchHandler(
-        HandlerParts parts,
+    OpenSaveBrowserHandler::OpenSaveBrowserHandler(
         state::PresentationState& state,
+        MatchInProgressQuery hasMatch,
         SavedMatchQuery hasSavedMatch
     ) noexcept
-        : parts_(parts)
-        , state_(state)
+        : state_(state)
+        , hasMatch_(std::move(hasMatch))
         , hasSavedMatch_(std::move(hasSavedMatch)) {}
 
-    bool LoadMatchHandler::isHandled(const model::events::GameEvent& event) const {
-        return model::events::isKind<model::events::MatchLoadRequested>(event) && hasSavedMatch_();
+    bool OpenSaveBrowserHandler::isHandled(const model::events::GameEvent& event) const {
+        return model::events::isKind<model::events::SaveBrowserRequested>(event) && !hasMatch_() &&
+               hasSavedMatch_();
     }
 
-    void LoadMatchHandler::handleEvent(const model::events::GameEvent&) {
+    void OpenSaveBrowserHandler::handleEvent(const model::events::GameEvent&) {
+        state_.isBrowsingSaves = true;
+        state_.saves.selectedIndex = 0;
+    }
+
+    LoadMatchHandler::LoadMatchHandler(HandlerParts parts, state::PresentationState& state) noexcept
+        : parts_(parts)
+        , state_(state) {}
+
+    bool LoadMatchHandler::isHandled(const model::events::GameEvent& event) const {
+        return model::events::isKind<model::events::MatchLoadRequested>(event);
+    }
+
+    void LoadMatchHandler::handleEvent(const model::events::GameEvent& event) {
+        const auto& asked = std::get<model::events::MatchLoadRequested>(event);
         parts_.scenarios.submit(
-            model::scenarios::scenarioOf("loading the match", parts_.intents.loadMatch())
+            model::scenarios::scenarioOf("loading the match", parts_.intents.loadMatch(asked.name))
         );
+        state_.isBrowsingSaves = false;
         state_.isAtMenu = false;
     }
 
-    SaveAndQuitHandler::SaveAndQuitHandler(HandlerParts parts) noexcept
-        : parts_(parts) {}
+    DeleteSaveHandler::DeleteSaveHandler(
+        HandlerParts parts,
+        state::PresentationState& state
+    ) noexcept
+        : parts_(parts)
+        , state_(state) {}
+
+    bool DeleteSaveHandler::isHandled(const model::events::GameEvent& event) const {
+        return model::events::isKind<model::events::SaveDeleteRequested>(event);
+    }
+
+    void DeleteSaveHandler::handleEvent(const model::events::GameEvent& event) {
+        const auto& asked = std::get<model::events::SaveDeleteRequested>(event);
+        parts_.scenarios.submit(
+            model::scenarios::scenarioOf("deleting a save", parts_.intents.deleteSave(asked.name))
+        );
+        state_.saves.selectedIndex = std::max(0, state_.saves.selectedIndex - 1);
+    }
+
+    OpenSaveNamingHandler::OpenSaveNamingHandler(
+        state::PresentationState& state,
+        MatchInProgressQuery hasMatch,
+        SaveNameQuery nameInPlay
+    ) noexcept
+        : state_(state)
+        , hasMatch_(std::move(hasMatch))
+        , nameInPlay_(std::move(nameInPlay)) {}
+
+    bool OpenSaveNamingHandler::isHandled(const model::events::GameEvent& event) const {
+        return model::events::isKind<model::events::SaveNamingRequested>(event) && hasMatch_();
+    }
+
+    void OpenSaveNamingHandler::handleEvent(const model::events::GameEvent&) {
+        state_.isNamingSave = true;
+        state_.naming.typedName = nameInPlay_();
+    }
+
+    SaveAndQuitHandler::SaveAndQuitHandler(
+        HandlerParts parts,
+        state::PresentationState& state
+    ) noexcept
+        : parts_(parts)
+        , state_(state) {}
 
     bool SaveAndQuitHandler::isHandled(const model::events::GameEvent& event) const {
         return model::events::isKind<model::events::MatchSaveAndQuitRequested>(event);
     }
 
-    void SaveAndQuitHandler::handleEvent(const model::events::GameEvent&) {
+    void SaveAndQuitHandler::handleEvent(const model::events::GameEvent& event) {
+        const auto& asked = std::get<model::events::MatchSaveAndQuitRequested>(event);
+        state_.isNamingSave = false;
         parts_.scenarios.submit(
             std::make_shared<model::scenarios::SequenceScenario>(
                 "saving and leaving",
                 std::vector<model::intents::GameIntentPointer>{
-                    parts_.intents.saveMatch(),
+                    parts_.intents.saveMatch(asked.name),
                     parts_.intents.finishSession()
                 }
             )
@@ -94,6 +154,8 @@ namespace cpp_warships::head::common::input::handlers {
 
     void ReturnToMenuHandler::handleEvent(const model::events::GameEvent&) {
         state_.isAtMenu = true;
+        state_.isBrowsingSaves = false;
+        state_.isNamingSave = false;
     }
 
     QuitHandler::QuitHandler(HandlerParts parts) noexcept

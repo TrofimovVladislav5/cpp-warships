@@ -75,4 +75,9 @@ namespace cpp_warships::persistence {
     const std::string& FilesystemSaveStorage::directoryPath() const noexcept {
         return directoryPath_;
     }
+
+    bool FilesystemSaveStorage::remove(const std::string& name) {
+        std::error_code error;
+        return std::filesystem::remove(pathFor(name), error) && !error;
+    }
 }  // namespace cpp_warships::persistence

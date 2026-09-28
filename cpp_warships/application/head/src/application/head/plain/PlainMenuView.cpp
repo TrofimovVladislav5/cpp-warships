@@ -27,11 +27,11 @@ namespace cpp_warships::head::plain {
 
         if (context_.game().hasMatch()) {
             lines.push_back(plainKeyLine("r", "resume the match in play"));
-            lines.push_back(plainKeyLine("s", "save and quit"));
+            lines.push_back(plainKeyLine("s", "name it and quit"));
         }
 
-        if (context_.game().saves().hasSavedMatch()) {
-            lines.push_back(plainKeyLine("l", "load the saved match"));
+        if (!context_.game().hasMatch() && context_.game().saves().hasSavedMatch()) {
+            lines.push_back(plainKeyLine("l", "load a saved match"));
         }
 
         lines.push_back(plainKeyLine("q", "quit"));

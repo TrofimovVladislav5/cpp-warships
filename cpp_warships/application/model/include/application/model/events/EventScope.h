@@ -5,6 +5,8 @@ namespace cpp_warships::model::events {
     enum class EventScope {
         Always,
         Menu,
+        Saves,
+        SaveNaming,
         Placement,
         Battle,
     };

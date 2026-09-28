@@ -30,4 +30,8 @@ namespace cpp_warships::persistence {
     bool MemorySaveStorage::contains(const std::string& name) const {
         return savesByName_.contains(name);
     }
+
+    bool MemorySaveStorage::remove(const std::string& name) {
+        return savesByName_.erase(name) > 0;
+    }
 }  // namespace cpp_warships::persistence

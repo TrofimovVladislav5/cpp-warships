@@ -22,5 +22,8 @@ namespace cpp_warships::persistence {
 
         /** @brief Whether a save called @p name exists. */
         [[nodiscard]] virtual bool contains(const std::string& name) const = 0;
+
+        /** @brief Throws the save called @p name away. @return whether one was there. */
+        virtual bool remove(const std::string& name) = 0;
     };
 }  // namespace cpp_warships::persistence

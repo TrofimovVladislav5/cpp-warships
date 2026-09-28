@@ -1,6 +1,6 @@
-#include <application/head/common/input/keys/BattleKeys.h>
-#include <application/head/common/input/Keystroke.h>
 #include <application/head/common/PresentationContext.h>
+#include <application/head/common/input/Keystroke.h>
+#include <application/head/common/input/keys/BattleKeys.h>
 
 #include <algorithm>
 

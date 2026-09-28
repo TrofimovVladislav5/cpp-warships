@@ -4,6 +4,7 @@
 #include <application/core/Direction.h>
 
 #include <optional>
+#include <string>
 #include <variant>
 
 namespace cpp_warships::model::events {
@@ -15,14 +16,29 @@ namespace cpp_warships::model::events {
     /** @brief The player asked to go back to the match already in play. */
     struct MatchResumeRequested {};
 
-    /** @brief The player asked for the saved match to be picked back up. */
-    struct MatchLoadRequested {};
+    /** @brief The player asked to see what has been saved. */
+    struct SaveBrowserRequested {};
+
+    /** @brief The player asked for the save called @p name to be picked back up. */
+    struct MatchLoadRequested {
+        std::string name;
+    };
+
+    /** @brief The player asked for the save called @p name to be thrown away. */
+    struct SaveDeleteRequested {
+        std::string name;
+    };
 
     /** @brief The player asked to stop playing. */
     struct SessionQuitRequested {};
 
-    /** @brief The player asked to put the match away and stop, as one thing. */
-    struct MatchSaveAndQuitRequested {};
+    /** @brief The player asked to give the match in play a name before putting it away. */
+    struct SaveNamingRequested {};
+
+    /** @brief The player named the match @p name and asked to put it away and stop. */
+    struct MatchSaveAndQuitRequested {
+        std::string name;
+    };
 
     /** @brief The player asked to step back out to the menu. */
     struct MenuReturnRequested {};
@@ -60,8 +76,11 @@ namespace cpp_warships::model::events {
     using GameEvent = std::variant<
         MatchStartRequested,
         MatchResumeRequested,
+        SaveBrowserRequested,
         MatchLoadRequested,
+        SaveDeleteRequested,
         SessionQuitRequested,
+        SaveNamingRequested,
         MatchSaveAndQuitRequested,
         MenuReturnRequested,
         ShipPlacementRequested,

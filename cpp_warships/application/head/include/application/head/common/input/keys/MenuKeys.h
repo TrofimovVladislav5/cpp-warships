@@ -58,7 +58,7 @@ namespace cpp_warships::head::common::input::keys {
         ) override;
     };
 
-    /** @brief Picks the saved match back up. */
+    /** @brief Opens the list of saved games. */
     class LoadMatchKey final : public InputKey {
     public:
         [[nodiscard]] bool matches(const Keystroke& stroke) const override;
@@ -67,7 +67,7 @@ namespace cpp_warships::head::common::input::keys {
         ) override;
     };
 
-    /** @brief Puts the match in play away and ends the session, as one thing. */
+    /** @brief Asks what to call the match in play before putting it away. */
     class SaveAndQuitKey final : public InputKey {
     public:
         [[nodiscard]] bool matches(const Keystroke& stroke) const override;

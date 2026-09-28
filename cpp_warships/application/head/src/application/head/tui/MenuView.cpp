@@ -54,11 +54,11 @@ namespace cpp_warships::head::tui {
 
         if (hasMatchInProgress) {
             hints.push_back(keyHint(theme, "r", "resume the match in play"));
-            hints.push_back(keyHint(theme, "s", "save and quit"));
+            hints.push_back(keyHint(theme, "s", "name it and quit"));
         }
 
-        if (context_.game().saves().hasSavedMatch()) {
-            hints.push_back(keyHint(theme, "l", "load the saved match"));
+        if (!hasMatchInProgress && context_.game().saves().hasSavedMatch()) {
+            hints.push_back(keyHint(theme, "l", "load a saved match"));
         }
 
         hints.push_back(keyHint(theme, "q", "quit"));

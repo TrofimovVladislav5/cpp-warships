@@ -24,6 +24,10 @@ namespace cpp_warships::head::common::input {
         switch (screen) {
             case ScreenKind::Menu:
                 return model::events::EventScope::Menu;
+            case ScreenKind::Saves:
+                return model::events::EventScope::Saves;
+            case ScreenKind::SaveNaming:
+                return model::events::EventScope::SaveNaming;
             case ScreenKind::Placement:
                 return model::events::EventScope::Placement;
             case ScreenKind::Battle:

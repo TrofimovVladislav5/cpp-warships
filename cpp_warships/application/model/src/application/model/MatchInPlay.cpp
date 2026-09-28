@@ -38,11 +38,25 @@ namespace cpp_warships::model {
     void MatchInPlay::replaceWith(flow::Match match) {
         match_.emplace(std::move(match));
         journal_.clear();
+        loadedFrom_.reset();
     }
 
-    void MatchInPlay::replaceWith(flow::Match match, const flow::MatchEventLog& story) {
+    void MatchInPlay::replaceWith(
+        flow::Match match,
+        const flow::MatchEventLog& story,
+        std::string fromSlot
+    ) {
         replaceWith(std::move(match));
         journal_.absorb(story);
+        loadedFrom_ = std::move(fromSlot);
+    }
+
+    const std::optional<std::string>& MatchInPlay::loadedFrom() const noexcept {
+        return loadedFrom_;
+    }
+
+    void MatchInPlay::rememberSlot(std::string slot) {
+        loadedFrom_ = std::move(slot);
     }
 
     void MatchInPlay::recordEvents() {
