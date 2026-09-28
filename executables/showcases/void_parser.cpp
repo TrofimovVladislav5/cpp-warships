@@ -1,29 +1,33 @@
-#include <CommandParser.h>
-#include <cpp_warships/utilities/include/ViewHelper.h>
-#include <cpp_warships/input_parser/include/VoidParser.h>
-#include <cpp_warships/input_parser/include/builder/ConfigCommandBuilder.h>
-#include <cpp_warships/input_parser/include/builder/DefaultParameterBuilder.h>
+#include <input_parser/CommandParser.h>
+#include <input_parser/VoidParser.h>
+#include <input_parser/builder/ConfigCommandBuilder.h>
+#include <input_parser/builder/DefaultParameterBuilder.h>
+#include <utilities/ViewHelper.h>
 
 using namespace cpp_warships::input_parser;
+using namespace cpp_warships::input_parser::builder;
+using namespace cpp_warships::input_parser::command;
+using namespace cpp_warships::input_parser::model;
 
 class ParserCommandsHandler {
 private:
     bool isExited = false;
+
 public:
-    void handleExit(ParsedOptions options) {
+    void handleExit(ParsedOptions) {
         ViewHelper::consoleOut("Leaving");
         isExited = true;
     }
 
-    void handleNew(ParsedOptions options) {
+    void handleNew(ParsedOptions) {
         ViewHelper::consoleOut("New");
     }
 
-    void handleInfo(ParsedOptions options) {
+    void handleInfo(ParsedOptions) {
         ViewHelper::consoleOut("Info");
     }
 
-    void handleList(ParsedOptions options) {
+    void handleList(ParsedOptions) {
         ViewHelper::consoleOut("List");
     }
 
@@ -42,65 +46,72 @@ int main() {
     ParserCommandsHandler handler;
 
     SchemeMap<void> inputScheme = {
-        {"load", ParserCommandInfo(
-            commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleLoad, &handler))
-                .setDescription("Load game from file")
-                .addParameter(
-                    parameterBuilder
-                        .addFlag("--filename")
-                        .setDescription("Specify the file name to load the game from. Make sure it's a .json file")
-                        .setValidator(std::regex("^.*\\.json$"))
-                        .setNecessary(true)
-                        .buildAndReset()
-                )
-                .buildAndReset()
-            )
-        },
-        {"new", ParserCommandInfo(
-            commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleNew, &handler))
-                .setDescription("Start new game from scratch")
-                .addParameter(
-                    parameterBuilder
-                        .addFlag("--default")
-                        .setDescription("Start game with default settings and skip the initialization phase (true/false")
-                        .setNecessary(false)
-                        .setValidator(std::regex("^(true|false)$"))
-                        .buildAndReset()
-                    )
-                .buildAndReset()
-            )
-        },
-        {"info", ParserCommandInfo(
-            commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleInfo, &handler))
-                .setDescription("Print the latest screenshot from currently handled save")
-                .buildAndReset()
-            )
-        },
-        {"list", ParserCommandInfo(
-            commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleList, &handler))
-                .setDescription("List all available saves")
-                .addParameter(
-                    parameterBuilder
-                        .addFlag("--filename")
-                        .setNecessary(false)
-                        .setDescription("Specify path to the directory with saves")
-                        .setValidator(std::regex("^.*$"))
-                        .buildAndReset()
-                )
-                .buildAndReset()
-            )
-        },
-        {"exit", ParserCommandInfo(
-            commandBuilder
-                .setCallback(TypesHelper::methodToFunction(&ParserCommandsHandler::handleExit, &handler))
-                .setDescription("Exit the program")
-                .buildAndReset()
-            )
-        }
+        {"load",
+         ParserCommandInfo(
+             commandBuilder
+                 .setCallback(
+                     TypesHelper::methodToFunction(&ParserCommandsHandler::handleLoad, &handler)
+                 )
+                 .setDescription("Load game from file")
+                 .addParameter(parameterBuilder.addFlag("--filename")
+                                   .setDescription(
+                                       "Specify the file name to load the game "
+                                       "from. Make sure it's a .json file"
+                                   )
+                                   .setValidator(std::regex("^.*\\.json$"))
+                                   .setNecessary(true)
+                                   .buildAndReset())
+                 .buildAndReset()
+         )},
+        {"new",
+         ParserCommandInfo(
+             commandBuilder
+                 .setCallback(
+                     TypesHelper::methodToFunction(&ParserCommandsHandler::handleNew, &handler)
+                 )
+                 .setDescription("Start new game from scratch")
+                 .addParameter(parameterBuilder.addFlag("--default")
+                                   .setDescription(
+                                       "Start game with default settings and skip "
+                                       "the initialization phase (true/false"
+                                   )
+                                   .setNecessary(false)
+                                   .setValidator(std::regex("^(true|false)$"))
+                                   .buildAndReset())
+                 .buildAndReset()
+         )},
+        {"info",
+         ParserCommandInfo(
+             commandBuilder
+                 .setCallback(
+                     TypesHelper::methodToFunction(&ParserCommandsHandler::handleInfo, &handler)
+                 )
+                 .setDescription("Print the latest screenshot from currently handled save")
+                 .buildAndReset()
+         )},
+        {"list",
+         ParserCommandInfo(
+             commandBuilder
+                 .setCallback(
+                     TypesHelper::methodToFunction(&ParserCommandsHandler::handleList, &handler)
+                 )
+                 .setDescription("List all available saves")
+                 .addParameter(parameterBuilder.addFlag("--filename")
+                                   .setNecessary(false)
+                                   .setDescription("Specify path to the directory with saves")
+                                   .setValidator(std::regex("^.*$"))
+                                   .buildAndReset())
+                 .buildAndReset()
+         )},
+        {"exit",
+         ParserCommandInfo(
+             commandBuilder
+                 .setCallback(
+                     TypesHelper::methodToFunction(&ParserCommandsHandler::handleExit, &handler)
+                 )
+                 .setDescription("Exit the program")
+                 .buildAndReset()
+         )}
     };
 
     while (!handler.getExited()) {

@@ -1,7 +1,38 @@
 BasedOnStyle: Google
+
 AccessModifierOffset: -4
-TabWidth: 4
-IndentWidth: 4
-ContinuationIndentWidth: 8
 ColumnLimit: 100
-PointerAlignment: Right
+IndentWidth: 4
+TabWidth: 4
+
+# Declarations inside a namespace are indented within it.
+NamespaceIndentation: All
+
+# A body always gets its own lines, however short it is. An empty one stays as {},
+# since splitting it only adds a line with nothing on it.
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+
+# When a call, a declaration or a braced list does not fit on one line, break
+# after the open bracket, give every item a line of its own rather than packing
+# as many as fit, and put the closing bracket on a line of its own.
+AlignAfterOpenBracket: BlockIndent
+BinPackArguments: false
+BinPackParameters: false
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+BreakAfterOpenBracketLoop: true
+BreakBeforeCloseBracketLoop: true
+BreakAfterOpenBracketIf: true
+BreakBeforeCloseBracketIf: true
+BreakAfterOpenBracketSwitch: true
+BreakBeforeCloseBracketSwitch: true
+
+# A member initialiser list always breaks onto its own lines, one member each,
+# with the comma leading so the member names line up down the page.
+BreakConstructorInitializers: BeforeComma
+PackConstructorInitializers: Never
+
+# Never push a return type onto its own line to save a wrap; break the parameters
+# instead, which is what the rules above already do everywhere else.
+PenaltyReturnTypeOnItsOwnLine: 10000

@@ -1,0 +1,109 @@
+#include <input_parser/CommandParser.h>
+#include <input_parser/builder/ConfigCommandBuilder.h>
+#include <input_parser/command/ArgumentsErrorCommand.h>
+#include <input_parser/command/ErrorCommand.h>
+#include <input_parser/command/HelpCommand.h>
+
+namespace cpp_warships::input_parser {
+    command::ParserCommand* CommandParser::printCommandsHelp(model::ParsedOptions _) {
+        return new command::HelpCommand(this->scheme);
+    }
+
+    command::ParserCommand* CommandParser::printCommandsError(model::ParsedOptions _) {
+        return new command::ErrorCommand(this->displayError);
+    }
+
+    command::ParserCommand* CommandParser::printArgumentsError(
+        model::ParserCommandInfo<command::ParserCommand*> command,
+        model::ParsedOptions _
+    ) {
+        return new command::ArgumentsErrorCommand(command);
+    }
+
+    CommandParser::CommandParser(const model::SchemeMap<command::ParserCommand*>& scheme)
+        : model::Parser<command::ParserCommand*>(scheme) {}
+
+    CommandParser::CommandParser(
+        const model::SchemeMap<command::ParserCommand*>& scheme,
+        const model::ParseCallback<void>& displayError,
+        const model::SchemeHelpCallback<void>& printHelp
+    )
+        : model::Parser<command::ParserCommand*>(scheme, displayError) {
+        if (!scheme.contains("help")) {
+            builder::ConfigCommandBuilder<command::ParserCommand*> commandBuilder;
+            model::ParserCommandInfo<command::ParserCommand*>* helpInfo;
+
+            if (printHelp) {
+                helpInfo = new model::ParserCommandInfo<command::ParserCommand*>(
+                    {commandBuilder.setDescription("command::Command to display this message")
+                         .setCallback(
+                             TypesHelper::methodToFunction(&CommandParser::printCommandsHelp, this)
+                         )
+                         .buildAndReset()}
+                );
+            } else {
+                auto method =
+                    TypesHelper::methodToFunction(&CommandParser::printCommandsHelp, this);
+                helpInfo = new model::ParserCommandInfo<command::ParserCommand*>(
+                    {commandBuilder.setDescription("command::Command to display this message")
+                         .setCallback(
+                             TypesHelper::methodToFunction(&CommandParser::printCommandsHelp, this)
+                         )
+                         .buildAndReset()}
+                );
+            }
+
+            this->scheme.insert({"help", *helpInfo});
+            delete helpInfo;
+        }
+    }
+
+    void CommandParser::executedParse(const std::string& input) {
+        ParseResult parseResult = this->parse(input);
+        if (parseResult.first) {
+            command::ParserCommand* command = parseResult.first(parseResult.second);
+            command->execute(parseResult.second);
+        }
+    }
+
+    model::BindedParseCallback<command::ParserCommand*> CommandParser::bindedParse(
+        const std::string& input
+    ) {
+        ParseResult result = this->parse(input);
+        return std::bind(result.first, result.second);
+    }
+
+    std::pair<model::ParseCallback<command::ParserCommand*>, model::ParsedOptions> CommandParser::
+        getOptionsError(
+            model::ParserCommandInfo<command::ParserCommand*> command,
+            model::ParsedOptions arguments
+        ) {
+        model::ParseCallback<command::ParserCommand*> protectedDisplayError =
+            command.getErrorDisplay() ? std::bind(
+                                            &CommandParser::printArgumentsError,
+                                            this,
+                                            command,
+                                            std::placeholders::_1
+                                        )
+                                      : throw std::invalid_argument(
+                                            "Arguments validation failed. You can "
+                                            "get better error message "
+                                            "by providing displayError callback"
+                                        );
+
+        return std::make_pair(protectedDisplayError, arguments);
+    }
+
+    std::pair<model::ParseCallback<command::ParserCommand*>, model::ParsedOptions> CommandParser::
+        getCommandError() {
+        model::ParseCallback<command::ParserCommand*> commandNotFound =
+            this->displayError
+                ? TypesHelper::methodToFunction(&CommandParser::printCommandsError, this)
+                : throw std::invalid_argument(
+                      "command::Command not found. You can get better error "
+                      "message by providing displayError callback"
+                  );
+
+        return std::make_pair(commandNotFound, model::ParsedOptions());
+    }
+}  // namespace cpp_warships::input_parser

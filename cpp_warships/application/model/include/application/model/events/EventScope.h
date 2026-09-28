@@ -1,0 +1,13 @@
+#pragma once
+
+namespace cpp_warships::model::events {
+    /** @brief When a handler is listening. */
+    enum class EventScope {
+        Always,
+        Menu,
+        Saves,
+        SaveNaming,
+        Placement,
+        Battle,
+    };
+}  // namespace cpp_warships::model::events
