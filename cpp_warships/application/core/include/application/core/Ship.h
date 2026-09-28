@@ -1,0 +1,51 @@
+#pragma once
+
+#include <application/core/Coordinate.h>
+#include <application/core/Direction.h>
+#include <application/core/Segment.h>
+
+#include <optional>
+#include <vector>
+
+namespace cpp_warships::core {
+    /** @brief A placed ship: its origin, orientation and per-cell segments.
+     * Coordinates derive from origin and direction, so index and cell always agree. */
+    class Ship {
+    public:
+        /** @brief Rebuilds a ship with segments already part-damaged, as when
+         * loading a save. */
+        Ship(Coordinate origin, Direction direction, std::vector<Segment> segments);
+
+        Ship(
+            Coordinate origin,
+            Direction direction,
+            int length,
+            int segmentHealth = DEFAULT_SEGMENT_HEALTH
+        );
+
+        [[nodiscard]] Coordinate origin() const noexcept;
+        [[nodiscard]] Direction direction() const noexcept;
+        [[nodiscard]] int length() const noexcept;
+
+        /** @brief Coordinate of the segment at @p index, which must be in range. */
+        [[nodiscard]] Coordinate coordinateAt(int index) const;
+
+        /** @brief Index of the segment covering @p coordinate, or nullopt when not covered. */
+        [[nodiscard]] std::optional<int> segmentIndexAt(Coordinate coordinate) const noexcept;
+
+        [[nodiscard]] bool occupies(Coordinate coordinate) const noexcept;
+        [[nodiscard]] std::vector<Coordinate> coordinates() const;
+
+        /** @brief Damages the segment at @p index; returns false when out of range. */
+        bool damageSegment(int index, int amount);
+
+        [[nodiscard]] int segmentHealth(int index) const;
+        [[nodiscard]] bool isSunk() const noexcept;
+        [[nodiscard]] const std::vector<Segment>& segments() const noexcept;
+
+    private:
+        Coordinate origin_;
+        Direction direction_;
+        std::vector<Segment> segments_;
+    };
+}  // namespace cpp_warships::core

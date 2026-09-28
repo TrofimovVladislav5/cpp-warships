@@ -1,20 +1,21 @@
-#include <string>
+#include <serialization/SerializerAggregator.h>
+#include <serialization/example/ImplicitTestClass.h>
+#include <serialization/example/TestClass.h>
+
 #include <iostream>
+#include <string>
 
-#include <cpp_warships/game_saves/include/example/TestClass.h>
-#include <cpp_warships/game_saves/include/example/ImplicitTestClass.h>
-#include <cpp_warships/game_saves/include/SerializerAggregator.h>
-
-using namespace cpp_warships::game_saves;
+using namespace cpp_warships::serialization;
+using namespace cpp_warships::serialization::example;
 
 int main() {
-    examples::TestClass test_class;
+    example::TestClass test_class;
     test_class.stringPublicField = "changed";
 
     SerializerAggregator<std::string> test_serializer;
     test_serializer.setSerializers(
-        examples::TestClassStringSerializer{},
-        examples::ImplicitTestClassStringSerializer{}
+        new example::TestClassStringSerializer{},
+        new example::ImplicitTestClassStringSerializer{}
     );
 
     test_class.implicitClass.stringPublicField = "changed-public";
@@ -27,7 +28,7 @@ int main() {
     std::cout << "---- SERIALIZATION FINISHED ----" << std::endl << std::endl;
 
     std::cout << "---- DESERIALIZATION RESULT ----" << std::endl;
-    auto deserialized_test_class = test_serializer.deserialize<examples::TestClass>(serialized_data);
+    auto deserialized_test_class = test_serializer.deserialize<example::TestClass>(serialized_data);
     std::cout << deserialized_test_class << std::endl;
 
     return 0;
