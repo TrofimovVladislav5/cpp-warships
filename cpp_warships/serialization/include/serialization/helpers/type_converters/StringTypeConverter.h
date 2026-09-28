@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <stdexcept>
 #include <string>
 
 namespace cpp_warships::serialization::helpers::type_converters {

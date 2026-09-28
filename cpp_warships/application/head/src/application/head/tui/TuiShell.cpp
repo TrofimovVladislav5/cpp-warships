@@ -4,7 +4,6 @@
 #include <application/head/tui/FtxuiPalette.h>
 #include <application/head/tui/FtxuiView.h>
 #include <application/head/tui/TuiShell.h>
-#include <unistd.h>
 
 #include <cstdio>
 #include <ftxui/component/component.hpp>
@@ -15,12 +14,27 @@
 #include <iostream>
 #include <utility>
 
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
+
 namespace cpp_warships::head::tui {
     namespace {
+        /** @brief Whether standard output is a terminal rather than a pipe. */
+        bool isOutputTerminal() {
+#ifdef _WIN32
+            return _isatty(_fileno(stdout)) != 0;
+#else
+            return isatty(STDOUT_FILENO) != 0;
+#endif
+        }
+
         /** @brief Blanks the alternate screen before the library switches into
          * it. */
         void blankAlternateScreen() {
-            if (isatty(STDOUT_FILENO) == 0) {
+            if (!isOutputTerminal()) {
                 return;
             }
 

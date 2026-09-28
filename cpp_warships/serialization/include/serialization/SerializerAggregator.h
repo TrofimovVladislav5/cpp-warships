@@ -9,6 +9,7 @@
 #include <any>
 #include <iostream>
 #include <ranges>
+#include <unordered_map>
 
 namespace cpp_warships::serialization {
     template <typename TSerialized>

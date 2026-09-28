@@ -2,6 +2,8 @@
 #include <input_parser/command/HelpCommand.h>
 #include <utilities/ViewHelper.h>
 
+#include <utility>
+
 namespace cpp_warships::input_parser::command {
     HelpCommand::HelpCommand(model::SchemeMap<ParserCommand*> scheme)
         : ParserCommand()

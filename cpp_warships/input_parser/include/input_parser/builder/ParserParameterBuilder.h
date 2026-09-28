@@ -1,5 +1,7 @@
 #pragma once
 #include <regex>
+#include <string>
+#include <vector>
 
 namespace cpp_warships::input_parser::builder {
     class ParserParameterBuilder {

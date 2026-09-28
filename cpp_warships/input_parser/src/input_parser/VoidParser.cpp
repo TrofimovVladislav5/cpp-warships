@@ -6,6 +6,8 @@
 #include <utilities/TypesHelper.h>
 #include <utilities/ViewHelper.h>
 
+#include <stdexcept>
+
 namespace cpp_warships::input_parser {
     void VoidParser::printCommandsHelp(model::ParsedOptions options) {
         ViewHelper::consoleOut("This is the list of supported commands:");

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <functional>
 #include <string>
+#include <unordered_map>
 
 namespace cpp_warships::serialization::helpers::serializers {
     /** @brief JsonStringSerializer is a utility class that provides methods to

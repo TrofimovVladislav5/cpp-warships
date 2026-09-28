@@ -1,6 +1,7 @@
 #include <utilities/StringHelper.h>
 #include <utilities/ViewHelper.h>
 
+#include <exception>
 #include <functional>
 #include <iostream>
 #include <ostream>

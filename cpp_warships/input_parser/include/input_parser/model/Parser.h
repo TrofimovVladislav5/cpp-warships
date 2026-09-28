@@ -2,7 +2,10 @@
 #include <input_parser/model/ParserCommandInfo.h>
 #include <utilities/StringHelper.h>
 
+#include <functional>
 #include <map>
+#include <unordered_map>
+#include <utility>
 
 namespace cpp_warships::input_parser::model {
     template <typename T>

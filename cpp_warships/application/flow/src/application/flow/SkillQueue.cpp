@@ -1,6 +1,7 @@
 #include <application/flow/SkillQueue.h>
 
 #include <algorithm>
+#include <cstddef>
 #include <utility>
 
 namespace cpp_warships::flow {

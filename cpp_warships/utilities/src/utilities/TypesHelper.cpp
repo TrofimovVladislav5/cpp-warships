@@ -1,5 +1,9 @@
 #include <utilities/TypesHelper.h>
 
+#include <stdexcept>
+#include <string>
+#include <utility>
+
 std::pair<int, int> TypesHelper::convertToPair(const std::string& input) {
     if (input.length() < 2) {
         throw std::invalid_argument("Input string is too short");

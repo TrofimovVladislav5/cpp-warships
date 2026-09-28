@@ -1,6 +1,7 @@
 #include <input_reader/config_reader/ConfigInputReader.h>
 #include <input_reader/console_reader/ConsoleInputReader.h>
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>

@@ -4,6 +4,8 @@
 #include <input_parser/command/ErrorCommand.h>
 #include <input_parser/command/HelpCommand.h>
 
+#include <stdexcept>
+
 namespace cpp_warships::input_parser {
     command::ParserCommand* CommandParser::printCommandsHelp(model::ParsedOptions _) {
         return new command::HelpCommand(this->scheme);

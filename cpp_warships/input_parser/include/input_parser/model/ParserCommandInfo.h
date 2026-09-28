@@ -1,9 +1,11 @@
 #pragma once
 #include <input_parser/model/ParserParameter.h>
 
+#include <functional>
 #include <iostream>
 #include <map>
 #include <string>
+#include <utility>
 
 namespace cpp_warships::input_parser::model {
     typedef std::map<std::string, std::string> ParsedOptions;

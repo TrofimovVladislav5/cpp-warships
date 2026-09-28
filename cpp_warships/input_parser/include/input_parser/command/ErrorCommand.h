@@ -2,6 +2,8 @@
 #include <input_parser/command/ParserCommand.h>
 #include <input_parser/model/Parser.h>
 
+#include <functional>
+
 namespace cpp_warships::input_parser::command {
     class ErrorCommand : public ParserCommand {
     private:

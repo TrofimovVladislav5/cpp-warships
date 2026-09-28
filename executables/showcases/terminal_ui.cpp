@@ -4,6 +4,8 @@
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <map>
+#include <memory>
+#include <string>
 #include <vector>
 
 using FieldMock = std::vector<std::vector<std::size_t>>;

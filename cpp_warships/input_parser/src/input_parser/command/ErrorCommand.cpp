@@ -1,5 +1,8 @@
 #include <input_parser/command/ErrorCommand.h>
 
+#include <functional>
+#include <utility>
+
 namespace cpp_warships::input_parser::command {
     ErrorCommand::ErrorCommand(std::function<void(model::ParsedOptions options)> displayError)
         : ParserCommand()

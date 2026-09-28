@@ -1,6 +1,7 @@
 #include <application/persistence/serializers/ShipJsonSerializer.h>
 #include <serialization/exceptions/DeserializationException.h>
 
+#include <utility>
 #include <vector>
 
 namespace cpp_warships::persistence::serializers {

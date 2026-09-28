@@ -1,5 +1,7 @@
 #include <input_parser/command/ArgumentsErrorCommand.h>
 
+#include <stdexcept>
+
 namespace cpp_warships::input_parser::command {
     void ArgumentsErrorCommand::execute(model::ParsedOptions options) {
         model::ParseCallback<void> protectedDisplayError =

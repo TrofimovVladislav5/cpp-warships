@@ -5,8 +5,6 @@ presentation genuinely apart.
 
 ![The game running in a terminal](readme/tui_view.png)
 
----
-
 ## Features
 
 ### The game
@@ -25,12 +23,11 @@ presentation genuinely apart.
 
 ### Two front ends
 
-| | |
-|---|---|
-| `cpp_warships` | the full FTXUI interface, with colour, themes and a mouse |
-| `cpp_warships --plain` | plain text, naming no drawing library at all |
+|                        |                                                           |
+|------------------------|-----------------------------------------------------------|
+| `cpp_warships`         | the full FTXUI interface, with colour, themes and a mouse |
+| `cpp_warships --plain` | plain text, naming no drawing library at all              |
 
----
 
 ## Architecture
 
@@ -117,7 +114,6 @@ sequenceDiagram
 > The full class diagram and the reasoning behind each decision are in
 > [architecture.md](architecture.md).
 
----
 
 ## Everything runs on one thread
 
@@ -141,18 +137,17 @@ That is a deliberate simplification rather than an oversight.
 The whole game can be driven by piping keystrokes into the plain front end and reading the
 frames back — which is how every feature here has been tested.
 
----
 
 ## Building
 
 ### Commands
 
-| command | description |
-|---|---|
-| `make compile` | build, reusing previous artifacts |
-| `make rebuild-debug` | build from scratch in Debug |
-| `make rebuild-release` | build from scratch in Release |
-| `make test` | run every library's tests |
+| command                | description                       |
+|------------------------|-----------------------------------|
+| `make compile`         | build, reusing previous artifacts |
+| `make rebuild-debug`   | build from scratch in Debug       |
+| `make rebuild-release` | build from scratch in Release     |
+| `make test`            | run every library's tests         |
 
 ### Flags
 
@@ -168,7 +163,6 @@ Tests are omitted entirely from Release builds, so `make test` finds nothing aft
 
 FTXUI and nlohmann/json are fetched by CMake on first configure.
 
----
 
 ## A note on scope
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <functional>
 #include <regex>
+#include <string>
+#include <utility>
 
 class TypesHelper {
 public:

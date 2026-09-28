@@ -2,6 +2,7 @@
 #include <serialization/exceptions/DeserializationException.h>
 
 #include <map>
+#include <utility>
 
 namespace cpp_warships::persistence::serializers {
     bool MatchSettingsJsonSerializer::isRelated(nlohmann::json item) {
