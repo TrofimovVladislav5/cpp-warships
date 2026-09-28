@@ -30,7 +30,7 @@ namespace cpp_warships::head::plain {
         for (std::size_t index = 0; index < saves.size(); ++index) {
             const std::string marker = static_cast<int>(index) == chosen ? "  > " : "    ";
             lines.push_back(
-                marker + persistence::SaveArchive::momentOf(saves[index].id) + "   " +
+                marker + persistence::SaveArchive::momentOf(saves[index].timestamp) + "   " +
                 saves[index].name
             );
         }

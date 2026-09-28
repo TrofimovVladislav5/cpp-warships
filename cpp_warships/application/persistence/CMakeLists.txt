@@ -18,7 +18,12 @@ add_library(warships_persistence
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(warships_persistence_tests tests/main.cpp)
+    add_executable(warships_persistence_tests
+            tests/FilesystemSaveStorageTests.cpp
+            tests/JsonSerializerTests.cpp
+            tests/MatchSnapshotTests.cpp
+            tests/MemorySaveStorageTests.cpp
+            tests/SaveArchiveTests.cpp)
     target_link_libraries(warships_persistence_tests PRIVATE GTest::gtest_main warships_persistence)
     include(GoogleTest)
     gtest_discover_tests(warships_persistence_tests)
@@ -31,6 +36,7 @@ target_include_directories(warships_persistence
 
 # Link dependencies
 target_link_libraries(warships_persistence
-        PUBLIC warships_core warships_flow serialization cxx_setup
-        PRIVATE nlohmann_json::nlohmann_json
+        # nlohmann/json appears in the serializers' public headers, so it travels with them
+        PUBLIC warships_core warships_flow serialization cxx_setup nlohmann_json::nlohmann_json
+        PRIVATE platform
 )

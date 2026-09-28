@@ -7,17 +7,17 @@
 #include <stdexcept>
 
 namespace cpp_warships::input_parser {
-    command::ParserCommand* CommandParser::printCommandsHelp(model::ParsedOptions _) {
+    command::ParserCommand* CommandParser::printCommandsHelp(model::ParsedOptions) {
         return new command::HelpCommand(this->scheme);
     }
 
-    command::ParserCommand* CommandParser::printCommandsError(model::ParsedOptions _) {
+    command::ParserCommand* CommandParser::printCommandsError(model::ParsedOptions) {
         return new command::ErrorCommand(this->displayError);
     }
 
     command::ParserCommand* CommandParser::printArgumentsError(
         model::ParserCommandInfo<command::ParserCommand*> command,
-        model::ParsedOptions _
+        model::ParsedOptions
     ) {
         return new command::ArgumentsErrorCommand(command);
     }

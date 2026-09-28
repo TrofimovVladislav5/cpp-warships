@@ -22,6 +22,5 @@ target_include_directories(cpp_warships
 # so naming any of them again here only makes the linker warn about duplicates.
 target_link_libraries(cpp_warships
         PRIVATE warships_head_tui
-        PRIVATE utilities
         PRIVATE cxx_setup
 )

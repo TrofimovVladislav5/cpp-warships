@@ -20,7 +20,10 @@ add_library(serialization
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(serialization_tests tests/main.cpp)
+    add_executable(serialization_tests
+            tests/ExampleClassTests.cpp
+            tests/JsonStringSerializerTests.cpp
+            tests/SerializerContractTests.cpp)
     target_link_libraries(serialization_tests PRIVATE GTest::gtest_main serialization)
     include(GoogleTest)
     gtest_discover_tests(serialization_tests)

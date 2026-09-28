@@ -34,17 +34,18 @@ namespace cpp_warships::serialization::helpers {
             if constexpr (sizeof...(Args) == 0) {
                 return T{};
             } else {
-                T* result{};
-                bool found = false;
+                T* result = nullptr;
                 (
                     [&]<typename T0>(T0&& arg) {
-                        if (!found && std::is_same_v<T0, T> && std::is_constructible_v<T, T0&&>) {
-                            result = dynamic_cast<T*>(&arg);
-                            found = true;
+                        if constexpr (std::is_same_v<std::remove_cvref_t<T0>, T>) {
+                            if (result == nullptr) {
+                                result = &arg;
+                            }
                         }
                     }(args),
                     ...);
-                return *result;
+
+                return result == nullptr ? T{} : *result;
             }
         }
 

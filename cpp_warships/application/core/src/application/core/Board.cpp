@@ -126,7 +126,7 @@ namespace cpp_warships::core {
             return AttackOutcome::Miss;
         }
 
-        return attackShipCell(targetShip.base(), coordinate, damage);
+        return attackShipCell(&*targetShip, coordinate, damage);
     }
 
     AttackOutcome Board::attackShipCell(

@@ -20,11 +20,14 @@ namespace cpp_warships::persistence {
         /** @brief Every save there is, newest first. */
         [[nodiscard]] std::vector<SaveSummary> listSaves() const;
 
-        /** @brief An id for a save made now, which sorts and reads as its moment. */
-        [[nodiscard]] static std::string idForNow();
+        /** @brief An identifier no other save will carry, for one being made now. */
+        [[nodiscard]] static std::string newSaveId();
 
-        /** @brief The moment @p id stands for, written out for a player to read. */
-        [[nodiscard]] static std::string momentOf(const std::string& id);
+        /** @brief This moment, written so that saves sort into the order they were made. */
+        [[nodiscard]] static std::string timestampForNow();
+
+        /** @brief The moment @p timestamp stands for, written out for a player to read. */
+        [[nodiscard]] static std::string momentOf(const std::string& timestamp);
 
         /** @brief Throws the save called @p name away. @return whether one was there. */
         bool remove(const std::string& id);

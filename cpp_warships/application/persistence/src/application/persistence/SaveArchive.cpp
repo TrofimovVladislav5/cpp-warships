@@ -8,19 +8,25 @@
 #include <exception>
 #include <iomanip>
 #include <nlohmann/json.hpp>
+#include <platform/OSBrancher.h>
+#include <random>
 #include <sstream>
 
 namespace cpp_warships::persistence {
     namespace {
-        constexpr std::size_t DATE_LENGTH = 8;
-        constexpr std::size_t SAVE_NAME_LENGTH = 15;
-        constexpr const char* SAVE_NAME_KEY = "name";
-    }  // namespace
-
-    namespace {
         /** @brief How many spaces a written save is indented by, to stay
          * readable. */
         constexpr int SAVE_INDENTATION = 4;
+
+        constexpr const char* DATA_KEY = "data";
+        constexpr const char* META_KEY = "meta";
+        constexpr const char* UUID_KEY = "uuid";
+        constexpr const char* TIMESTAMP_KEY = "timestamp";
+        constexpr const char* NAME_KEY = "name";
+
+        /** @brief Length of a timestamp written as YYYY-MM-DDTHH:MM:SS. */
+        constexpr std::size_t TIMESTAMP_LENGTH = 19;
+        constexpr std::size_t TIMESTAMP_SEPARATOR_POSITION = 10;
 
         /** @brief A snapshot serializer with its children wired up. */
         serializers::MatchSnapshotJsonSerializer makeSnapshotSerializer() {
@@ -36,62 +42,117 @@ namespace cpp_warships::persistence {
 
             return serializer;
         }
+
+        /** @brief The meta block of the save called @p id, or nothing when it
+         * cannot be read. */
+        [[nodiscard]] std::optional<nlohmann::json> metaOf(
+            const SaveStorage& storage,
+            const std::string& id
+        ) {
+            const std::optional<std::string> contents = storage.read(id);
+            if (!contents.has_value()) {
+                return std::nullopt;
+            }
+
+            try {
+                const nlohmann::json document = nlohmann::json::parse(*contents);
+                if (document.contains(META_KEY) && document[META_KEY].is_object()) {
+                    return document[META_KEY];
+                }
+            } catch (const std::exception&) {
+                return std::nullopt;
+            }
+
+            return std::nullopt;
+        }
+
+        /** @brief Reads @p key of @p meta as text, or nothing when it is not there. */
+        [[nodiscard]] std::optional<std::string> textOf(
+            const std::optional<nlohmann::json>& meta,
+            const char* key
+        ) {
+            if (!meta.has_value() || !meta->contains(key) || !(*meta)[key].is_string()) {
+                return std::nullopt;
+            }
+
+            return (*meta)[key].get<std::string>();
+        }
     }  // namespace
 
     SaveArchive::SaveArchive(SaveStorage& storage)
         : storage_(storage) {}
 
     std::vector<SaveSummary> SaveArchive::listSaves() const {
-        std::vector<std::string> ids = storage_.list();
-        std::sort(ids.begin(), ids.end(), std::greater<>());
-
         std::vector<SaveSummary> summaries;
-        summaries.reserve(ids.size());
-        for (const std::string& id : ids) {
-            summaries.push_back({.id = id, .name = nameOf(id).value_or(momentOf(id))});
+        for (const std::string& id : storage_.list()) {
+            const std::optional<nlohmann::json> meta = metaOf(storage_, id);
+
+            summaries.push_back(
+                {.id = id,
+                 .name = textOf(meta, NAME_KEY).value_or(id),
+                 .timestamp = textOf(meta, TIMESTAMP_KEY).value_or(std::string{})}
+            );
         }
+
+        const auto isNewerFirst = [](const SaveSummary& left, const SaveSummary& right) {
+            if (left.timestamp != right.timestamp) {
+                return left.timestamp > right.timestamp;
+            }
+
+            return left.id < right.id;
+        };
+        std::sort(summaries.begin(), summaries.end(), isNewerFirst);
 
         return summaries;
     }
 
     std::optional<std::string> SaveArchive::nameOf(const std::string& id) const {
-        const std::optional<std::string> contents = storage_.read(id);
-        if (!contents.has_value()) {
-            return std::nullopt;
-        }
-
-        try {
-            const nlohmann::json document = nlohmann::json::parse(*contents);
-            if (document.contains(SAVE_NAME_KEY)) {
-                return document[SAVE_NAME_KEY].get<std::string>();
-            }
-        } catch (const std::exception&) {
-            return std::nullopt;
-        }
-
-        return std::nullopt;
+        return textOf(metaOf(storage_, id), NAME_KEY);
     }
 
-    std::string SaveArchive::idForNow() {
+    std::string SaveArchive::newSaveId() {
+        static constexpr const char* HEX_DIGITS = "0123456789abcdef";
+        static constexpr int UUID_VERSION = 4;
+        static constexpr int UUID_VARIANT_LOW = 8;
+        static constexpr int UUID_VARIANT_HIGH = 11;
+
+        std::random_device randomDevice;
+        std::mt19937 engine{randomDevice()};
+        std::uniform_int_distribution<int> anyDigit{0, 15};
+        std::uniform_int_distribution<int> variantDigit{UUID_VARIANT_LOW, UUID_VARIANT_HIGH};
+
+        std::string written = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
+        for (char& position : written) {
+            if (position == 'x') {
+                position = HEX_DIGITS[anyDigit(engine)];
+            } else if (position == 'y') {
+                position = HEX_DIGITS[variantDigit(engine)];
+            }
+        }
+        written[14] = HEX_DIGITS[UUID_VERSION];
+
+        return written;
+    }
+
+    std::string SaveArchive::timestampForNow() {
         const std::time_t now =
             std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        std::tm broken{};
-        localtime_r(&now, &broken);
+        const std::tm broken = platform::localTimeOf(now);
 
         std::ostringstream written;
-        written << std::put_time(&broken, "%Y%m%d-%H%M%S");
+        written << std::put_time(&broken, "%Y-%m-%dT%H:%M:%S");
 
         return written.str();
     }
 
-    std::string SaveArchive::momentOf(const std::string& id) {
-        const std::string& name = id;
-        if (name.size() != SAVE_NAME_LENGTH || name[DATE_LENGTH] != '-') {
-            return name;
+    std::string SaveArchive::momentOf(const std::string& timestamp) {
+        if (timestamp.size() != TIMESTAMP_LENGTH ||
+            timestamp[TIMESTAMP_SEPARATOR_POSITION] != 'T') {
+            return timestamp;
         }
 
-        return name.substr(0, 4) + "-" + name.substr(4, 2) + "-" + name.substr(6, 2) + "  " +
-               name.substr(9, 2) + ":" + name.substr(11, 2) + ":" + name.substr(13, 2);
+        return timestamp.substr(0, TIMESTAMP_SEPARATOR_POSITION) + "  " +
+               timestamp.substr(TIMESTAMP_SEPARATOR_POSITION + 1);
     }
 
     bool SaveArchive::remove(const std::string& id) {
@@ -108,8 +169,10 @@ namespace cpp_warships::persistence {
         bool isSaved = false;
 
         try {
-            nlohmann::json document = serializer.serialize(writableSnapshot);
-            document[SAVE_NAME_KEY] = name;
+            const nlohmann::json document{
+                {DATA_KEY, serializer.serialize(writableSnapshot)},
+                {META_KEY, {{UUID_KEY, id}, {TIMESTAMP_KEY, timestampForNow()}, {NAME_KEY, name}}}
+            };
             isSaved = storage_.write(id, document.dump(SAVE_INDENTATION));
         } catch (const std::exception&) {
             isSaved = false;
@@ -125,7 +188,8 @@ namespace cpp_warships::persistence {
         if (contents.has_value()) {
             serializers::MatchSnapshotJsonSerializer serializer = makeSnapshotSerializer();
             try {
-                snapshot = serializer.deserialize(nlohmann::json::parse(*contents));
+                const nlohmann::json document = nlohmann::json::parse(*contents);
+                snapshot = serializer.deserialize(document.at(DATA_KEY));
             } catch (const std::exception&) {
                 snapshot = std::nullopt;
             }

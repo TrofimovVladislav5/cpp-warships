@@ -26,7 +26,10 @@ add_library(input_parser
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(input_parser_tests tests/main.cpp)
+    add_executable(input_parser_tests
+            tests/BuilderTests.cpp
+            tests/ParserModelTests.cpp
+            tests/VoidParserTests.cpp)
     target_link_libraries(input_parser_tests PRIVATE GTest::gtest_main input_parser)
     include(GoogleTest)
     gtest_discover_tests(input_parser_tests)

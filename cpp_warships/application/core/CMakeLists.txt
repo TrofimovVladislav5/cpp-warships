@@ -18,7 +18,14 @@ add_library(warships_core
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(warships_core_tests tests/main.cpp)
+    add_executable(warships_core_tests
+            tests/BoardTests.cpp
+            tests/CoordinateTests.cpp
+            tests/ErrorsTests.cpp
+            tests/FleetCompositionTests.cpp
+            tests/MatchSettingsTests.cpp
+            tests/SegmentTests.cpp
+            tests/ShipTests.cpp)
     target_link_libraries(warships_core_tests PRIVATE GTest::gtest_main warships_core)
     include(GoogleTest)
     gtest_discover_tests(warships_core_tests)

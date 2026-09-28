@@ -1,7 +1,5 @@
 # Compile files
 add_library(utilities
-        # Settings
-        include/utilities/Initials.h
         # Helpers
         src/utilities/StateMessages.cpp include/utilities/StateMessages.h
         src/utilities/FieldCoordinateHelper.cpp include/utilities/FieldCoordinateHelper.h
@@ -11,7 +9,11 @@ add_library(utilities
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(utilities_tests tests/main.cpp)
+    add_executable(utilities_tests
+            tests/FieldCoordinateHelperTests.cpp
+            tests/StringHelperTests.cpp
+            tests/TypesHelperTests.cpp
+            tests/ViewHelperTests.cpp)
     target_link_libraries(utilities_tests PRIVATE GTest::gtest_main utilities)
     include(GoogleTest)
     gtest_discover_tests(utilities_tests)

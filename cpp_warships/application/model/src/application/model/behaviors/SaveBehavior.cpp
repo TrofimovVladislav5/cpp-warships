@@ -36,15 +36,12 @@ namespace cpp_warships::model::behaviors {
             inPlay_.journal().entries().begin(),
             inPlay_.journal().entries().end()
         };
-        const std::string slot =
-            inPlay_.loadedFrom().value_or(persistence::SaveArchive::idForNow());
-
-        const bool isStored = saveArchive_.save(
-            slot,
-            name,
-            persistence::MatchSnapshot::capture(inPlay_.match(), story)
+        const std::string slot = inPlay_.loadedFrom().value_or(
+            persistence::SaveArchive::newSaveId()
         );
-        if (!isStored) {
+
+        const auto matchSnapshot = persistence::MatchSnapshot::capture(inPlay_.match(), story);
+        if (const bool isStored = saveArchive_.save(slot, name, matchSnapshot); !isStored) {
             return SaveOutcome::CouldNotWrite;
         }
 

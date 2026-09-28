@@ -13,19 +13,19 @@ namespace cpp_warships::input_reader::config_reader {
         , linesExecuted(0) {
         std::ifstream file(filename);
 
-        std::vector<std::string> fileContents;
+        std::vector<std::string> readLines;
         if (!file.is_open() || std::filesystem::is_directory(filename)) {
             std::cerr << "Error opening file!" << std::endl;
         } else {
             std::string line;
             while (std::getline(file, line)) {
-                fileContents.push_back(line);
+                readLines.push_back(line);
             }
 
             file.close();
         }
 
-        this->fileContents = fileContents;
+        this->fileContents = readLines;
     }
 
     std::string ConfigInputReader::readCommand() {

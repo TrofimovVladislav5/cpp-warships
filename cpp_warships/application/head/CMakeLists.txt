@@ -97,7 +97,13 @@ add_library(warships_head_tui
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(warships_head_tests tests/main.cpp)
+    add_executable(warships_head_tests
+            tests/GridGeometryTests.cpp
+            tests/KeystrokeTests.cpp
+            tests/PresentationContextTests.cpp
+            tests/RenderTests.cpp
+            tests/ScreenInputTests.cpp
+            tests/ThemeTests.cpp)
     target_link_libraries(warships_head_tests PRIVATE GTest::gtest_main warships_head)
     include(GoogleTest)
     gtest_discover_tests(warships_head_tests)
@@ -113,5 +119,5 @@ target_link_libraries(warships_head
         PUBLIC warships_core warships_flow warships_persistence warships_model cxx_setup
 )
 target_link_libraries(warships_head_tui
-        PUBLIC warships_head ftxui::ftxui cxx_setup
+        PUBLIC warships_head ftxui::ftxui cxx_setup platform
 )

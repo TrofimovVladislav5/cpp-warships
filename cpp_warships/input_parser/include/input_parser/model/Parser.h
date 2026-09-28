@@ -34,8 +34,8 @@ namespace cpp_warships::input_parser::model {
             }
         }
 
-        bool commandInScheme(std::string& command, const SchemeMap<T>& scheme) {
-            return scheme.find(command) != scheme.end();
+        bool commandInScheme(std::string& command, const SchemeMap<T>& searchedScheme) {
+            return searchedScheme.find(command) != searchedScheme.end();
         }
 
         bool findOption(
@@ -56,9 +56,9 @@ namespace cpp_warships::input_parser::model {
 
         bool necessaryFlagsPresent(
             const std::vector<std::string>& input,
-            const ParserCommandInfo<T>& scheme
+            const ParserCommandInfo<T>& commandScheme
         ) {
-            auto params = scheme.getParams();
+            auto params = commandScheme.getParams();
 
             std::unordered_map<std::string, int> necessaryFlags;
             std::unordered_map<std::string, int> allFlags;
@@ -130,7 +130,7 @@ namespace cpp_warships::input_parser::model {
         explicit Parser(
             SchemeMap<T> scheme,
             ParseCallback<void> displayError,
-            const SchemeHelpCallback<void>& _ = nullptr
+            const SchemeHelpCallback<void>& = nullptr
         )
             : scheme(std::move(scheme))
             , displayError(std::move(displayError)) {}

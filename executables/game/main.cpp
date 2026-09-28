@@ -1,10 +1,10 @@
 #include <application/flow/RandomEngine.h>
 #include <build_shell.h>
 #include <run_game.h>
-#include <utilities/Initials.h>
+#include <platform/OSBrancher.h>
 
 auto main(const int argumentCount, const char* const* arguments) -> int {
-    Initials::consoleOutInitials();
+    cpp_warships::platform::prepareConsoleForUnicode();
 
     cpp_warships::flow::RandomEngine randomEngine = cpp_warships::flow::makeRandomlySeededEngine();
 

@@ -58,7 +58,7 @@ namespace cpp_warships::serialization::example {
                     data,
                     "stringPrivateField"
                 );
-            } catch (std::exception& e) {
+            } catch (const std::exception&) {
                 delete testClass;
                 throw;
             }

@@ -1,4 +1,5 @@
 # Reusable libraries, owing nothing to this game.
+add_subdirectory(platform)
 add_subdirectory(utilities)
 add_subdirectory(serialization)
 add_subdirectory(input_parser)

@@ -32,7 +32,13 @@ add_library(warships_model
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(warships_model_tests tests/main.cpp)
+    add_executable(warships_model_tests
+            tests/ApplicationContextTests.cpp
+            tests/BattleJournalTests.cpp
+            tests/BehaviorTests.cpp
+            tests/EventTests.cpp
+            tests/IntentTests.cpp
+            tests/ScenarioQueueTests.cpp)
     target_link_libraries(warships_model_tests PRIVATE GTest::gtest_main warships_model)
     include(GoogleTest)
     gtest_discover_tests(warships_model_tests)

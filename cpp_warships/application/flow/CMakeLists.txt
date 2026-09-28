@@ -21,7 +21,18 @@ add_library(warships_flow
 
 # Tests setup
 if (BUILD_TESTING)
-    add_executable(warships_flow_tests tests/main.cpp)
+    add_executable(warships_flow_tests
+            tests/AiOpponentTests.cpp
+            tests/AttackOutcomeBehaviourTests.cpp
+            tests/EventLogTests.cpp
+            tests/MatchTests.cpp
+            tests/PlacementPlanTests.cpp
+            tests/RandomEngineTests.cpp
+            tests/ShotStrengthTests.cpp
+            tests/SkillBehaviourTests.cpp
+            tests/SkillManagerTests.cpp
+            tests/SkillQueueTests.cpp
+            tests/TurnOrderTests.cpp)
     target_link_libraries(warships_flow_tests PRIVATE GTest::gtest_main warships_flow)
     include(GoogleTest)
     gtest_discover_tests(warships_flow_tests)

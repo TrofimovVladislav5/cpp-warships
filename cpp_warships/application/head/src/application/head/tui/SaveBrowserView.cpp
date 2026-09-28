@@ -35,7 +35,7 @@ namespace cpp_warships::head::tui {
         for (std::size_t index = 0; index < saves.size(); ++index) {
             const bool isChosen = static_cast<int>(index) == chosen;
             ftxui::Element line = ftxui::text(
-                " " + persistence::SaveArchive::momentOf(saves[index].id) + "   " +
+                " " + persistence::SaveArchive::momentOf(saves[index].timestamp) + "   " +
                 saves[index].name + " "
             );
 
