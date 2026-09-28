@@ -23,7 +23,7 @@ namespace cpp_warships::input_parser {
         CommandParser(
             const model::SchemeMap<command::ParserCommand*>& scheme,
             const model::ParseCallback<void>& displayError,
-            const model::SchemeHelpCallback<void>& printHelp = nullptr
+            const model::SchemeHelpCallback<command::ParserCommand*>& printHelp = nullptr
         );
 
         ~CommandParser() override = default;

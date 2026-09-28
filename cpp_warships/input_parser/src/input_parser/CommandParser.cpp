@@ -1,6 +1,7 @@
 #include <input_parser/CommandParser.h>
 #include <input_parser/builder/ConfigCommandBuilder.h>
 #include <input_parser/command/ArgumentsErrorCommand.h>
+#include <input_parser/command/CallbackCommand.h>
 #include <input_parser/command/ErrorCommand.h>
 #include <input_parser/command/HelpCommand.h>
 
@@ -28,32 +29,30 @@ namespace cpp_warships::input_parser {
     CommandParser::CommandParser(
         const model::SchemeMap<command::ParserCommand*>& scheme,
         const model::ParseCallback<void>& displayError,
-        const model::SchemeHelpCallback<void>& printHelp
+        const model::SchemeHelpCallback<command::ParserCommand*>& printHelp
     )
         : model::Parser<command::ParserCommand*>(scheme, displayError) {
         if (!scheme.contains("help")) {
             builder::ConfigCommandBuilder<command::ParserCommand*> commandBuilder;
             model::ParserCommandInfo<command::ParserCommand*>* helpInfo;
 
+            model::ParseCallback<command::ParserCommand*> help;
             if (printHelp) {
-                helpInfo = new model::ParserCommandInfo<command::ParserCommand*>(
-                    {commandBuilder.setDescription("command::Command to display this message")
-                         .setCallback(
-                             TypesHelper::methodToFunction(&CommandParser::printCommandsHelp, this)
-                         )
-                         .buildAndReset()}
-                );
+                const auto renderScheme = [this, printHelp](model::ParsedOptions) {
+                    printHelp(this->scheme);
+                };
+                help = [renderScheme](model::ParsedOptions) -> command::ParserCommand* {
+                    return new command::CallbackCommand(renderScheme);
+                };
             } else {
-                auto method =
-                    TypesHelper::methodToFunction(&CommandParser::printCommandsHelp, this);
-                helpInfo = new model::ParserCommandInfo<command::ParserCommand*>(
-                    {commandBuilder.setDescription("command::Command to display this message")
-                         .setCallback(
-                             TypesHelper::methodToFunction(&CommandParser::printCommandsHelp, this)
-                         )
-                         .buildAndReset()}
-                );
+                help = TypesHelper::methodToFunction(&CommandParser::printCommandsHelp, this);
             }
+
+            helpInfo = new model::ParserCommandInfo<command::ParserCommand*>(
+                {commandBuilder.setDescription("command::Command to display this message")
+                     .setCallback(help)
+                     .buildAndReset()}
+            );
 
             this->scheme.insert({"help", *helpInfo});
             delete helpInfo;

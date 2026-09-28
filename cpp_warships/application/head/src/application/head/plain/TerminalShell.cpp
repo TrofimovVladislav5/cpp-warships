@@ -24,6 +24,12 @@ namespace cpp_warships::head::plain {
                 return static_cast<char>(std::tolower(letter));
             };
 
+            // A space is a name the player may want to type, so it is a keystroke of its
+            // own rather than a blank line asking for Enter.
+            if (command == " ") {
+                return command;
+            }
+
             const auto first = std::find_if_not(command.begin(), command.end(), isBlank);
             const auto last = std::find_if_not(command.rbegin(), command.rend(), isBlank).base();
 

@@ -1,6 +1,7 @@
 #include <application/persistence/SaveArchive.h>
 #include <application/persistence/SaveStorage.h>
 #include <application/persistence/serializers/MatchSnapshotJsonSerializer.h>
+#include <platform/OSBrancher.h>
 
 #include <algorithm>
 #include <chrono>
@@ -8,7 +9,6 @@
 #include <exception>
 #include <iomanip>
 #include <nlohmann/json.hpp>
-#include <platform/OSBrancher.h>
 #include <random>
 #include <sstream>
 
@@ -27,6 +27,22 @@ namespace cpp_warships::persistence {
         /** @brief Length of a timestamp written as YYYY-MM-DDTHH:MM:SS. */
         constexpr std::size_t TIMESTAMP_LENGTH = 19;
         constexpr std::size_t TIMESTAMP_SEPARATOR_POSITION = 10;
+
+        /** @brief Length of the identifier saves carried before they were wrapped in a
+         * meta block, written as YYYYMMDD-HHMMSS. */
+        constexpr std::size_t LEGACY_ID_LENGTH = 15;
+        constexpr std::size_t LEGACY_ID_SEPARATOR_POSITION = 8;
+
+        /** @brief The moment a save of the older shape was made, read out of its identifier
+         * because it kept no timestamp of its own. */
+        [[nodiscard]] std::string timestampOfLegacyId(const std::string& id) {
+            if (id.size() != LEGACY_ID_LENGTH || id[LEGACY_ID_SEPARATOR_POSITION] != '-') {
+                return {};
+            }
+
+            return id.substr(0, 4) + "-" + id.substr(4, 2) + "-" + id.substr(6, 2) + "T" +
+                   id.substr(9, 2) + ":" + id.substr(11, 2) + ":" + id.substr(13, 2);
+        }
 
         /** @brief A snapshot serializer with its children wired up. */
         serializers::MatchSnapshotJsonSerializer makeSnapshotSerializer() {
@@ -58,6 +74,16 @@ namespace cpp_warships::persistence {
                 const nlohmann::json document = nlohmann::json::parse(*contents);
                 if (document.contains(META_KEY) && document[META_KEY].is_object()) {
                     return document[META_KEY];
+                }
+
+                // A save of the older shape kept the name beside the match and nothing else,
+                // so its meta block is put together from what there is.
+                if (document.contains(NAME_KEY)) {
+                    return nlohmann::json{
+                        {UUID_KEY, id},
+                        {TIMESTAMP_KEY, timestampOfLegacyId(id)},
+                        {NAME_KEY, document[NAME_KEY]}
+                    };
                 }
             } catch (const std::exception&) {
                 return std::nullopt;
@@ -189,7 +215,11 @@ namespace cpp_warships::persistence {
             serializers::MatchSnapshotJsonSerializer serializer = makeSnapshotSerializer();
             try {
                 const nlohmann::json document = nlohmann::json::parse(*contents);
-                snapshot = serializer.deserialize(document.at(DATA_KEY));
+
+                // A save of the older shape holds the match at the top level rather than
+                // under a data block, so it is read as it stands.
+                const bool isWrapped = document.contains(DATA_KEY);
+                snapshot = serializer.deserialize(isWrapped ? document.at(DATA_KEY) : document);
             } catch (const std::exception&) {
                 snapshot = std::nullopt;
             }

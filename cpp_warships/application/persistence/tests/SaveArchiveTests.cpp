@@ -260,14 +260,63 @@ namespace cpp_warships::persistence {
         EXPECT_EQ(archive.load("wrong-shape"), std::nullopt);
     }
 
-    TEST(SaveArchiveTests, LoadingASaveOfTheOlderFlatShapeGivesNothing) {
+    TEST(SaveArchiveTests, ReadsASaveOfTheOlderFlatShape) {
+        MemorySaveStorage storage;
+        SaveArchive archive{storage};
+        archive.save("a-save", "my game", makeSnapshot(6));
+        nlohmann::json flat = nlohmann::json::parse(*storage.read("a-save"))["data"];
+        flat["name"] = "an older game";
+        storage.write("20260928-021655", flat.dump());
+        storage.remove("a-save");
+
+        const std::optional<MatchSnapshot> loaded = archive.load("20260928-021655");
+
+        ASSERT_TRUE(loaded.has_value());
+        EXPECT_EQ(loaded->roundNumber(), 6);
+    }
+
+    TEST(SaveArchiveTests, ReadsTheNameOutOfASaveOfTheOlderFlatShape) {
         MemorySaveStorage storage;
         SaveArchive archive{storage};
         archive.save("a-save", "my game", makeSnapshot());
-        const nlohmann::json document = nlohmann::json::parse(*storage.read("a-save"));
-        storage.write("flat", document["data"].dump());
+        nlohmann::json flat = nlohmann::json::parse(*storage.read("a-save"))["data"];
+        flat["name"] = "an older game";
+        storage.write("20260928-021655", flat.dump());
 
-        EXPECT_EQ(archive.load("flat"), std::nullopt);
+        EXPECT_EQ(archive.nameOf("20260928-021655"), "an older game");
+    }
+
+    TEST(SaveArchiveTests, DatesASaveOfTheOlderShapeFromItsIdentifier) {
+        MemorySaveStorage storage;
+        SaveArchive archive{storage};
+        archive.save("a-save", "my game", makeSnapshot());
+        nlohmann::json flat = nlohmann::json::parse(*storage.read("a-save"))["data"];
+        flat["name"] = "an older game";
+        storage.write("20260928-021655", flat.dump());
+        storage.remove("a-save");
+
+        const std::vector<SaveSummary> saves = archive.listSaves();
+
+        ASSERT_EQ(saves.size(), 1U);
+        EXPECT_EQ(saves.front().name, "an older game");
+        EXPECT_EQ(saves.front().timestamp, "2026-09-28T02:16:55");
+    }
+
+    TEST(SaveArchiveTests, SortsOlderAndNewerShapesTogetherByWhenTheyWereMade) {
+        MemorySaveStorage storage;
+        SaveArchive archive{storage};
+        saveMadeAt(storage, archive, "newer", "the newer one", "2026-09-28T12:00:00");
+        archive.save("scratch", "scratch", makeSnapshot());
+        nlohmann::json flat = nlohmann::json::parse(*storage.read("scratch"))["data"];
+        flat["name"] = "the older one";
+        storage.write("20260101-090000", flat.dump());
+        storage.remove("scratch");
+
+        const std::vector<SaveSummary> saves = archive.listSaves();
+
+        ASSERT_EQ(saves.size(), 2U);
+        EXPECT_EQ(saves[0].name, "the newer one");
+        EXPECT_EQ(saves[1].name, "the older one");
     }
 
     TEST(SaveArchiveTests, ReportsAFailureToWrite) {

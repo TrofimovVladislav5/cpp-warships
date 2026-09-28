@@ -9,6 +9,20 @@ namespace cpp_warships::persistence {
     namespace {
         /** @brief Extension every save file carries. */
         constexpr const char* SAVE_EXTENSION = ".json";
+
+        /** @brief Whether @p name is one plain file name, and so cannot lead anywhere but
+         * into the save directory. Anything with a separator, a parent step or a root could
+         * name a file elsewhere, so nothing of the sort is allowed to become a path. */
+        [[nodiscard]] bool isPlainFileName(const std::string& name) {
+            if (name.empty() || name == "." || name == "..") {
+                return false;
+            }
+
+            const std::filesystem::path asPath{name};
+
+            return !asPath.has_root_name() && !asPath.has_root_directory() &&
+                   ++asPath.begin() == asPath.end();
+        }
     }  // namespace
 
     FilesystemSaveStorage::FilesystemSaveStorage(std::string directoryPath)
@@ -19,6 +33,10 @@ namespace cpp_warships::persistence {
     }
 
     std::string FilesystemSaveStorage::pathFor(const std::string& name) const {
+        if (!isPlainFileName(name)) {
+            return {};
+        }
+
         return (std::filesystem::path{directoryPath_} / (name + SAVE_EXTENSION)).string();
     }
 
@@ -40,7 +58,12 @@ namespace cpp_warships::persistence {
     }
 
     std::optional<std::string> FilesystemSaveStorage::read(const std::string& name) const {
-        std::ifstream file{pathFor(name)};
+        const std::string path = pathFor(name);
+        if (path.empty()) {
+            return std::nullopt;
+        }
+
+        std::ifstream file{path};
         std::optional<std::string> contents;
 
         if (file.is_open()) {
@@ -53,10 +76,15 @@ namespace cpp_warships::persistence {
     }
 
     bool FilesystemSaveStorage::write(const std::string& name, const std::string& contents) {
+        const std::string path = pathFor(name);
+        if (path.empty()) {
+            return false;
+        }
+
         std::error_code error;
         std::filesystem::create_directories(directoryPath_, error);
 
-        std::ofstream file{pathFor(name)};
+        std::ofstream file{path};
         bool isWritten = false;
 
         if (file.is_open()) {
@@ -68,8 +96,13 @@ namespace cpp_warships::persistence {
     }
 
     bool FilesystemSaveStorage::contains(const std::string& name) const {
+        const std::string path = pathFor(name);
+        if (path.empty()) {
+            return false;
+        }
+
         std::error_code error;
-        return std::filesystem::is_regular_file(pathFor(name), error);
+        return std::filesystem::is_regular_file(path, error);
     }
 
     const std::string& FilesystemSaveStorage::directoryPath() const noexcept {
@@ -77,7 +110,12 @@ namespace cpp_warships::persistence {
     }
 
     bool FilesystemSaveStorage::remove(const std::string& name) {
+        const std::string path = pathFor(name);
+        if (path.empty()) {
+            return false;
+        }
+
         std::error_code error;
-        return std::filesystem::remove(pathFor(name), error) && !error;
+        return std::filesystem::remove(path, error) && !error;
     }
 }  // namespace cpp_warships::persistence

@@ -1,10 +1,13 @@
 #include <gtest/gtest.h>
+#include <input_parser/CommandParser.h>
 #include <input_parser/VoidParser.h>
 #include <input_parser/builder/ConfigCommandBuilder.h>
 #include <input_parser/builder/DefaultParameterBuilder.h>
+#include <input_parser/command/ParserCommand.h>
 #include <input_parser/model/Parser.h>
 #include <input_parser/model/ParserCommandInfo.h>
 
+#include <cstddef>
 #include <iostream>
 #include <regex>
 #include <sstream>
@@ -183,5 +186,69 @@ namespace cpp_warships::input_parser {
         parser.executedParse("help");
 
         EXPECT_TRUE(isOwnHelpRun);
+    }
+
+    namespace {
+        /** @brief A command scheme whose one command notes when it ran. */
+        model::SchemeMap<command::ParserCommand*> commandSchemeRunning(bool& wasRun) {
+            builder::ConfigCommandBuilder<command::ParserCommand*> commandBuilder;
+
+            model::SchemeMap<command::ParserCommand*> scheme;
+            scheme.insert(
+                {"run",
+                 model::ParserCommandInfo<command::ParserCommand*>{
+                     commandBuilder.setDescription("runs a thing")
+                         .setCallback([&wasRun](model::ParsedOptions) {
+                             wasRun = true;
+                             return static_cast<command::ParserCommand*>(nullptr);
+                         })
+                         .buildAndReset()
+                 }}
+            );
+
+            return scheme;
+        }
+    }  // namespace
+
+    TEST(CommandParserTests, AddsAHelpCommandOfItsOwn) {
+        bool wasRun = false;
+        CommandParser parser{commandSchemeRunning(wasRun), [](model::ParsedOptions) {}};
+        const StreamCapture capture{std::cout};
+
+        parser.executedParse("help");
+
+        EXPECT_NE(capture.text().find("supported commands"), std::string::npos);
+    }
+
+    TEST(CommandParserTests, UsesTheHelpCallbackItWasGiven) {
+        bool wasRun = false;
+        bool isOwnHelpShown = false;
+        CommandParser parser{
+            commandSchemeRunning(wasRun),
+            [](model::ParsedOptions) {},
+            [&isOwnHelpShown](model::SchemeMap<command::ParserCommand*>) { isOwnHelpShown = true; }
+        };
+        const StreamCapture capture{std::cout};
+
+        parser.executedParse("help");
+
+        EXPECT_TRUE(isOwnHelpShown);
+        EXPECT_EQ(capture.text().find("supported commands"), std::string::npos);
+    }
+
+    TEST(CommandParserTests, TheHelpCallbackIsShownTheWholeSchemeIncludingHelpItself) {
+        bool wasRun = false;
+        std::size_t describedCount = 0;
+        CommandParser parser{
+            commandSchemeRunning(wasRun),
+            [](model::ParsedOptions) {},
+            [&describedCount](model::SchemeMap<command::ParserCommand*> scheme) {
+                describedCount = scheme.size();
+            }
+        };
+
+        parser.executedParse("help");
+
+        EXPECT_EQ(describedCount, 2U);
     }
 }  // namespace cpp_warships::input_parser

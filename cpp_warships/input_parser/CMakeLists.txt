@@ -13,6 +13,7 @@ add_library(input_parser
         # Command Parser Implementation
         include/input_parser/CommandParser.h src/input_parser/CommandParser.cpp
         include/input_parser/command/ErrorCommand.h src/input_parser/command/ErrorCommand.cpp
+        include/input_parser/command/CallbackCommand.h src/input_parser/command/CallbackCommand.cpp
         include/input_parser/command/HelpCommand.h src/input_parser/command/HelpCommand.cpp
         include/input_parser/command/ArgumentsErrorCommand.h src/input_parser/command/ArgumentsErrorCommand.cpp
         # Builder
