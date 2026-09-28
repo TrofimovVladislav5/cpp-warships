@@ -1,70 +1,177 @@
-# Disclaimer
+# WarShips Game Application
 
-This project was created as a learning project, which means it includes all the cauveats of the learning project, such as: imperfect architecture, possible memory leaks, and lack of optimisation. Here is the justifications of not fixing those aspects:
-- Rethinking the architecture will require recreating the project from scratch which will take unreasonably long time;
-- I wanted to keep all those downsights to make the progress more trackable over pet-projects;
-- Even though supporting project to the production-ready state will teach me, the progress will be less rapid relative to if I was creating new project for learning new concepts. For pet-project, this is the main metric.
-Considering all the above, authors of this project understand most of its downsides, but it is not planned to be maintained in the future.
+A terminal battleships game in C++20, built as a study in keeping game logic and
+presentation genuinely apart.
 
-# WarShips game
-This project is based on a laboratory work from a second course of a university. The purpose was to create the Warships game with following integrated parts:
-1) Main game. It includes possibility to attack an enemy, place ships, and all the main features inside the game cycle;
-2) Skills. The task was to improve game variety by implementing the skills system;
-3) Saves. This part includes saving game progress, loading from save files;
-4) Configs. Initially, it was about the possibility of creating files with 'commands', and the game will run all those commands in order;
+![The game running in a terminal](readme/tui_view.png)
 
-## Usage 
-Final user can find the list of commands in Makefile in the root of the project.
+---
 
-| command | description           | details                    |
-|---------|-----------------------|----------------------------|
-| compile   | build the project using the previous builds to optimise build time  | [read more](#game-process) |
-| rebuild-debug   | rebuild the project in 'debug' mode   | [read more](#game-process) |
-| rebuild-release   | rebuild the project in 'release' mode  | [read more](#game-process) |
-| test   | run all tests in all libraries  | [read more](#game-process) |
+## Features
 
-### `compile` Command
-Builds the project using the previous builds to optimise build time. It supports the following flags:
+### The game
 
-| flag | value | description |
-|------|------|--------|
-| CLEAN | 0/1 | If set to 1, previous build artifacts will be cleaned up before building the project |
-| BUILD_DIR | string | Specifies the directory of the build |
-| CPP_COMPILER | string | Specifies the c++ compiler that will be used in the build process. This value is passed to the -DCMAKE_CXX_COMPILER cmake flag |
-| C_COMPILER | string | Specifies the c-language compiler that will be used in the build process. This value is passed to the -DCMAKE_C_COMPILER cmake flag |
-| BUILD_TYPE | Debug/Release | Choose which build to use (see more details on each build further |
+- **Fleet placement** by hand or shuffled, on boards from 8×8 to 20×20
+- **A hunting opponent** that remembers where it has fired and works outwards from a hit
+  until the ship is finished
+- **Three skills** — scanner, double damage and random strike — earned by sinking a ship
 
-### `rebuild` Command
-Builds the project from scratch, cleaning the previous build artifacts if present. It supports the same flags as [compile](#compile-command) command, overriding the `CLEAN` flag to 1:
+### Saves
 
-| flag | value | description |
-|------|------|--------|
-| BUILD_DIR | string | Specifies the directory of the build |
-| CPP_COMPILER | string | Specifies the c++ compiler that will be used in the build process. This value is passed to the -DCMAKE_CXX_COMPILER cmake flag |
-| C_COMPILER | string | Specifies the c-language compiler that will be used in the build process. This value is passed to the -DCMAKE_C_COMPILER cmake flag |
-| BUILD_TYPE | Debug/Release | Choose which build to use (see more details on each build further |
+- **As many as you like**, each named by the player and listed newest first
+- **Browsed and deleted** from a list of their own
+- **Loading one and saving again updates it**, rather than leaving a duplicate behind
+- The battle log travels with the save, so a loaded game reads back its own history
 
-### `rebuild-debug` Command
-Builds the project from scratch in Debug mode. It supports the same flags as [rebuild](#rebuild-command) command, overriding the `BUILD_TYPE` flag to 'Debug':
+### Two front ends
 
-| flag | value | description |
-|------|------|--------|
-| BUILD_DIR | string | Specifies the directory of the build |
-| CPP_COMPILER | string | Specifies the c++ compiler that will be used in the build process. This value is passed to the -DCMAKE_CXX_COMPILER cmake flag |
-| C_COMPILER | string | Specifies the c-language compiler that will be used in the build process. This value is passed to the -DCMAKE_C_COMPILER cmake flag |
+| | |
+|---|---|
+| `cpp_warships` | the full FTXUI interface, with colour, themes and a mouse |
+| `cpp_warships --plain` | plain text, naming no drawing library at all |
 
-### `rebuild-release` Command
-Builds the project from scratch in Release mode. It supports the same flags as [rebuild](#rebuild-command) command, overriding the `BUILD_TYPE` flag to 'Release':
+---
 
-| flag | value | description |
-|------|------|--------|
-| BUILD_DIR | string | Specifies the directory of the build |
-| CPP_COMPILER | string | Specifies the c++ compiler that will be used in the build process. This value is passed to the -DCMAKE_CXX_COMPILER cmake flag |
-| C_COMPILER | string | Specifies the c-language compiler that will be used in the build process. This value is passed to the -DCMAKE_C_COMPILER cmake flag |
+## Architecture
 
-## Build Types
-Project currently supports two build modes: Release and Debug. The difference between those two is that the tests are completely omitted on the 'Release' mode, which means that the tests will not be found if you try to run `make test` after `make rebuild-release`. It is used to achieve the minimum bundle size in the release mode.
+### The layers
 
-| criteria | debug | release |
-|------|------|--------|
-| GTests | Included and can be run with `make test` | Omitted from the build and will not be found with `make test` |
+Four layers, each its own CMake target, each reaching only inwards.
+
+```mermaid
+flowchart TB
+    tui["warships_head_tui<br/>FTXUI renderers, TuiShell"]
+    head["warships_head<br/>EventBus · PresentationContext · renderers · plain front end"]
+    model["warships_model<br/>events · intents · scenarios · WarshipsGame"]
+    persistence["warships_persistence<br/>snapshots · storage"]
+    flow["warships_flow<br/>match orchestration"]
+    core["warships_core<br/>board rules · error root"]
+
+    tui --> head
+    head --> model
+    model --> persistence
+    model --> flow
+    persistence --> flow
+    flow --> core
+```
+
+`warships_head` links **without any drawing library**. The plain front end lives in that
+target on purpose, so leaking an FTXUI include into shared code breaks the build rather
+than escaping notice.
+
+### Two rules that hold it together
+
+#### Presentation cannot change the game
+
+It is handed `const ApplicationContext&`. Asking for a change is what events are for.
+
+#### Navigation is derived, not requested
+
+Which screen shows follows from the match phase and two presentation flags. Nothing ever
+says "go to that screen".
+
+### One turn of the machine
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Player
+    participant Shell as PresentationShell
+    participant Bus as EventBus
+    participant EQ as EventQueue
+    participant Router as EventRouter
+    participant Handler as EventHandler
+    participant SQ as ScenarioQueue
+    participant Proc as IntentProcessor
+    participant Intent as GameIntent
+    participant Game as WarshipsGame
+
+    Player->>Shell: keystroke or click
+    Shell->>Bus: interpret(Keystroke)
+    Note over Bus: arrow keys move the cursor<br/>and emit nothing at all
+    Bus->>EQ: push(CellSelectedEvent)
+
+    Shell->>EQ: drain()
+    EQ->>Router: dispatch(event)
+    Router->>Handler: handler claiming it, in scope
+    Handler->>SQ: submit(scenario)
+
+    Shell->>SQ: start()
+    SQ->>Proc: run(scenario)
+    loop until the scenario is spent
+        Proc->>Intent: applyTo()
+        Intent->>Game: mutate
+        Intent-->>Proc: IntentResult
+        Note over Proc: an error below becomes a failed<br/>result and a notification on the context<br/>it never leaves this loop
+    end
+    Shell->>SQ: join()
+
+    Shell->>Shell: render PresentationContext
+```
+
+### Errors stop at one place
+
+`IntentProcessor` is a hard membrane: anything thrown beneath it becomes a failed
+`IntentResult` and a notice the player reads. Nothing above it holds a `catch`.
+
+> The full class diagram and the reasoning behind each decision are in
+> [architecture.md](architecture.md).
+
+---
+
+## Everything runs on one thread
+
+There is no asynchronous code anywhere — no threads, no futures, no callbacks waiting on
+anything. A keystroke is read, turned into an event, acted on and drawn, all before the
+next one is read.
+
+### The seam is already there
+
+That is a deliberate simplification rather than an oversight.
+
+- **`ScenarioQueue` is an interface.** Its only implementation, `SyncScenarioQueue`, drains
+  inline on `start()` and returns immediately from `join()`. Those two calls exist purely
+  so a threaded implementation could be dropped in without any caller changing: `start()`
+  would spawn, `join()` would wait.
+- **`EventQueue` already separates arriving from acting**, so an event raised while another
+  is being handled waits for the next turn instead of lengthening the current one.
+
+### What it buys
+
+The whole game can be driven by piping keystrokes into the plain front end and reading the
+frames back — which is how every feature here has been tested.
+
+---
+
+## Building
+
+### Commands
+
+| command | description |
+|---|---|
+| `make compile` | build, reusing previous artifacts |
+| `make rebuild-debug` | build from scratch in Debug |
+| `make rebuild-release` | build from scratch in Release |
+| `make test` | run every library's tests |
+
+### Flags
+
+All commands take `BUILD_DIR`, `CPP_COMPILER`, `C_COMPILER` and `BUILD_TYPE`; `compile`
+also takes `CLEAN=1`.
+
+### Build types
+
+Tests are omitted entirely from Release builds, so `make test` finds nothing after
+`make rebuild-release`.
+
+### Dependencies
+
+FTXUI and nlohmann/json are fetched by CMake on first configure.
+
+---
+
+## A note on scope
+
+This began as a university laboratory exercise and is kept as a learning project. The
+architecture above was arrived at by rewriting the original console application in stages,
+and the history reflects that. It is not maintained as a product.
