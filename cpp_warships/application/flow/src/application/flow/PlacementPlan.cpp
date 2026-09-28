@@ -9,11 +9,11 @@ namespace cpp_warships::flow {
     namespace {
         /** @brief How many random attempts a single ship gets before giving up. */
         constexpr int MAXIMUM_PLACEMENT_ATTEMPTS = 200;
-    } // namespace
+    }  // namespace
 
     PlacementPlan::PlacementPlan(
-            core::FleetComposition composition,
-            const core::Board& board
+        const core::FleetComposition &composition,
+        const core::Board& board
     )
         : remaining_(composition.countsByLength()) {
         for (const core::Ship& ship : board.ships()) {
@@ -26,6 +26,7 @@ namespace cpp_warships::flow {
 
     int PlacementPlan::remainingOf(int shipLength) const {
         const auto found = remaining_.find(shipLength);
+
         return found == remaining_.end() ? 0 : found->second;
     }
 
@@ -38,46 +39,72 @@ namespace cpp_warships::flow {
             return total + entry.second;
         };
 
-        return std::accumulate(remaining_.begin(), remaining_.end(), 0, addRemaining);
+        return std::accumulate(
+            remaining_.begin(),
+            remaining_.end(),
+            0,
+            addRemaining
+        );
     }
 
     bool PlacementPlan::isComplete() const {
         return remainingShipCount() == 0;
     }
 
+    bool placeSingleShip(
+        core::Board& board,
+        const int segmentHealth,
+        const int shipLength,
+        RandomEngine& randomEngine
+    ) {
+        std::uniform_int_distribution<int> columnDistribution{0, board.width() - 1};
+        std::uniform_int_distribution<int> rowDistribution{0, board.height() - 1};
+        std::uniform_int_distribution<int> directionDistribution{0, 1};
+
+        bool isPlaced = false;
+        for (int attempt = 0; attempt < MAXIMUM_PLACEMENT_ATTEMPTS && !isPlaced; ++attempt) {
+            const core::Coordinate origin{
+                columnDistribution(randomEngine),
+                rowDistribution(randomEngine)
+            };
+            const auto direction = directionDistribution(randomEngine) == 0
+               ? core::Direction::Horizontal
+               : core::Direction::Vertical;
+
+            isPlaced = board.place(origin, direction, shipLength, segmentHealth) ==
+                core::PlacementError::None;
+        }
+
+        return isPlaced;
+    }
+
     bool placeFleetRandomly(
-            core::Board& board,
-            const core::FleetComposition& composition,
-            RandomEngine& randomEngine
+        core::Board& board,
+        const core::FleetComposition& composition,
+        RandomEngine& randomEngine,
+        const int segmentHealth
     ) {
         board.clear();
 
         std::vector<int> lengthsToPlace;
         for (const auto& [length, count] : composition.countsByLength()) {
-            lengthsToPlace.insert(lengthsToPlace.end(), static_cast<std::size_t>(count), length);
+            lengthsToPlace.insert(
+                lengthsToPlace.end(),
+                static_cast<std::size_t>(count),
+                length
+            );
         }
-        std::sort(lengthsToPlace.begin(), lengthsToPlace.end(), std::greater<>());
-
-        std::uniform_int_distribution<int> columnDistribution{0, board.width() - 1};
-        std::uniform_int_distribution<int> rowDistribution{0, board.height() - 1};
-        std::uniform_int_distribution<int> directionDistribution{0, 1};
+        std::sort(
+            lengthsToPlace.begin(),
+            lengthsToPlace.end(),
+            std::greater<>()
+        );
 
         for (const int length : lengthsToPlace) {
-            bool isPlaced = false;
-            for (int attempt = 0; attempt < MAXIMUM_PLACEMENT_ATTEMPTS && !isPlaced; ++attempt) {
-                const core::Coordinate origin{
-                        columnDistribution(randomEngine),
-                        rowDistribution(randomEngine)
-                };
-                const auto direction = directionDistribution(randomEngine) == 0
-                                               ? core::Direction::Horizontal
-                                               : core::Direction::Vertical;
-
-                const core::PlacementError placeError = board.place(origin, direction, length);
-                isPlaced = placeError == core::PlacementError::None;
-            }
-
-            if (!isPlaced) {
+            if (
+                bool isPlaced = placeSingleShip(board, segmentHealth, length, randomEngine);
+                !isPlaced
+            ) {
                 board.clear();
                 return false;
             }
@@ -85,4 +112,4 @@ namespace cpp_warships::flow {
 
         return true;
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

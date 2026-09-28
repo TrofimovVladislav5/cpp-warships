@@ -17,12 +17,10 @@ namespace cpp_warships::flow {
 
         /** @brief Arms the next shot to deal twice the base damage. */
         void armDoubleDamage() noexcept;
-
         /** @brief Consumes any armed bonus, called once a shot has actually been taken. */
         void spend() noexcept;
-
     private:
         int baseDamage_;
         bool isDoubleDamageArmed_;
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

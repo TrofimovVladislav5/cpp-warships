@@ -1,24 +1,28 @@
 #pragma once
 #include <regex>
-#include <vector>
 #include <string>
-
+#include <vector>
 
 namespace cpp_warships::input_parser {
     class ParserParameter {
-    private:
+       private:
         std::regex validator;
         std::string description;
         std::vector<std::string> flags;
         bool necessary = false;
-    public:
+
+       public:
         ParserParameter() = default;
-        ParserParameter(std::vector<std::string> flags, std::regex validator, std::string description, bool necessary)
-            : validator(std::move(validator))
-            , description(std::move(description))
-            , flags(std::move(flags))
-            , necessary(necessary)
-        {};
+        ParserParameter(
+            std::vector<std::string> flags,
+            std::regex validator,
+            std::string description,
+            bool necessary
+        )
+            : validator(std::move(validator)),
+              description(std::move(description)),
+              flags(std::move(flags)),
+              necessary(necessary) {};
 
         [[nodiscard]] std::string getDescription() const {
             return this->description;
@@ -28,7 +32,7 @@ namespace cpp_warships::input_parser {
             return this->necessary;
         }
 
-        [[nodiscard]] bool getIsFlagPresent(const std::string &flag) const {
+        [[nodiscard]] bool getIsFlagPresent(const std::string& flag) const {
             for (int i = 0; i < static_cast<int>(this->flags.size()); i++) {
                 if (this->flags[i] == flag) {
                     return true;
@@ -47,6 +51,5 @@ namespace cpp_warships::input_parser {
 
             return std::make_pair(isValid, input);
         }
-
     };
-}
+}  // namespace cpp_warships::input_parser

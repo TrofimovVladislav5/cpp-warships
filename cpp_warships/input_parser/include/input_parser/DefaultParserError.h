@@ -3,8 +3,8 @@
 
 namespace cpp_warships::input_parser {
     class DefaultParserError {
-    public:
+       public:
         static void CommandNotFoundError(ParsedOptions options);
         static void WrongFlagValueError(ParsedOptions options);
     };
-}
+}  // namespace cpp_warships::input_parser

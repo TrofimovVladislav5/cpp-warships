@@ -1,15 +1,13 @@
 #include <input_reader/command_reader/CommandInputReader.h>
-
 #include <utilities/StringHelper.h>
+
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 
 namespace cpp_warships::input_reader::command_reader {
-
-    CommandInputReader::CommandInputReader(const std::string &filename, char delimiter)
-        : keymap({})
-    {
+    CommandInputReader::CommandInputReader(const std::string& filename, char delimiter)
+        : keymap({}) {
         std::ifstream file(filename);
 
         std::vector<std::string> fileContents;
@@ -39,5 +37,4 @@ namespace cpp_warships::input_reader::command_reader {
             return input;
         }
     }
-
-} // namespace cpp_warships::input_reader::command_reader
+}  // namespace cpp_warships::input_reader::command_reader

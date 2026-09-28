@@ -31,4 +31,4 @@ namespace cpp_warships::model {
     bool EventRouter::isInScope(const EventScope scope) const noexcept {
         return scope == EventScope::Always || scope == currentScope_;
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

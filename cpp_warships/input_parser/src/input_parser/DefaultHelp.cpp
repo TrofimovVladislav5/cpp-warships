@@ -1,10 +1,10 @@
 #include <input_parser/DefaultHelp.h>
-
 #include <utilities/ViewHelper.h>
+
 #include <iostream>
 
 namespace cpp_warships::input_parser {
-    void DefaultHelp::PrintParam(const ParserParameter &param) {
+    void DefaultHelp::PrintParam(const ParserParameter& param) {
         std::string flagsOutput;
         for (const auto& flag : param.getFlags()) {
             flagsOutput += flag + " ";
@@ -16,4 +16,4 @@ namespace cpp_warships::input_parser {
         std::string necessary = param.getNecessary() ? "true" : "false";
         ViewHelper::consoleOut("└── is necessary: " + necessary, 2);
     };
-}
+}  // namespace cpp_warships::input_parser

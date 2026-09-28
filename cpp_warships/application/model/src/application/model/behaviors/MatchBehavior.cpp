@@ -1,21 +1,20 @@
+#include <application/core/MatchSettings.h>
 #include <application/model/behaviors/MatchBehavior.h>
 
-#include <application/core/MatchSettings.h>
-
 namespace cpp_warships::model {
-    MatchBehavior::MatchBehavior(MatchInPlay& inPlay) noexcept
-        : inPlay_(inPlay) {}
+    MatchBehavior::MatchBehavior(MatchInPlay& inPlay) noexcept : inPlay_(inPlay) {
+    }
 
     void MatchBehavior::startNewMatch(const int boardSize) {
         inPlay_.replaceWith(
-                flow::Match{core::MatchSettings::forBoardSize(boardSize), inPlay_.randomEngine()}
+            flow::Match{core::MatchSettings::forBoardSize(boardSize), inPlay_.randomEngine()}
         );
     }
 
     void MatchBehavior::placeShip(
-            const core::Coordinate origin,
-            const core::Direction direction,
-            const int length
+        const core::Coordinate origin,
+        const core::Direction direction,
+        const int length
     ) {
         if (!inPlay_.hasMatch()) {
             return;
@@ -23,7 +22,7 @@ namespace cpp_warships::model {
 
         flow::Match& match = inPlay_.editableMatch();
         match.editablePlayerBoard()
-                .place(origin, direction, length, match.settings().segmentHealth());
+            .place(origin, direction, length, match.settings().segmentHealth());
     }
 
     void MatchBehavior::removeShipAt(const core::Coordinate coordinate) {
@@ -73,4 +72,4 @@ namespace cpp_warships::model {
         inPlay_.editableMatch().concludeTurn();
         inPlay_.recordEvents();
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

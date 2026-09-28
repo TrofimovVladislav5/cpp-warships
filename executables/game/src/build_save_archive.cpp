@@ -1,19 +1,18 @@
+#include <application/persistence/FilesystemSaveStorage.h>
 #include <build_save_archive.h>
 
 #include <cstdlib>
 #include <filesystem>
 
-#include <application/persistence/FilesystemSaveStorage.h>
-
 namespace cpp_warships::application {
     namespace {
         const std::string SAVE_DIRECTORY_NAME = ".cpp-warships";
-    } // namespace
+    }  // namespace
 
     std::string defaultSaveDirectory() {
         const char* home = std::getenv("HOME");
         const std::filesystem::path root =
-                home == nullptr ? std::filesystem::current_path() : std::filesystem::path{home};
+            home == nullptr ? std::filesystem::current_path() : std::filesystem::path{home};
 
         return (root / SAVE_DIRECTORY_NAME).string();
     }
@@ -24,4 +23,4 @@ namespace cpp_warships::application {
 
         return SaveLibrary{.storage = std::move(storage), .archive = std::move(archive)};
     }
-} // namespace cpp_warships::application
+}  // namespace cpp_warships::application

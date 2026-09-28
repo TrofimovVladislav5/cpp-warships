@@ -1,16 +1,17 @@
 #pragma once
 
-#include <optional>
-
 #include <application/core/Coordinate.h>
 #include <application/core/Direction.h>
 #include <application/model/MatchInPlay.h>
 
+#include <optional>
+
 namespace cpp_warships::model {
-    /** @brief Everything that can be done to a match: starting one, laying out a fleet and
-     *  fighting it out. Knows nothing of screens, of saves or of whose turn it is to draw. */
+    /** @brief Everything that can be done to a match: starting one, laying out
+     * a fleet and fighting it out. Knows nothing of screens, of saves or of
+     * whose turn it is to draw. */
     class MatchBehavior {
-    public:
+       public:
         /** @brief Acts on @p inPlay, which must outlive this behaviour. */
         explicit MatchBehavior(MatchInPlay& inPlay) noexcept;
 
@@ -20,16 +21,17 @@ namespace cpp_warships::model {
         void removeShipAt(core::Coordinate coordinate);
         void shuffleFleet();
 
-        /** @brief Opens fire, once the fleet is laid out. @return whether the battle began. */
+        /** @brief Opens fire, once the fleet is laid out. @return whether the
+         * battle began. */
         bool beginBattle();
 
         void fireAt(core::Coordinate coordinate);
         void useSkill(std::optional<core::Coordinate> target);
 
-    private:
+       private:
         /** @brief Lets the match hand play on, then keeps what happened. */
         void settleTurn();
 
         MatchInPlay& inPlay_;
     };
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

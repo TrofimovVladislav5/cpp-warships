@@ -1,9 +1,9 @@
-#include <string>
-#include <iostream>
-
-#include <serialization/example/TestClass.h>
-#include <serialization/example/ImplicitTestClass.h>
 #include <serialization/SerializerAggregator.h>
+#include <serialization/example/ImplicitTestClass.h>
+#include <serialization/example/TestClass.h>
+
+#include <iostream>
+#include <string>
 
 using namespace cpp_warships::serialization;
 
@@ -27,7 +27,8 @@ int main() {
     std::cout << "---- SERIALIZATION FINISHED ----" << std::endl << std::endl;
 
     std::cout << "---- DESERIALIZATION RESULT ----" << std::endl;
-    auto deserialized_test_class = test_serializer.deserialize<examples::TestClass>(serialized_data);
+    auto deserialized_test_class =
+        test_serializer.deserialize<examples::TestClass>(serialized_data);
     std::cout << deserialized_test_class << std::endl;
 
     return 0;

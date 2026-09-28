@@ -3,14 +3,15 @@
 
 namespace cpp_warships::input_parser {
     class ParameterBuildDirector {
-    private:
+       private:
         ParserParameterBuilder& parameterBuilder;
-    public:
-        explicit ParameterBuildDirector(ParserParameterBuilder *parameterBuilder)
-            : parameterBuilder(*parameterBuilder)
-        {};
 
-        ParserParameterBuilder& buildNecessary(std::string flag, std::regex validator = std::regex("."))  {
+       public:
+        explicit ParameterBuildDirector(ParserParameterBuilder* parameterBuilder)
+            : parameterBuilder(*parameterBuilder) {};
+
+        ParserParameterBuilder&
+        buildNecessary(std::string flag, std::regex validator = std::regex(".")) {
             parameterBuilder.addFlag(std::move(flag));
             parameterBuilder.setNecessary(true);
             parameterBuilder.setValidator(std::move(validator));
@@ -18,7 +19,8 @@ namespace cpp_warships::input_parser {
             return parameterBuilder;
         };
 
-        ParserParameterBuilder& buildUnnecessary(std::string flag, std::regex validator = std::regex(".")) {
+        ParserParameterBuilder&
+        buildUnnecessary(std::string flag, std::regex validator = std::regex(".")) {
             parameterBuilder.addFlag(std::move(flag));
             parameterBuilder.setNecessary(false);
             parameterBuilder.setValidator(std::move(validator));
@@ -30,4 +32,4 @@ namespace cpp_warships::input_parser {
             parameterBuilder.reset();
         };
     };
-}
+}  // namespace cpp_warships::input_parser

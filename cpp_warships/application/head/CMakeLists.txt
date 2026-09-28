@@ -1,68 +1,69 @@
-# Compile files
+# The interface, in two halves.
+#
+# warships_head is everything that decides what the game looks like and what the player
+# meant by a keystroke, together with the plain text presentation. It must build and link
+# without any drawing library at all. The plain renderers live in this target rather than
+# beside the FTXUI ones precisely so that the build proves it: leak an FTXUI include into
+# common/ and this target stops compiling, with no separate check to remember to run.
 add_library(warships_head
-        # What can go wrong here
-        include/application/head/errors/PresentationExceptions.h src/application/head/errors/PresentationExceptions.cpp
         # Shared vocabulary
-        include/application/head/Color.h
-        include/application/head/Theme.h src/application/head/Theme.cpp
-        include/application/head/Queries.h
-        include/application/head/ThemeSelection.h src/application/head/ThemeSelection.cpp
-        include/application/head/PresentationContext.h src/application/head/PresentationContext.cpp
+        include/application/head/common/Color.h
+        include/application/head/common/Theme.h src/application/head/common/Theme.cpp
+        include/application/head/common/Queries.h
+        include/application/head/common/ScreenKind.h
+        include/application/head/common/ThemeSelection.h src/application/head/common/ThemeSelection.cpp
+        include/application/head/common/PresentationContext.h src/application/head/common/PresentationContext.cpp
+        # What the interface remembers of its own
+        include/application/head/common/state/MenuState.h
+        include/application/head/common/state/PlacementState.h src/application/head/common/state/PlacementState.cpp
+        include/application/head/common/state/BattleState.h src/application/head/common/state/BattleState.cpp
+        include/application/head/common/state/PresentationState.h
         # Reading input: raw strokes in, asks in the game's own words out
-        include/application/head/input/Keystroke.h src/application/head/input/Keystroke.cpp
-        include/application/head/input/GridGeometry.h src/application/head/input/GridGeometry.cpp
-        include/application/head/input/ScreenInput.h
-        include/application/head/input/MenuInput.h src/application/head/input/MenuInput.cpp
-        include/application/head/input/PlacementInput.h src/application/head/input/PlacementInput.cpp
-        include/application/head/input/BattleInput.h src/application/head/input/BattleInput.cpp
-        include/application/head/input/EventBus.h src/application/head/input/EventBus.cpp
-        include/application/head/input/EventPipeline.h src/application/head/input/EventPipeline.cpp
+        include/application/head/common/input/Keystroke.h src/application/head/common/input/Keystroke.cpp
+        include/application/head/common/input/GridGeometry.h src/application/head/common/input/GridGeometry.cpp
+        include/application/head/common/input/ScreenInput.h
+        include/application/head/common/input/MenuInput.h src/application/head/common/input/MenuInput.cpp
+        include/application/head/common/input/PlacementInput.h src/application/head/common/input/PlacementInput.cpp
+        include/application/head/common/input/BattleInput.h src/application/head/common/input/BattleInput.cpp
+        include/application/head/common/input/EventBus.h src/application/head/common/input/EventBus.cpp
+        include/application/head/common/input/EventPipeline.h src/application/head/common/input/EventPipeline.cpp
         # ... and what the game does about them
-        include/application/head/input/handlers/SessionHandlers.h
-        src/application/head/input/handlers/SessionHandlers.cpp
-        include/application/head/input/handlers/PlacementHandlers.h
-        src/application/head/input/handlers/PlacementHandlers.cpp
-        include/application/head/input/handlers/BattleHandlers.h
-        src/application/head/input/handlers/BattleHandlers.cpp
-        # How things are drawn
-        include/application/head/views/Frame.h src/application/head/views/Frame.cpp
-        include/application/head/views/Renderer.h
-        include/application/head/views/RendererSet.h src/application/head/views/RendererSet.cpp
-        include/application/head/views/Notices.h src/application/head/views/Notices.cpp
-        include/application/head/views/CellAppearance.h src/application/head/views/CellAppearance.cpp
-        include/application/head/views/CoordinateLabel.h src/application/head/views/CoordinateLabel.cpp
-        include/application/head/views/BoardView.h src/application/head/views/BoardView.cpp
-        include/application/head/views/KeyHint.h src/application/head/views/KeyHint.cpp
-        include/application/head/views/EventNarration.h src/application/head/views/EventNarration.cpp
-        include/application/head/views/MenuView.h src/application/head/views/MenuView.cpp
-        include/application/head/views/PlacementView.h src/application/head/views/PlacementView.cpp
-        include/application/head/views/BattleView.h src/application/head/views/BattleView.cpp
-        # ... the one place that knows both how FTXUI draws and how we do
-        include/application/head/views/ftxui_bridge/FtxuiPalette.h
-        src/application/head/views/ftxui_bridge/FtxuiPalette.cpp
-        include/application/head/views/ftxui_bridge/FtxuiView.h
-        src/application/head/views/ftxui_bridge/FtxuiView.cpp
-        include/application/head/views/ftxui_bridge/FtxuiNotices.h
-        src/application/head/views/ftxui_bridge/FtxuiNotices.cpp
-        # ... and how they are drawn when there is no interactive terminal to draw into
-        include/application/head/views/plain/PlainFrame.h src/application/head/views/plain/PlainFrame.cpp
-        include/application/head/views/plain/PlainBoardGrid.h
-        src/application/head/views/plain/PlainBoardGrid.cpp
-        include/application/head/views/plain/PlainMenuView.h src/application/head/views/plain/PlainMenuView.cpp
-        include/application/head/views/plain/PlainPlacementView.h
-        src/application/head/views/plain/PlainPlacementView.cpp
-        include/application/head/views/plain/PlainBattleView.h
-        src/application/head/views/plain/PlainBattleView.cpp
-        # Which screen is showing, and what the interface remembers of its own
-        include/application/head/screens/ScreenKind.h
-        include/application/head/state/MenuState.h
-        include/application/head/state/PlacementState.h src/application/head/state/PlacementState.cpp
-        include/application/head/state/BattleState.h src/application/head/state/BattleState.cpp
-        include/application/head/state/PresentationState.h
-        # Where it all runs
-        include/application/head/host/Shell.h
-        include/application/head/host/TuiShell.h src/application/head/host/TuiShell.cpp
-        include/application/head/host/TerminalShell.h src/application/head/host/TerminalShell.cpp
+        include/application/head/common/input/handlers/SessionHandlers.h
+        src/application/head/common/input/handlers/SessionHandlers.cpp
+        include/application/head/common/input/handlers/PlacementHandlers.h
+        src/application/head/common/input/handlers/PlacementHandlers.cpp
+        include/application/head/common/input/handlers/BattleHandlers.h
+        src/application/head/common/input/handlers/BattleHandlers.cpp
+        # How anything is drawn at all
+        include/application/head/common/render/Frame.h src/application/head/common/render/Frame.cpp
+        include/application/head/common/render/Renderer.h
+        include/application/head/common/render/RendererSet.h src/application/head/common/render/RendererSet.cpp
+        include/application/head/common/render/Notices.h src/application/head/common/render/Notices.cpp
+        include/application/head/common/render/CoordinateLabel.h src/application/head/common/render/CoordinateLabel.cpp
+        include/application/head/common/render/EventNarration.h src/application/head/common/render/EventNarration.cpp
+        # Where it runs
+        include/application/head/common/host/Shell.h
+        # ... and how it all looks with no drawing library to hand
+        include/application/head/plain/PlainFrame.h src/application/head/plain/PlainFrame.cpp
+        include/application/head/plain/PlainBoardGrid.h src/application/head/plain/PlainBoardGrid.cpp
+        include/application/head/plain/PlainMenuView.h src/application/head/plain/PlainMenuView.cpp
+        include/application/head/plain/PlainPlacementView.h src/application/head/plain/PlainPlacementView.cpp
+        include/application/head/plain/PlainBattleView.h src/application/head/plain/PlainBattleView.cpp
+        include/application/head/plain/TerminalShell.h src/application/head/plain/TerminalShell.cpp
+)
+
+# warships_head_ftxui is the only place in the project that names FTXUI.
+add_library(warships_head_ftxui
+        include/application/head/ftxui/FtxuiPalette.h src/application/head/ftxui/FtxuiPalette.cpp
+        include/application/head/ftxui/FtxuiView.h src/application/head/ftxui/FtxuiView.cpp
+        include/application/head/ftxui/FtxuiNotices.h src/application/head/ftxui/FtxuiNotices.cpp
+        include/application/head/ftxui/CellAppearance.h src/application/head/ftxui/CellAppearance.cpp
+        include/application/head/ftxui/KeyHint.h src/application/head/ftxui/KeyHint.cpp
+        include/application/head/ftxui/BoardView.h src/application/head/ftxui/BoardView.cpp
+        include/application/head/ftxui/MenuView.h src/application/head/ftxui/MenuView.cpp
+        include/application/head/ftxui/PlacementView.h src/application/head/ftxui/PlacementView.cpp
+        include/application/head/ftxui/BattleView.h src/application/head/ftxui/BattleView.cpp
+        include/application/head/ftxui/TuiShell.h src/application/head/ftxui/TuiShell.cpp
 )
 
 # Tests setup
@@ -74,11 +75,14 @@ if (BUILD_TESTING)
 endif()
 
 # Expose settings
-target_include_directories(warships_head
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+target_include_directories(warships_head PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(warships_head_ftxui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# Link dependencies
+# Link dependencies. Note what is missing from warships_head: no drawing library appears
+# here or anywhere below it.
 target_link_libraries(warships_head
-        PUBLIC warships_core warships_flow warships_persistence warships_model ftxui::ftxui cxx_setup
+        PUBLIC warships_core warships_flow warships_persistence warships_model cxx_setup
+)
+target_link_libraries(warships_head_ftxui
+        PUBLIC warships_head ftxui::ftxui cxx_setup
 )

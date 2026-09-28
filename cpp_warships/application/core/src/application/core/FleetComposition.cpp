@@ -14,10 +14,11 @@ namespace cpp_warships::core {
         constexpr float REFERENCE_BOARD_SIZE = 10.0F;
         constexpr std::array<int, 4> SHIP_LENGTHS{4, 3, 2, 1};
         constexpr std::array<int, 4> BASE_SHIP_COUNTS{1, 2, 3, 4};
-    } // namespace
+    }  // namespace
 
     FleetComposition::FleetComposition(std::map<int, int> countsByLength)
-        : countsByLength_(std::move(countsByLength)) {}
+        : countsByLength_(std::move(countsByLength)) {
+    }
 
     FleetComposition FleetComposition::forBoardSize(int boardSize) {
         if (boardSize <= 0) {
@@ -27,7 +28,7 @@ namespace cpp_warships::core {
         const auto boardSizeAsFloat = static_cast<float>(boardSize);
         const float scaleFactor = boardSizeAsFloat / REFERENCE_BOARD_SIZE;
         int remainingCells =
-                static_cast<int>(boardSizeAsFloat * boardSizeAsFloat * SHIP_COVERED_AREA_RATIO);
+            static_cast<int>(boardSizeAsFloat * boardSizeAsFloat * SHIP_COVERED_AREA_RATIO);
 
         std::map<int, int> counts;
         for (std::size_t index = 0; index < SHIP_LENGTHS.size(); ++index) {
@@ -58,7 +59,12 @@ namespace cpp_warships::core {
             return sum + entry.second;
         };
 
-        return std::accumulate(countsByLength_.begin(), countsByLength_.end(), 0, addShipCount);
+        return std::accumulate(
+            countsByLength_.begin(),
+            countsByLength_.end(),
+            0,
+            addShipCount
+        );
     }
 
     int FleetComposition::totalCells() const {
@@ -66,10 +72,15 @@ namespace cpp_warships::core {
             return sum + entry.first * entry.second;
         };
 
-        return std::accumulate(countsByLength_.begin(), countsByLength_.end(), 0, addOccupiedCells);
+        return std::accumulate(
+            countsByLength_.begin(),
+            countsByLength_.end(),
+            0,
+            addOccupiedCells
+        );
     }
 
     bool FleetComposition::isEmpty() const noexcept {
         return countsByLength_.empty();
     }
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

@@ -1,13 +1,11 @@
-#include <input_parser/command/HelpCommand.h>
 #include <input_parser/DefaultHelp.h>
-
+#include <input_parser/command/HelpCommand.h>
 #include <utilities/ViewHelper.h>
 
 namespace cpp_warships::input_parser {
     HelpCommand::HelpCommand(SchemeMap<ParserCommand*> scheme)
-        : ParserCommand()
-        , scheme(std::move(scheme))
-    {}
+        : ParserCommand(), scheme(std::move(scheme)) {
+    }
 
     void HelpCommand::execute(ParsedOptions options) {
         ViewHelper::consoleOut("This is the list of supported commands:");
@@ -23,4 +21,4 @@ namespace cpp_warships::input_parser {
             }
         }
     }
-}
+}  // namespace cpp_warships::input_parser

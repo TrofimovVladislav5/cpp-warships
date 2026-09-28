@@ -1,4 +1,4 @@
-# cpp-warships — target architecture
+# cpp-warships — architecture
 
 Two layers, each its own CMake target. The model never draws and never reads input;
 the head never decides anything. What crosses between them is `ApplicationContext`,
@@ -13,9 +13,10 @@ handed to the head as `const`.
 | `cpp_warships/application/head/{common,plain}` | `warships_head` | presentation, no drawing library |
 | `cpp_warships/application/head/ftxui` | `warships_head_ftxui` | FTXUI renderers |
 
-`warships_head` must link without FTXUI. `plain/` lives in that target so the build
-itself proves it: leak an FTXUI include into `common/` and `warships_head` stops
-compiling.
+`warships_head` links without FTXUI, and the build proves it rather than a checklist:
+`plain/` sits in that target, so leaking an FTXUI include into `common/` breaks the
+build. Measured: 27 translation units in `warships_head` see no FTXUI include path,
+10 in `warships_head_ftxui` see one.
 
 ## Structure
 
@@ -41,15 +42,26 @@ classDiagram
         }
         class PresentationContext {
             The one place presentation state lives
-            +context() const ApplicationContext&
-            +menu() MenuState&
-            +placement() PlacementState&
-            +battle() BattleState&
-            +theme() Theme&
+            Owns the theme, the state and the geometry
+            +application() const ApplicationContext&
+            +state() PresentationState&
+            +geometry() GridGeometry&
+            +theme() const Theme&
+            +currentScreen() ScreenKind
+        }
+        class EventPipeline {
+            One turn of the machine
+            +offer(Keystroke) void
+            +settle() bool
+        }
+        class RendererSet {
+            A renderer for every screen there is
+            +render(ScreenKind, int, int) Frame
         }
         class Renderer {
             <<abstract>>
             Draws one screen from the context
+            +render(int, int) Frame
         }
     }
 
@@ -127,16 +139,21 @@ classDiagram
         }
     }
 
-    PresentationShell *-- EventBus
-    PresentationShell *-- Renderer
+    PresentationShell --> RendererSet : draws through
+    PresentationShell --> EventPipeline : feeds
     PresentationShell --> PresentationContext : renders
+    RendererSet o-- Renderer
+    EventPipeline --> EventBus
+    EventPipeline --> EventQueue
+    EventPipeline --> EventRouter
+    EventPipeline --> ScenarioQueue
     EventBus *-- GridGeometry
     EventBus --> PresentationContext : moves the cursor
     Renderer --> PresentationContext : reads (const)
 
     EventBus --> EventQueue : GameEvent
     EventQueue --> EventRouter : on tick
-    EventRouter --> EventHandler : dispatches
+    EventRouter --> EventHandler : dispatches, in scope
     EventHandler --> IntendedGameScenario : builds
     EventHandler --> IntentFactory : asks for intents
     IntendedGameScenario o-- GameIntent
@@ -201,6 +218,27 @@ Navigation is not an intent. The head picks its renderer from `MatchPhase`, so a
 change *is* the navigation. Quitting is a scenario that ends by setting
 `ApplicationContext::isFinished`, which the shell loop observes — that keeps quit
 sequenced behind a save without making it a navigation step.
+
+## Why a scenario, in one case
+
+Saving is offered from the menu and nowhere else, and never on its own: it always ends
+the session with it. Inside a match there is no key for it at all, so putting a match
+away is always deliberate — step out to the menu first. That pairing is a scenario of
+two steps, and `SequenceScenario` stops at the first that does not come off:
+
+```
+saving and leaving  =  [ saveMatch, finishSession ]
+```
+
+A save that fails therefore leaves the session running, with the match still there and
+a notice saying why. Nothing had to be written to arrange that: the ordering and the
+stop-on-failure are what a scenario already is.
+
+Telling the two failures apart mattered enough to change a signature. `SaveBehavior::
+saveMatch` once returned `false` both for "no match" and for "the write failed", so a
+full disk reported "there is no match to save". It now returns `false` only for the
+first and throws `SaveWriteException` for the second, which the processor turns into
+an accurate notice.
 
 ## Errors
 
@@ -276,12 +314,24 @@ by reading a notification off the context, not by catching anything.
 | ordering of actions within one event | model | `IntendedGameScenario`, locally and visibly, not a global priority table |
 | what an intent may touch | model | `IntentFactory` injects at construction; intents never see the whole context |
 
-## Open
+## Settled along the way
 
-- Menu versus in-match is not a `MatchPhase` today. Either add a value, or give
-  `ApplicationContext` its own session state.
-- `WarshipsGame` owns `BattleJournal`, so saves should start carrying it. Loaded games
-  currently resume with an empty log. The JSON reader already tolerates absent fields,
-  so this can land without breaking existing saves.
-- `placeFleetRandomly` uses the default segment health while `placeShip` passes the
-  configured value, so computer and shuffled fleets ignore the setting.
+- **Menu versus in-match** is not a `MatchPhase`, and does not need to be.
+  `PresentationState::isAtMenu` carries it, on the presentation side, because a match
+  can be in play while the player is looking at the menu. Everything else about which
+  screen shows is read off the match.
+- **The journal is saved.** `MatchSnapshot` carries it as `flow::MatchEventLog` rather
+  than as a `BattleJournal`, since persistence sits below the layer that keeps journals.
+  A save written before this loads with an empty log rather than failing.
+- **Segment health reaches every fleet.** `placeFleetRandomly` takes it as an argument
+  instead of defaulting, so shuffled and computer fleets are as tough as hand-laid ones.
+- **`ScreenKind::GameOver` is gone.** A finished match is the battle screen, saying so.
+
+## Still open
+
+- The renderers are still named `MenuView`, `PlainBattleView` and so on, while the
+  interface they implement is `Renderer`. Worth one rename.
+- `Queries.h` is thinner than it was: `MatchQuery` and `BoardQuery` have no callers left
+  now that everything reads the context.
+- Nothing shows a notice except a failed save, because every other failure is guarded
+  before it can happen. That is the right trade, but it leaves the strip nearly unused.

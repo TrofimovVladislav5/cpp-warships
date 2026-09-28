@@ -6,12 +6,10 @@
 #include <iostream>
 
 namespace cpp_warships::input_reader::config_reader {
-
-    ConfigInputReader::ConfigInputReader(const std::string &filename)
-        : fileContents({})
-        , shadowReader(new console_reader::ConsoleInputReader())
-        , linesExecuted(0)
-    {
+    ConfigInputReader::ConfigInputReader(const std::string& filename)
+        : fileContents({}),
+          shadowReader(new console_reader::ConsoleInputReader()),
+          linesExecuted(0) {
         std::ifstream file(filename);
 
         std::vector<std::string> fileContents;
@@ -31,12 +29,11 @@ namespace cpp_warships::input_reader::config_reader {
 
     std::string ConfigInputReader::readCommand() {
         auto command = linesExecuted >= this->fileContents.size()
-            ? shadowReader->readCommand()
-            : this->fileContents[linesExecuted++];
+                           ? shadowReader->readCommand()
+                           : this->fileContents[linesExecuted++];
 
         linesExecuted = std::min(linesExecuted, this->fileContents.size());
 
         return command;
     }
-
-} // namespace cpp_warships::input_reader::config_reader
+}  // namespace cpp_warships::input_reader::config_reader

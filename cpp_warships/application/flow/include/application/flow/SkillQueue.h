@@ -1,10 +1,10 @@
 #pragma once
 
-#include <deque>
-#include <optional>
-
 #include <application/flow/RandomEngine.h>
 #include <application/flow/SkillKind.h>
+
+#include <deque>
+#include <optional>
 
 namespace cpp_warships::flow {
     /** @brief The skills a player has banked, consumed oldest first. */
@@ -33,4 +33,4 @@ namespace cpp_warships::flow {
     private:
         std::deque<SkillKind> pending_;
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

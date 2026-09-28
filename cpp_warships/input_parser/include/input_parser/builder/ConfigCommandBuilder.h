@@ -1,11 +1,10 @@
 #pragma once
 #include <input_parser/builder/ParserCommandBuilder.h>
 
-
 namespace cpp_warships::input_parser {
     template <typename T>
-    class ConfigCommandBuilder: public ParserCommandBuilder<T> {
-    public:
+    class ConfigCommandBuilder : public ParserCommandBuilder<T> {
+       public:
         ~ConfigCommandBuilder() override = default;
 
         ConfigCommandBuilder& setDescription(std::string description) override {
@@ -33,14 +32,14 @@ namespace cpp_warships::input_parser {
             return *this;
         };
         ParserCommandInfoConfig<T> build() {
-            return ParserCommandInfoConfig<T>({
-                this->description,
-                this->parameters,
-                this->executable ? this->executable : nullptr,
-                this->displayError ? this->displayError : nullptr,
-                this->resolveAllFlags ? this->resolveAllFlags : false,
-                this->printHelp ? this->printHelp : nullptr
-            });
+            return ParserCommandInfoConfig<T>(
+                {this->description,
+                 this->parameters,
+                 this->executable ? this->executable : nullptr,
+                 this->displayError ? this->displayError : nullptr,
+                 this->resolveAllFlags ? this->resolveAllFlags : false,
+                 this->printHelp ? this->printHelp : nullptr}
+            );
         };
         ParserCommandInfoConfig<T> buildAndReset() {
             ParserCommandInfoConfig config = this->build();
@@ -48,4 +47,4 @@ namespace cpp_warships::input_parser {
             return config;
         };
     };
-}
+}  // namespace cpp_warships::input_parser

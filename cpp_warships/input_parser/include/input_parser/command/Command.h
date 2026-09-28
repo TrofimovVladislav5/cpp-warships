@@ -1,15 +1,14 @@
 #pragma once
-#include <map>
-
 #include <input_parser/model/ParserCommandInfo.h>
 
+#include <map>
 
 namespace cpp_warships::input_parser {
     template <typename T>
     class Command {
-    public:
+       public:
         virtual ~Command() = default;
 
         virtual void execute(T data) = 0;
     };
-}
+}  // namespace cpp_warships::input_parser

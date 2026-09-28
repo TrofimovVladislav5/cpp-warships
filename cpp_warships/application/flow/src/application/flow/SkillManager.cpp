@@ -3,7 +3,6 @@
 #include <utility>
 
 namespace cpp_warships::flow {
-
     SkillManager::SkillManager(RandomEngine& randomEngine)
         : randomEngine_(randomEngine) {}
 
@@ -28,10 +27,7 @@ namespace cpp_warships::flow {
         return pending.has_value() && behaviourFor(*pending).needsTarget();
     }
 
-    bool SkillManager::applyNext(
-            SkillContext& context,
-            std::optional<core::Coordinate> target
-    ) {
+    bool SkillManager::applyNext(SkillContext& context, std::optional<core::Coordinate> target) {
         const std::optional<SkillKind> pending = bank_.next();
         bool isApplied = false;
 
@@ -46,4 +42,4 @@ namespace cpp_warships::flow {
 
         return isApplied;
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

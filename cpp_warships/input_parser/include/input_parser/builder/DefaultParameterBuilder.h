@@ -4,7 +4,7 @@
 
 namespace cpp_warships::input_parser {
     class DefaultParameterBuilder : public ParserParameterBuilder {
-    public:
+       public:
         ~DefaultParameterBuilder() override = default;
 
         DefaultParameterBuilder& addFlag(std::string flag) override {
@@ -28,12 +28,7 @@ namespace cpp_warships::input_parser {
         }
 
         ParserParameter build() {
-            return ParserParameter({
-                flags,
-                validator,
-                description,
-                necessary
-            });
+            return ParserParameter({flags, validator, description, necessary});
         }
 
         ParserParameter buildAndReset() {
@@ -43,4 +38,4 @@ namespace cpp_warships::input_parser {
             return parameter;
         }
     };
-}
+}  // namespace cpp_warships::input_parser

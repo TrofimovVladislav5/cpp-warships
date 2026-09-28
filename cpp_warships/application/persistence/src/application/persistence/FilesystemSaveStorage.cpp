@@ -9,10 +9,11 @@ namespace cpp_warships::persistence {
     namespace {
         /** @brief Extension every save file carries. */
         constexpr const char* SAVE_EXTENSION = ".json";
-    } // namespace
+    }  // namespace
 
     FilesystemSaveStorage::FilesystemSaveStorage(std::string directoryPath)
-        : directoryPath_(std::move(directoryPath)) {}
+        : directoryPath_(std::move(directoryPath)) {
+    }
 
     FilesystemSaveStorage FilesystemSaveStorage::inCurrentDirectory() {
         return FilesystemSaveStorage{std::filesystem::current_path().string()};
@@ -75,4 +76,4 @@ namespace cpp_warships::persistence {
     const std::string& FilesystemSaveStorage::directoryPath() const noexcept {
         return directoryPath_;
     }
-} // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence

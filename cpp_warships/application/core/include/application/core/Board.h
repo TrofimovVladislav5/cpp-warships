@@ -1,12 +1,12 @@
 #pragma once
 
-#include <unordered_set>
-#include <vector>
-
 #include <application/core/Coordinate.h>
 #include <application/core/Direction.h>
 #include <application/core/Outcomes.h>
 #include <application/core/Ship.h>
+
+#include <unordered_set>
+#include <vector>
 
 namespace cpp_warships::core {
     /** @brief A player's grid: the ships on it and the cells attacked so far.
@@ -16,37 +16,34 @@ namespace cpp_warships::core {
         Board(int width, int height);
 
         /** @brief Rebuilds a board with ships and shots already on it, as when loading a save. */
-        Board(int width,
-              int height,
-              std::vector<Ship> ships,
-              std::unordered_set<Coordinate> attackedCells);
+        Board(
+            int width,
+            int height,
+            std::vector<Ship> ships,
+            std::unordered_set<Coordinate> attackedCells
+        );
 
         [[nodiscard]] int width() const noexcept;
         [[nodiscard]] int height() const noexcept;
         [[nodiscard]] bool contains(Coordinate coordinate) const noexcept;
 
         /** @brief Whether a ship of @p length fits at @p origin, and why not when it does not. */
-        [[nodiscard]] PlacementError canPlace(
-                Coordinate origin,
-                Direction direction,
-                int length
-        ) const;
+        [[nodiscard]] PlacementError
+        canPlace(Coordinate origin, Direction direction, int length) const;
 
         /** @brief Places a ship when the placement is legal.
          *  @return PlacementError::None on success, leaving the board untouched otherwise. */
         PlacementError place(
-                Coordinate origin,
-                Direction direction,
-                int length,
-                int segmentHealth = DEFAULT_SEGMENT_HEALTH
+            Coordinate origin,
+            Direction direction,
+            int length,
+            int segmentHealth = DEFAULT_SEGMENT_HEALTH
         );
 
         /** @brief Removes the ship covering @p coordinate; false when no ship is there. */
         bool removeShipAt(Coordinate coordinate);
 
-        /** @brief Attacks a cell, which may be struck again while a segment there still lives.
-         *  Resolved cells -- water already shot, or a destroyed segment -- reject further shots.
-         *  Sinking a ship lays bare the water around it, which no ship can occupy. */
+        /** @brief Attacks a cell, which may be struck again while a segment there still lives. */
         AttackOutcome attack(Coordinate coordinate, int damage);
 
         /** @brief What @p visibility knows about @p coordinate. */
@@ -78,4 +75,4 @@ namespace cpp_warships::core {
         std::vector<Ship> ships_;
         std::unordered_set<Coordinate> attackedCells_;
     };
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

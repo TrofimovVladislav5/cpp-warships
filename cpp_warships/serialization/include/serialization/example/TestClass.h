@@ -1,8 +1,8 @@
 #pragma once
 
-#include <serialization/example/ImplicitTestClass.h>
-#include <serialization/ISerializer.h>
 #include <serialization/ISerializable.h>
+#include <serialization/ISerializer.h>
+#include <serialization/example/ImplicitTestClass.h>
 #include <serialization/helpers/serializers/JsonStringSerializer.h>
 #include <serialization/helpers/type_converters/StringTypeConverter.h>
 
@@ -10,18 +10,16 @@ namespace cpp_warships::serialization::examples {
     using namespace helpers::serializers;
     using namespace helpers::type_converters;
 
-    // Test class serializer TName definition.
     inline char TestClassTypeName[] = "TestClass";
 
-    // Forward declaration of TestClass and TestClassStringSerializer to avoid circular dependency.
     class TestClassStringSerializer;
 
-    // Test class that implements ISerializable and contains both public and private fields.
     class TestClass : public ISerializable<TestClassTypeName> {
-    private:
+       private:
         int intPrivateField = 0;
         std::string stringPrivateField = "default";
-    public:
+
+       public:
         friend TestClassStringSerializer;
         friend std::ostream& operator<<(std::ostream& os, const TestClass& obj);
 
@@ -31,44 +29,66 @@ namespace cpp_warships::serialization::examples {
         ImplicitTestClass implicitClass;
     };
 
-    // Serializer for TestClass with std::string serialization implementation.
-    class TestClassStringSerializer
-        : public ISerializer<std::string, TestClass, TestClassTypeName, ImplicitTestClassStringSerializer>
-    {
-    public:
+    class TestClassStringSerializer : public ISerializer<
+                                          std::string,
+                                          TestClass,
+                                          TestClassTypeName,
+                                          ImplicitTestClassStringSerializer> {
+       public:
         using ISerializer::ISerializer;
         bool isRelated(std::string item) override {
             return JsonStringSerializer::isIncludeFields(
-                item,
-                "intPublicField",
-                "stringPublicField",
-                "intPrivateField",
-                "stringPrivateField"
-            ) && std::get<0>(childrenSerializers).isRelated(item);
+                       item,
+                       "intPublicField",
+                       "stringPublicField",
+                       "intPrivateField",
+                       "stringPrivateField"
+                   ) &&
+                   std::get<0>(childrenSerializers).isRelated(item);
         }
 
         std::string serialize(TestClass& item) override {
-            auto implicitClassSerialized = std::get<0>(childrenSerializers).serialize(item.implicitClass);
+            auto implicitClassSerialized =
+                std::get<0>(childrenSerializers).serialize(item.implicitClass);
 
-            return JsonStringSerializer::serializeFields({
-                { "intPublicField", std::to_string(item.intPublicField) },
-                { "stringPublicField", item.stringPublicField },
-                { "intPrivateField", std::to_string(item.intPrivateField) },
-                { "stringPrivateField", item.stringPrivateField },
-                { "implicitClass", implicitClassSerialized }
-            });
+            return JsonStringSerializer::serializeFields(
+                {{"intPublicField", std::to_string(item.intPublicField)},
+                 {"stringPublicField", item.stringPublicField},
+                 {"intPrivateField", std::to_string(item.intPrivateField)},
+                 {"stringPrivateField", item.stringPrivateField},
+                 {"implicitClass", implicitClassSerialized}}
+            );
         }
 
         TestClass deserialize(std::string data) override {
             auto* testClass = new TestClass();
 
             try {
-                JsonStringSerializer::setFieldValue<int>(&testClass->intPublicField, data, "intPublicField", StringTypeConverter::stringToInt);
-                JsonStringSerializer::setFieldValue(&testClass->stringPublicField, data, "stringPublicField");
-                JsonStringSerializer::setFieldValue<int>(&testClass->intPrivateField, data, "intPrivateField", StringTypeConverter::stringToInt);
-                JsonStringSerializer::setFieldValue(&testClass->stringPrivateField, data, "stringPrivateField");
+                JsonStringSerializer::setFieldValue<int>(
+                    &testClass->intPublicField,
+                    data,
+                    "intPublicField",
+                    StringTypeConverter::stringToInt
+                );
+                JsonStringSerializer::setFieldValue(
+                    &testClass->stringPublicField,
+                    data,
+                    "stringPublicField"
+                );
+                JsonStringSerializer::setFieldValue<int>(
+                    &testClass->intPrivateField,
+                    data,
+                    "intPrivateField",
+                    StringTypeConverter::stringToInt
+                );
+                JsonStringSerializer::setFieldValue(
+                    &testClass->stringPrivateField,
+                    data,
+                    "stringPrivateField"
+                );
 
-                if (const auto field = JsonStringSerializer::extractFieldValue(data, "implicitClass", true)) {
+                if (const auto field =
+                        JsonStringSerializer::extractFieldValue(data, "implicitClass", true)) {
                     testClass->implicitClass = std::get<0>(childrenSerializers).deserialize(*field);
                     delete field;
                 }
@@ -92,4 +112,4 @@ namespace cpp_warships::serialization::examples {
 
         return os;
     }
-} // namespace cpp_warships::serialization::examples
+}  // namespace cpp_warships::serialization::examples

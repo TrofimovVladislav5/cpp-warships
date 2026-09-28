@@ -5,21 +5,20 @@
 #include <utility>
 
 namespace cpp_warships::core {
-
     Board::Board(int width, int height)
         : width_(std::max(0, width))
         , height_(std::max(0, height)) {}
 
     Board::Board(
-            int width,
-            int height,
-            std::vector<Ship> ships,
-            std::unordered_set<Coordinate> attackedCells
+        int width,
+        int height,
+        std::vector<Ship> ships,
+        std::unordered_set<Coordinate> attackedCells
     )
-        : width_(std::max(0, width))
-        , height_(std::max(0, height))
-        , ships_(std::move(ships))
-        , attackedCells_(std::move(attackedCells)) {}
+        : width_(std::max(0, width)),
+          height_(std::max(0, height)),
+          ships_(std::move(ships)),
+          attackedCells_(std::move(attackedCells)) {}
 
     int Board::width() const noexcept {
         return width_;
@@ -39,15 +38,21 @@ namespace cpp_warships::core {
             return ship.occupies(coordinate);
         };
 
-        const auto foundShip = std::find_if(ships_.begin(), ships_.end(), occupiesCoordinate);
-
+        const auto foundShip = std::find_if(
+            ships_.begin(),
+            ships_.end(),
+            occupiesCoordinate
+        );
         return foundShip == ships_.end() ? nullptr : &*foundShip;
     }
 
     bool Board::touchesExistingShip(const Coordinate coordinate) const {
         for (int offsetY = -1; offsetY <= 1; ++offsetY) {
             for (int offsetX = -1; offsetX <= 1; ++offsetX) {
-                if (shipAt({coordinate.x + offsetX, coordinate.y + offsetY}) != nullptr) {
+                if (shipAt({
+                    coordinate.x + offsetX,
+                    coordinate.y + offsetY
+                }) != nullptr) {
                     return true;
                 }
             }
@@ -57,9 +62,9 @@ namespace cpp_warships::core {
     }
 
     PlacementError Board::canPlace(
-            const Coordinate origin,
-            const Direction direction,
-            const int length
+        const Coordinate origin,
+        const Direction direction,
+        const int length
     ) const {
         if (length <= 0) {
             return PlacementError::InvalidLength;
@@ -69,11 +74,9 @@ namespace cpp_warships::core {
         for (const Coordinate coordinate : candidateShip.coordinates()) {
             if (!contains(coordinate)) {
                 return PlacementError::OutOfBounds;
-            }
-            if (shipAt(coordinate) != nullptr) {
+            } else if (shipAt(coordinate) != nullptr) {
                 return PlacementError::Overlaps;
-            }
-            if (touchesExistingShip(coordinate)) {
+            } else if (touchesExistingShip(coordinate)) {
                 return PlacementError::TouchesAnotherShip;
             }
         }
@@ -82,10 +85,10 @@ namespace cpp_warships::core {
     }
 
     PlacementError Board::place(
-            Coordinate origin,
-            Direction direction,
-            int length,
-            int segmentHealth
+        Coordinate origin,
+        Direction direction,
+        int length,
+        int segmentHealth
     ) {
         const PlacementError error = canPlace(origin, direction, length);
         if (error != PlacementError::None) {
@@ -101,7 +104,11 @@ namespace cpp_warships::core {
             return ship.occupies(coordinate);
         };
 
-        const auto foundShip = std::find_if(ships_.begin(), ships_.end(), occupiesCoordinate);
+        const auto foundShip = std::find_if(
+            ships_.begin(),
+            ships_.end(),
+            occupiesCoordinate
+        );
 
         if (foundShip == ships_.end()) {
             return false;
@@ -120,8 +127,11 @@ namespace cpp_warships::core {
             return AttackOutcome::OutOfBounds;
         }
 
-        const auto targetShip = std::find_if(ships_.begin(), ships_.end(), occupiesCoordinate);
-
+        const auto targetShip = std::find_if(
+            ships_.begin(),
+            ships_.end(),
+            occupiesCoordinate
+        );
         if (targetShip == ships_.end()) {
             if (attackedCells_.contains(coordinate)) {
                 return AttackOutcome::AlreadyAttacked;
@@ -135,9 +145,9 @@ namespace cpp_warships::core {
     }
 
     AttackOutcome Board::attackShipCell(
-            Ship* targetShip,
-            const Coordinate coordinate,
-            const int damage
+        Ship* targetShip,
+        const Coordinate coordinate,
+        const int damage
     ) {
         const std::optional<int> index = targetShip->segmentIndexAt(coordinate);
         if (targetShip->segmentHealth(*index) == 0) {
@@ -159,7 +169,10 @@ namespace cpp_warships::core {
         for (const Coordinate coordinate : ship.coordinates()) {
             for (int offsetY = -1; offsetY <= 1; ++offsetY) {
                 for (int offsetX = -1; offsetX <= 1; ++offsetX) {
-                    const Coordinate neighbour{coordinate.x + offsetX, coordinate.y + offsetY};
+                    const Coordinate neighbour{
+                        coordinate.x + offsetX,
+                        coordinate.y + offsetY
+                    };
 
                     if (contains(neighbour) && shipAt(neighbour) == nullptr) {
                         attackedCells_.insert(neighbour);
@@ -179,7 +192,9 @@ namespace cpp_warships::core {
             }
 
             const std::optional<int> index = ship->segmentIndexAt(coordinate);
-            return ship->segmentHealth(*index) == 0 ? CellState::Destroyed : CellState::Damaged;
+            return ship->segmentHealth(*index) == 0
+                ? CellState::Destroyed
+                : CellState::Damaged;
         } else if (isAttacked) {
             return CellState::Miss;
         } else if (ship != nullptr && visibility == Visibility::Owner) {
@@ -209,9 +224,9 @@ namespace cpp_warships::core {
 
         if (ships_.empty()) {
             return false;
+        } else {
+            return std::all_of(ships_.begin(), ships_.end(), isShipSunk);
         }
-
-        return std::all_of(ships_.begin(), ships_.end(), isShipSunk);
     }
 
     bool Board::hasShips() const noexcept {
@@ -230,4 +245,4 @@ namespace cpp_warships::core {
         ships_.clear();
         attackedCells_.clear();
     }
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

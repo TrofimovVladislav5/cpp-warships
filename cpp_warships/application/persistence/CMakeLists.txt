@@ -1,7 +1,5 @@
 # Compile files
 add_library(warships_persistence
-        # What can go wrong here
-        include/application/persistence/errors/PersistenceExceptions.h src/application/persistence/errors/PersistenceExceptions.cpp
         # Where saves are kept
         include/application/persistence/SaveStorage.h
         include/application/persistence/FilesystemSaveStorage.h src/application/persistence/FilesystemSaveStorage.cpp

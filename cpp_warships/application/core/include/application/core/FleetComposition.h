@@ -3,7 +3,6 @@
 #include <map>
 
 namespace cpp_warships::core {
-
     class FleetComposition {
     public:
         FleetComposition() = default;
@@ -20,4 +19,4 @@ namespace cpp_warships::core {
     private:
         std::map<int, int> countsByLength_;
     };
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

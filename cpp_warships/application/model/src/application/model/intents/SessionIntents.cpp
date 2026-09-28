@@ -1,23 +1,28 @@
 #include <application/model/intents/SessionIntents.h>
 
 namespace cpp_warships::model {
-    SaveMatchIntent::SaveMatchIntent(SaveBehavior& saves) noexcept
-        : saves_(saves) {}
+    SaveMatchIntent::SaveMatchIntent(SaveBehavior& saves) noexcept : saves_(saves) {
+    }
 
     std::string SaveMatchIntent::name() const {
         return "saving the match";
     }
 
     IntentResult SaveMatchIntent::apply() const {
-        if (!saves_.saveMatch()) {
-            return IntentResult::failed("there is no match to save");
+        switch (saves_.saveMatch()) {
+            case SaveOutcome::Saved:
+                return IntentResult::succeeded();
+            case SaveOutcome::NoMatchInPlay:
+                return IntentResult::failed("there is no match to save");
+            case SaveOutcome::CouldNotWrite:
+                return IntentResult::failed("the save could not be written");
         }
 
-        return IntentResult::succeeded();
+        return IntentResult::failed("the match could not be saved");
     }
 
-    LoadMatchIntent::LoadMatchIntent(SaveBehavior& saves) noexcept
-        : saves_(saves) {}
+    LoadMatchIntent::LoadMatchIntent(SaveBehavior& saves) noexcept : saves_(saves) {
+    }
 
     std::string LoadMatchIntent::name() const {
         return "loading the match";
@@ -32,7 +37,8 @@ namespace cpp_warships::model {
     }
 
     FinishSessionIntent::FinishSessionIntent(ApplicationContext& application) noexcept
-        : application_(application) {}
+        : application_(application) {
+    }
 
     std::string FinishSessionIntent::name() const {
         return "finishing the session";
@@ -42,4 +48,4 @@ namespace cpp_warships::model {
         application_.finish();
         return IntentResult::succeeded();
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

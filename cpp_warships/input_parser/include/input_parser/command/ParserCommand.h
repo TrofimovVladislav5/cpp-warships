@@ -4,4 +4,4 @@
 
 namespace cpp_warships::input_parser {
     class ParserCommand : public Command<ParsedOptions> {};
-}
+}  // namespace cpp_warships::input_parser

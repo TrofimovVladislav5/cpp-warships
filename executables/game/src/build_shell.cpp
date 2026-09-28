@@ -1,3 +1,5 @@
+#include <application/head/ftxui/TuiShell.h>
+#include <application/head/plain/TerminalShell.h>
 #include <build_shell.h>
 
 #include <algorithm>
@@ -5,13 +7,10 @@
 #include <string_view>
 #include <utility>
 
-#include <application/head/host/TerminalShell.h>
-#include <application/head/host/TuiShell.h>
-
 namespace cpp_warships::application {
     namespace {
         constexpr std::string_view PLAIN_TERMINAL_ARGUMENT = "--plain";
-    } // namespace
+    }  // namespace
 
     ShellKind shellKindFromArguments(const int argumentCount, const char* const* arguments) {
         const auto isPlainTerminal = [](const char* argument) {
@@ -19,7 +18,7 @@ namespace cpp_warships::application {
         };
 
         const bool wantsPlainTerminal =
-                std::any_of(arguments, arguments + argumentCount, isPlainTerminal);
+            std::any_of(arguments, arguments + argumentCount, isPlainTerminal);
 
         return wantsPlainTerminal ? ShellKind::PlainTerminal : ShellKind::InteractiveTerminal;
     }
@@ -31,4 +30,4 @@ namespace cpp_warships::application {
 
         return std::make_unique<head::TuiShell>(std::move(theme));
     }
-} // namespace cpp_warships::application
+}  // namespace cpp_warships::application

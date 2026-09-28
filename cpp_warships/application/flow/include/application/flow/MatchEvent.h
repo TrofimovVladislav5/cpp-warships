@@ -1,11 +1,11 @@
 #pragma once
 
-#include <optional>
-#include <vector>
-
 #include <application/core/Coordinate.h>
 #include <application/flow/Participant.h>
 #include <application/flow/SkillKind.h>
+
+#include <optional>
+#include <vector>
 
 namespace cpp_warships::flow {
     /** @brief Something that happened during a match, in the order it happened. */
@@ -22,8 +22,8 @@ namespace cpp_warships::flow {
         TurnPassed,
     };
 
-    /** @brief One entry in a match's history.
-     *  The interface renders these and animations replay them; the match draws nothing. */
+    /** @brief One entry in a match's history. The interface renders these and
+     * animations replay them; the match draws nothing. */
     struct MatchEvent {
         MatchEventKind kind;
         Participant actor = Participant::Player;
@@ -34,4 +34,4 @@ namespace cpp_warships::flow {
     };
 
     using MatchEventLog = std::vector<MatchEvent>;
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

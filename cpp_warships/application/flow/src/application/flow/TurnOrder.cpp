@@ -1,9 +1,9 @@
 #include <application/flow/TurnOrder.h>
 
 namespace cpp_warships::flow {
-
     Participant opponentOf(Participant participant) {
-        return participant == Participant::Player ? Participant::Computer : Participant::Player;
+        return participant == Participant::Player ? Participant::Computer
+                                                  : Participant::Player;
     }
 
     TurnOrder::TurnOrder(Participant startingParticipant)
@@ -24,4 +24,4 @@ namespace cpp_warships::flow {
     void TurnOrder::giveTo(Participant participant) {
         current_ = participant;
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

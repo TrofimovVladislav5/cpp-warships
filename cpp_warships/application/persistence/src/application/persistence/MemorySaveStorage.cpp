@@ -1,7 +1,6 @@
 #include <application/persistence/MemorySaveStorage.h>
 
 namespace cpp_warships::persistence {
-
     std::vector<std::string> MemorySaveStorage::list() const {
         std::vector<std::string> names;
         names.reserve(savesByName_.size());
@@ -31,4 +30,4 @@ namespace cpp_warships::persistence {
     bool MemorySaveStorage::contains(const std::string& name) const {
         return savesByName_.contains(name);
     }
-} // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence

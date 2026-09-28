@@ -1,39 +1,39 @@
 #include <cstddef>
-#include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/component/component.hpp>
+#include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/table.hpp>
 #include <map>
 #include <vector>
 
-
 using FieldMock = std::vector<std::vector<std::size_t>>;
 
 enum class CellState : std::size_t {
     Water = 0,
-    Ship  = 1,
-    Hit   = 2,
-    Miss  = 3,
+    Ship = 1,
+    Hit = 2,
+    Miss = 3,
 };
 
 auto cell_glyph(const CellState state) -> std::string {
     switch (state) {
-        case CellState::Ship:  return "#";
-        case CellState::Hit:   return "X";
-        case CellState::Miss:  return "o";
+        case CellState::Ship:
+            return "#";
+        case CellState::Hit:
+            return "X";
+        case CellState::Miss:
+            return "o";
         case CellState::Water:
-        default:               return " ";
+        default:
+            return " ";
     }
 }
 
 auto draw_single_cell(const std::size_t value, const bool selected) -> ftxui::Element {
     const auto glyph = cell_glyph(static_cast<CellState>(value));
 
-    auto cell = ftxui::text(glyph)
-              | ftxui::bold
-              | ftxui::hcenter
-              | ftxui::xflex
-              | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 1);
+    auto cell = ftxui::text(glyph) | ftxui::bold | ftxui::hcenter | ftxui::xflex |
+                ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 1);
 
     if (selected) {
         cell = cell | ftxui::bgcolor(ftxui::Color::GrayDark);
@@ -89,9 +89,8 @@ auto draw_field(const FieldMock& field_state) -> ftxui::Component {
 
 int main() {
     const std::size_t field_size = 10;
-    std::vector<std::vector<std::size_t>> field = std::vector(
-        field_size,
-        std::vector<std::size_t>(field_size, 0));
+    std::vector<std::vector<std::size_t>> field =
+        std::vector(field_size, std::vector<std::size_t>(field_size, 0));
 
     field[2][3] = static_cast<std::size_t>(CellState::Ship);
     field[2][4] = static_cast<std::size_t>(CellState::Ship);
@@ -100,9 +99,8 @@ int main() {
     field[6][1] = static_cast<std::size_t>(CellState::Miss);
     field[8][8] = static_cast<std::size_t>(CellState::Miss);
 
-    std::vector<std::vector<std::size_t>> field2 = std::vector(
-        field_size,
-        std::vector<std::size_t>(field_size, 0));
+    std::vector<std::vector<std::size_t>> field2 =
+        std::vector(field_size, std::vector<std::size_t>(field_size, 0));
 
     field2[4][3] = static_cast<std::size_t>(CellState::Ship);
     field2[5][3] = static_cast<std::size_t>(CellState::Ship);
@@ -132,8 +130,9 @@ int main() {
         if (event == ftxui::Event::Tab) {
             *active_board = 1 - *active_board;
             return true;
-        } else if (event == ftxui::Event::Escape ||
-            (event.is_character() && event.character() == "q")) {
+        } else if (
+            event == ftxui::Event::Escape || (event.is_character() && event.character() == "q")
+        ) {
             screen.Exit();
             return true;
         }

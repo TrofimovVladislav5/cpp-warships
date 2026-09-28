@@ -1,0 +1,179 @@
+#include <application/core/Ship.h>
+#include <application/head/ftxui/CellAppearance.h>
+#include <application/head/ftxui/FtxuiNotices.h>
+#include <application/head/ftxui/FtxuiPalette.h>
+#include <application/head/ftxui/KeyHint.h>
+#include <application/head/ftxui/PlacementView.h>
+
+#include <cstddef>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace cpp_warships::head {
+    namespace {
+        /** @brief How a ship is drawn on the roster: smaller than a board cell,
+         *  with a gap across and a clear line between one ship and the next. */
+        /** @brief How wide the fleet panel stands, whatever the terminal does.
+         */
+        constexpr int PLACEMENT_PANEL_WIDTH = 28;
+
+        constexpr int ROSTER_TILE_WIDTH = 2;
+        constexpr int ROSTER_TILE_GAP = 1;
+        constexpr int ROSTER_ROW_GAP = 1;
+
+        std::unordered_set<core::Coordinate>
+        shipInHandCells(const PlacementState& state, int lengthInHand) {
+            if (lengthInHand <= 0) {
+                return {};
+            }
+
+            const core::Ship shipInHand{state.cursor, state.direction, lengthInHand};
+            const std::vector<core::Coordinate> covered = shipInHand.coordinates();
+            return {covered.begin(), covered.end()};
+        }
+
+        CellColors shipInHandColors(
+            const core::Board& board,
+            const PlacementState& state,
+            int lengthInHand,
+            const Theme& theme
+        ) {
+            const core::PlacementError error =
+                board.canPlace(state.cursor, state.direction, lengthInHand);
+            const bool isLegal = error == core::PlacementError::None;
+            return {isLegal ? theme.success : theme.danger, theme.background};
+        }
+
+        /** @brief A ship of @p length as a row of separate cells, in miniature.
+         *  The roster is a legend beside the board, so it is drawn tighter than
+         * the board. */
+        ftxui::Element hullOfLength(int length, Color fill) {
+            const auto tileWidth = static_cast<std::size_t>(ROSTER_TILE_WIDTH);
+            const auto gapWidth = static_cast<std::size_t>(ROSTER_TILE_GAP);
+
+            std::vector<ftxui::Element> tiles;
+            for (int segment = 0; segment < length; ++segment) {
+                if (segment > 0) {
+                    tiles.push_back(ftxui::text(std::string(gapWidth, ' ')));
+                }
+
+                tiles.push_back(ftxui::text(std::string(tileWidth, ' ')) | bgcolor(fill));
+            }
+
+            return ftxui::hbox(std::move(tiles));
+        }
+
+        ftxui::Element header(const Theme& theme, const flow::Match& match) {
+            const std::string boardSize = std::to_string(match.settings().boardSize());
+
+            return ftxui::hbox(
+                {ftxui::text("PLACE YOUR FLEET") | ftxui::bold | color(theme.accent),
+                 ftxui::filler(),
+                 ftxui::text(boardSize + " x " + boardSize) | color(theme.textMuted)}
+            );
+        }
+
+        ftxui::Element
+        fleetRoster(const Theme& theme, const flow::PlacementPlan& plan, int lengthInHand) {
+            std::vector<ftxui::Element> rows{
+                ftxui::text("FLEET") | ftxui::bold | color(theme.accent),
+                ftxui::separator() | color(theme.border)
+            };
+
+            bool isFirstEntry = true;
+            for (const auto& [length, remaining] : plan.remaining()) {
+                const bool isInHand = length == lengthInHand;
+                const Color hullFill = remaining > 0 ? theme.ship.fill : theme.surface;
+
+                for (int gap = 0; gap < ROSTER_ROW_GAP && !isFirstEntry; ++gap) {
+                    rows.push_back(ftxui::text(""));
+                }
+                isFirstEntry = false;
+
+                rows.push_back(
+                    ftxui::hbox(
+                        {ftxui::text(isInHand ? "> " : "  ") | color(theme.accent),
+                         hullOfLength(length, hullFill),
+                         ftxui::filler(),
+                         ftxui::text("  x" + std::to_string(remaining)) | color(theme.textMuted)}
+                    )
+                );
+            }
+
+            return ftxui::vbox(std::move(rows));
+        }
+
+        ftxui::Element
+        standing(const Theme& theme, const flow::PlacementPlan& plan, const PlacementState& state) {
+            if (plan.isComplete()) {
+                return ftxui::text("fleet ready") | ftxui::bold | color(theme.success);
+            }
+
+            const bool isAcross = state.direction == core::Direction::Horizontal;
+            return ftxui::text(isAcross ? "lying across" : "lying down") | color(theme.textMuted);
+        }
+
+        ftxui::Element legend(const Theme& theme, const flow::PlacementPlan& plan) {
+            std::vector<ftxui::Element> hints{
+                keyHint(theme, "arrows", "aim"),
+                keyHint(theme, "enter", "lay the ship"),
+                keyHint(theme, "bksp", "take it back"),
+                keyHint(theme, "r", "turn it"),
+                keyHint(theme, "tab", "another ship"),
+                keyHint(theme, "f", "shuffle the fleet")
+            };
+
+            if (plan.isComplete()) {
+                hints.push_back(keyHint(theme, "b", "begin the battle"));
+            }
+
+            hints.push_back(keyHint(theme, "esc", "back to the menu"));
+            return keyLegend(std::move(hints));
+        }
+    }  // namespace
+
+    PlacementView::PlacementView(
+        const PresentationContext& context,
+        GridGeometry& geometry
+    ) noexcept
+        : context_(context), boardView_(geometry, ScreenRegion::OwnWaters) {
+    }
+
+    ftxui::Element PlacementView::renderElement() {
+        const Theme& theme = context_.theme();
+        const flow::Match& match = context_.game().match();
+        const PlacementState& state = context_.state().placement;
+
+        const flow::PlacementPlan plan = match.playerPlacementPlan();
+        const core::Board& board = match.playerBoard();
+        const int lengthInHand = shipLengthInHand(plan, state);
+
+        const BoardOverlay overlay{
+            .cursor = state.cursor,
+            .marked = shipInHandCells(state, lengthInHand),
+            .markColors = shipInHandColors(board, state, lengthInHand, theme)
+        };
+
+        ftxui::Element waters = boardView_.render(board, core::Visibility::Owner, theme, overlay);
+
+        return ftxui::vbox(
+                   {header(theme, match),
+                    ftxui::separator() | color(theme.border),
+                    ftxui::hbox(
+                        {std::move(waters) | ftxui::center | ftxui::flex,
+                         ftxui::separator() | color(theme.border),
+                         ftxui::vbox(
+                             {fleetRoster(theme, plan, lengthInHand),
+                              ftxui::separator() | color(theme.border),
+                              standing(theme, plan, state),
+                              ftxui::separator() | color(theme.border),
+                              legend(theme, plan),
+                              ftxui::filler()}
+                         ) | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, PLACEMENT_PANEL_WIDTH)}
+                    ) | ftxui::flex,
+                    noticeBlock(theme, context_.application())}
+               ) |
+               ftxui::border | color(theme.border) | bgcolor(theme.background) | ftxui::flex;
+    }
+}  // namespace cpp_warships::head

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <optional>
-
 #include <application/core/Coordinate.h>
 #include <application/flow/RandomEngine.h>
 #include <application/flow/SkillBehaviour.h>
 #include <application/flow/SkillKind.h>
 #include <application/flow/SkillQueue.h>
+
+#include <optional>
 
 namespace cpp_warships::flow {
     /** @brief Owns a player's banked skills and applies them.
@@ -35,4 +35,4 @@ namespace cpp_warships::flow {
         RandomEngine& randomEngine_;
         SkillQueue bank_;
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

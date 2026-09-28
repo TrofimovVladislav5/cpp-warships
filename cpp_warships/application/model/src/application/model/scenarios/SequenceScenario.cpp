@@ -5,8 +5,8 @@
 
 namespace cpp_warships::model {
     SequenceScenario::SequenceScenario(std::string name, std::vector<GameIntentPointer> steps)
-        : name_(std::move(name))
-        , steps_(std::move(steps)) {}
+        : name_(std::move(name)), steps_(std::move(steps)) {
+    }
 
     std::string SequenceScenario::name() const {
         return name_;
@@ -26,4 +26,4 @@ namespace cpp_warships::model {
 
         return std::make_shared<SequenceScenario>(std::move(name), std::move(steps));
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

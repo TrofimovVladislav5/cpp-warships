@@ -4,13 +4,16 @@
 #include <utility>
 
 namespace cpp_warships::flow {
-
     SkillQueue::SkillQueue(std::deque<SkillKind> pending)
         : pending_(std::move(pending)) {}
 
     SkillKind SkillQueue::grantRandom(RandomEngine& randomEngine) {
-        std::uniform_int_distribution<std::size_t> distribution{0, ALL_SKILL_KINDS.size() - 1};
+        std::uniform_int_distribution<std::size_t> distribution{
+            0,
+            ALL_SKILL_KINDS.size() - 1
+        };
         const SkillKind granted = ALL_SKILL_KINDS[distribution(randomEngine)];
+
         grant(granted);
         return granted;
     }
@@ -18,6 +21,7 @@ namespace cpp_warships::flow {
     void SkillQueue::grantAllShuffled(RandomEngine& randomEngine) {
         std::array<SkillKind, ALL_SKILL_KINDS.size()> shuffled = ALL_SKILL_KINDS;
         std::shuffle(shuffled.begin(), shuffled.end(), randomEngine);
+
         for (const SkillKind skill : shuffled) {
             grant(skill);
         }
@@ -31,6 +35,7 @@ namespace cpp_warships::flow {
         if (pending_.empty()) {
             return std::nullopt;
         }
+
         return pending_.front();
     }
 
@@ -51,4 +56,4 @@ namespace cpp_warships::flow {
     bool SkillQueue::isEmpty() const noexcept {
         return pending_.empty();
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

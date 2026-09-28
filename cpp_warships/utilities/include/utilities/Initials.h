@@ -4,13 +4,12 @@
 #include <windows.h>
 #endif
 
-
 class Initials {
-public:
+   public:
     static void consoleOutInitials() {
-        #ifdef WIN32
-            system("chcp 65001");
-            SetConsoleOutputCP(CP_UTF8);
-        #endif
+#ifdef WIN32
+        system("chcp 65001");
+        SetConsoleOutputCP(CP_UTF8);
+#endif
     }
 };

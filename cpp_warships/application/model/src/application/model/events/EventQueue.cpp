@@ -9,8 +9,8 @@ namespace cpp_warships::model {
 
     std::vector<GameEvent> EventQueue::drain() {
         std::vector<GameEvent> taken{
-                std::make_move_iterator(events_.begin()),
-                std::make_move_iterator(events_.end())
+            std::make_move_iterator(events_.begin()),
+            std::make_move_iterator(events_.end())
         };
         events_.clear();
 
@@ -20,4 +20,4 @@ namespace cpp_warships::model {
     bool EventQueue::isEmpty() const noexcept {
         return events_.empty();
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

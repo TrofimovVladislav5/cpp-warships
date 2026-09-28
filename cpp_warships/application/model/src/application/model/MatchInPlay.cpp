@@ -1,12 +1,12 @@
 #include <application/model/MatchInPlay.h>
+#include <application/model/errors/ModelExceptions.h>
 
 #include <utility>
 
-#include <application/model/errors/ModelExceptions.h>
-
 namespace cpp_warships::model {
     MatchInPlay::MatchInPlay(flow::RandomEngine& randomEngine) noexcept
-        : randomEngine_(randomEngine) {}
+        : randomEngine_(randomEngine) {
+    }
 
     bool MatchInPlay::hasMatch() const noexcept {
         return match_.has_value();
@@ -41,7 +41,12 @@ namespace cpp_warships::model {
         journal_.clear();
     }
 
+    void MatchInPlay::replaceWith(flow::Match match, const flow::MatchEventLog& story) {
+        replaceWith(std::move(match));
+        journal_.absorb(story);
+    }
+
     void MatchInPlay::recordEvents() {
         journal_.absorb(editableMatch().drainEvents());
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

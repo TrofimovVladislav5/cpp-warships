@@ -1,16 +1,12 @@
 #include <application/persistence/serializers/MatchSettingsJsonSerializer.h>
-
 #include <serialization/exceptions/DeserializationException.h>
 
 #include <map>
 
 namespace cpp_warships::persistence {
-
     bool MatchSettingsJsonSerializer::isRelated(nlohmann::json item) {
-        return item.contains("boardSize") &&
-            item.contains("fleet") &&
-            item.contains("baseDamage") &&
-            item.contains("segmentHealth");
+        return item.contains("boardSize") && item.contains("fleet") &&
+               item.contains("baseDamage") && item.contains("segmentHealth");
     }
 
     nlohmann::json MatchSettingsJsonSerializer::serialize(core::MatchSettings& item) {
@@ -20,18 +16,18 @@ namespace cpp_warships::persistence {
         }
 
         return nlohmann::json{
-                {"boardSize", item.boardSize()},
-                {"fleet", fleet},
-                {"baseDamage", item.baseDamage()},
-                {"segmentHealth", item.segmentHealth()}
+            {"boardSize", item.boardSize()},
+            {"fleet", fleet},
+            {"baseDamage", item.baseDamage()},
+            {"segmentHealth", item.segmentHealth()}
         };
     }
 
     core::MatchSettings MatchSettingsJsonSerializer::deserialize(nlohmann::json item) {
         if (!isRelated(item)) {
             throw serialization::exceptions::DeserializationException(
-                    "MatchSettings",
-                    "JSON does not describe match settings"
+                "MatchSettings",
+                "JSON does not describe match settings"
             );
         }
 
@@ -41,10 +37,10 @@ namespace cpp_warships::persistence {
         }
 
         return core::MatchSettings{
-                item["boardSize"].get<int>(),
-                core::FleetComposition{std::move(countsByLength)},
-                item["baseDamage"].get<int>(),
-                item["segmentHealth"].get<int>()
+            item["boardSize"].get<int>(),
+            core::FleetComposition{std::move(countsByLength)},
+            item["baseDamage"].get<int>(),
+            item["segmentHealth"].get<int>()
         };
     }
-} // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence

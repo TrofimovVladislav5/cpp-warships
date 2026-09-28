@@ -23,4 +23,4 @@ namespace cpp_warships::flow {
     private:
         Participant current_;
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

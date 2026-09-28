@@ -7,12 +7,10 @@ namespace cpp_warships::persistence {
     namespace {
         constexpr const char* HORIZONTAL_DIRECTION = "horizontal";
         constexpr const char* VERTICAL_DIRECTION = "vertical";
-    } // namespace
+    }  // namespace
 
     bool ShipJsonSerializer::isRelated(nlohmann::json item) {
-        return item.contains("origin") &&
-            item.contains("direction") &&
-            item.contains("segments");
+        return item.contains("origin") && item.contains("direction") && item.contains("segments");
     }
 
     nlohmann::json ShipJsonSerializer::serialize(core::Ship& item) {
@@ -25,20 +23,17 @@ namespace cpp_warships::persistence {
 
         const bool isHorizontal = item.direction() == core::Direction::Horizontal;
         return nlohmann::json{
-                {"origin", {
-                    {"x", item.origin().x},
-                    {"y", item.origin().y}
-                }},
-                {"direction", isHorizontal ? HORIZONTAL_DIRECTION : VERTICAL_DIRECTION},
-                {"segments", segments}
+            {"origin", {{"x", item.origin().x}, {"y", item.origin().y}}},
+            {"direction", isHorizontal ? HORIZONTAL_DIRECTION : VERTICAL_DIRECTION},
+            {"segments", segments}
         };
     }
 
     core::Ship ShipJsonSerializer::deserialize(nlohmann::json item) {
         if (!isRelated(item)) {
             throw serialization::exceptions::DeserializationException(
-                    "Ship",
-                    "JSON does not describe a ship"
+                "Ship",
+                "JSON does not describe a ship"
             );
         }
 
@@ -50,13 +45,13 @@ namespace cpp_warships::persistence {
         }
 
         const core::Coordinate origin{
-                item["origin"]["x"].get<int>(),
-                item["origin"]["y"].get<int>()
+            item["origin"]["x"].get<int>(),
+            item["origin"]["y"].get<int>()
         };
         const bool isHorizontal = item["direction"].get<std::string>() == HORIZONTAL_DIRECTION;
-        const core::Direction direction = isHorizontal ? core::Direction::Horizontal
-                                                            : core::Direction::Vertical;
+        const core::Direction direction =
+            isHorizontal ? core::Direction::Horizontal : core::Direction::Vertical;
 
         return core::Ship{origin, direction, std::move(segments)};
     }
-} // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence

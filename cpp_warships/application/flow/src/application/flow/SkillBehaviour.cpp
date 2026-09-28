@@ -10,8 +10,8 @@ namespace cpp_warships::flow {
 
         /** @brief Picks a cell on @p board that has not been attacked yet. */
         std::optional<core::Coordinate> pickRandomUnattackedCell(
-                const core::Board& board,
-                RandomEngine& randomEngine
+            const core::Board& board,
+            RandomEngine& randomEngine
         ) {
             std::vector<core::Coordinate> available;
             for (int row = 0; row < board.height(); ++row) {
@@ -25,7 +25,10 @@ namespace cpp_warships::flow {
 
             std::optional<core::Coordinate> chosen;
             if (!available.empty()) {
-                std::uniform_int_distribution<std::size_t> distribution{0, available.size() - 1};
+                std::uniform_int_distribution<std::size_t> distribution{
+                    0,
+                    available.size() - 1
+                };
                 chosen = available[distribution(randomEngine)];
             }
 
@@ -40,16 +43,18 @@ namespace cpp_warships::flow {
             }
 
             void apply(
-                    SkillContext& context,
-                    std::optional<core::Coordinate> target
+                SkillContext& context,
+                std::optional<core::Coordinate> target
             ) const override {
                 const bool foundShip = context.enemyBoard().hasShipWithin(*target, SCANNER_RADIUS);
                 context.recordSkillEvent(
-                        {.kind = MatchEventKind::AreaScanned,
-                         .actor = Participant::Player,
-                         .coordinate = target,
-                         .skill = SkillKind::Scanner,
-                         .scanFoundShip = foundShip}
+                    MatchEvent{
+                        .kind = MatchEventKind::AreaScanned,
+                        .actor = Participant::Player,
+                        .coordinate = target,
+                        .skill = SkillKind::Scanner,
+                        .scanFoundShip = foundShip
+                    }
                 );
             }
         };
@@ -64,9 +69,11 @@ namespace cpp_warships::flow {
             void apply(SkillContext& context, std::optional<core::Coordinate>) const override {
                 context.armDoubleDamage();
                 context.recordSkillEvent(
-                        {.kind = MatchEventKind::DoubleDamageArmed,
-                         .actor = Participant::Player,
-                         .skill = SkillKind::DoubleDamage}
+                    MatchEvent{
+                        .kind = MatchEventKind::DoubleDamageArmed,
+                        .actor = Participant::Player,
+                        .skill = SkillKind::DoubleDamage
+                    }
                 );
             }
         };
@@ -80,8 +87,11 @@ namespace cpp_warships::flow {
             }
 
             void apply(SkillContext& context, std::optional<core::Coordinate>) const override {
-                const std::optional<core::Coordinate> targetCell =
-                        pickRandomUnattackedCell(context.enemyBoard(), context.randomEngine());
+                const std::optional<core::Coordinate> targetCell = pickRandomUnattackedCell(
+                    context.enemyBoard(),
+                    context.randomEngine()
+                );
+
                 if (targetCell.has_value()) {
                     context.strikeEnemyCell(*targetCell);
                 }
@@ -93,13 +103,13 @@ namespace cpp_warships::flow {
         const RandomStrikeBehaviour RANDOM_STRIKE_BEHAVIOUR;
 
         const std::unordered_map<SkillKind, const SkillBehaviour*> BEHAVIOUR_BY_SKILL{
-                {SkillKind::Scanner, &SCANNER_BEHAVIOUR},
-                {SkillKind::DoubleDamage, &DOUBLE_DAMAGE_BEHAVIOUR},
-                {SkillKind::RandomStrike, &RANDOM_STRIKE_BEHAVIOUR}
+                    {SkillKind::Scanner, &SCANNER_BEHAVIOUR},
+                    {SkillKind::DoubleDamage, &DOUBLE_DAMAGE_BEHAVIOUR},
+                    {SkillKind::RandomStrike, &RANDOM_STRIKE_BEHAVIOUR}
         };
-    } // namespace
+    }  // namespace
 
     const SkillBehaviour& behaviourFor(SkillKind skill) {
         return *BEHAVIOUR_BY_SKILL.at(skill);
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

@@ -2,12 +2,11 @@
 
 namespace cpp_warships::model {
     WarshipsGame::WarshipsGame(
-            flow::RandomEngine& randomEngine,
-            persistence::SaveArchive& saveArchive
+        flow::RandomEngine& randomEngine,
+        persistence::SaveArchive& saveArchive
     ) noexcept
-        : inPlay_(randomEngine)
-        , play_(inPlay_)
-        , saves_(inPlay_, saveArchive) {}
+        : inPlay_(randomEngine), play_(inPlay_), saves_(inPlay_, saveArchive) {
+    }
 
     bool WarshipsGame::hasMatch() const noexcept {
         return inPlay_.hasMatch();
@@ -32,4 +31,4 @@ namespace cpp_warships::model {
     const SaveBehavior& WarshipsGame::saves() const noexcept {
         return saves_;
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

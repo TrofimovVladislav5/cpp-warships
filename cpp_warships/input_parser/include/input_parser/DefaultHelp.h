@@ -1,15 +1,15 @@
 #pragma once
 
-#include <utilities/ViewHelper.h>
-#include <iostream>
-
 #include <input_parser/model/ParserCommandInfo.h>
 #include <input_parser/model/ParserParameter.h>
+#include <utilities/ViewHelper.h>
+
+#include <iostream>
 
 namespace cpp_warships::input_parser {
     class DefaultHelp {
-    public:
-        static void PrintParam(const ParserParameter &param);
+       public:
+        static void PrintParam(const ParserParameter& param);
 
         template <typename T>
         static void PrintCommand(
@@ -33,4 +33,4 @@ namespace cpp_warships::input_parser {
             }
         }
     };
-}
+}  // namespace cpp_warships::input_parser

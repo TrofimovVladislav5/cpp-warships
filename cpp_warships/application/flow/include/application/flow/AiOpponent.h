@@ -1,24 +1,23 @@
 #pragma once
 
-#include <optional>
-#include <unordered_set>
-#include <vector>
-
 #include <application/core/Board.h>
 #include <application/core/Coordinate.h>
 #include <application/flow/RandomEngine.h>
 
+#include <optional>
+#include <unordered_set>
+#include <vector>
+
 namespace cpp_warships::flow {
-    /** @brief What the computer has learned so far: where it has already fired, and the hits
-     *  on the ship it is currently chasing. Carried across a save so a loaded game does not
-     *  hand the player a freshly amnesiac enemy. */
+    /** @brief What the computer has learned so far: where it has already fired,
+     * and the hits on the ship it is currently chasing. */
     struct AiMemory {
         std::unordered_set<core::Coordinate> attemptedCoordinates;
         std::vector<core::Coordinate> currentTargetHits;
     };
 
-    /** @brief Chooses where the computer shoots: at random, then along any ship it finds.
-     *  Randomness comes from the injected engine, so a seed reproduces a whole game. */
+    /** @brief Chooses where the computer shoots: at random, then along any ship
+     * it finds. Randomness comes from the injected engine, so a seed reproduces a whole game. */
     class AiOpponent {
     public:
         explicit AiOpponent(RandomEngine& randomEngine);
@@ -31,46 +30,42 @@ namespace cpp_warships::flow {
 
         /** @brief Picks the next cell to attack on @p board.
          *  @return nullopt when every cell has already been attempted. */
-        [[nodiscard]] std::optional<core::Coordinate> chooseTarget(
-                const core::Board& board
-        );
+        [[nodiscard]] std::optional<core::Coordinate> chooseTarget(const core::Board& board);
 
         /** @brief Feeds back what the chosen shot did, shaping the next choice.
          *  Delegates to the outcome's behaviour rather than branching on it here. */
         void recordOutcome(
-                core::Coordinate coordinate,
-                core::AttackOutcome outcome,
-                const core::Board& board
+            core::Coordinate coordinate,
+            core::AttackOutcome outcome,
+            const core::Board& board
         );
 
-        /** @brief Notes that @p coordinate has been fired at and need not be tried again. */
+        /** @brief Notes that @p coordinate has been fired at and need not be
+         * tried again. */
         void markAttempted(core::Coordinate coordinate);
 
         /** @brief Adds a hit to the ship currently being chased. */
         void registerHit(core::Coordinate coordinate);
 
-        /** @brief Ends the current chase, ruling out every cell around the sunk ship. */
+        /** @brief Ends the current chase, ruling out every cell around the sunk
+         * ship. */
         void finishHunt(const core::Board& board);
 
     private:
         /** @brief A cell already struck that is still holding, and so is worth striking again.
-         *  A segment outlasts a single shot, so the chase must finish one before moving on. */
-        [[nodiscard]] std::optional<core::Coordinate> unfinishedHit(
-                const core::Board& board
-        ) const;
+         * A segment outlasts a single shot, so the chase must finish one before moving on. */
+        [[nodiscard]] std::optional<core::Coordinate> unfinishedHit(const core::Board& board) const;
         [[nodiscard]] std::vector<core::Coordinate> untriedNeighbours(
-                core::Coordinate coordinate,
-                const core::Board& board
+            core::Coordinate coordinate,
+            const core::Board& board
         ) const;
         [[nodiscard]] std::optional<core::Coordinate> continueAlongHits(
-                const core::Board& board
+            const core::Board& board
         ) const;
-        [[nodiscard]] std::optional<core::Coordinate> pickRandomUntried(
-                const core::Board& board
-        );
+        [[nodiscard]] std::optional<core::Coordinate> pickRandomUntried(const core::Board& board);
 
         RandomEngine& randomEngine_;
         std::unordered_set<core::Coordinate> attemptedCoordinates_;
         std::vector<core::Coordinate> currentTargetHits_;
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

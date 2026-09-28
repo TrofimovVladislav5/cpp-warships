@@ -3,7 +3,6 @@
 #include <utility>
 
 namespace cpp_warships::flow {
-
     void EventLog::record(const MatchEvent& event) {
         entries_.push_back(event);
     }
@@ -19,4 +18,4 @@ namespace cpp_warships::flow {
     bool EventLog::isEmpty() const noexcept {
         return entries_.empty();
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

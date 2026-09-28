@@ -9,19 +9,21 @@
 #include <application/persistence/SaveArchive.h>
 
 namespace cpp_warships::model {
-    /** @brief The game being played: what it currently is, and everything that can be done
-     *  to it. Reading is offered here directly; changing it goes through a behaviour. */
+    /** @brief The game being played: what it currently is, and everything that
+     * can be done to it. Reading is offered here directly; changing it goes
+     * through a behaviour. */
     class WarshipsGame {
-    public:
-        /** @brief A game played out with @p randomEngine and saved into @p saveArchive,
-         *  both of which must outlive it. */
+       public:
+        /** @brief A game played out with @p randomEngine and saved into @p
+         * saveArchive, both of which must outlive it. */
         WarshipsGame(
-                flow::RandomEngine& randomEngine,
-                persistence::SaveArchive& saveArchive
+            flow::RandomEngine& randomEngine,
+            persistence::SaveArchive& saveArchive
         ) noexcept;
 
-        /** @brief The behaviours hold references to state inside this object, so a copy
-         *  would leave them pointing at the original. There is one game, in one place. */
+        /** @brief The behaviours hold references to state inside this object,
+         * so a copy would leave them pointing at the original. There is one
+         * game, in one place. */
         WarshipsGame(const WarshipsGame&) = delete;
         WarshipsGame& operator=(const WarshipsGame&) = delete;
         WarshipsGame(WarshipsGame&&) = delete;
@@ -39,9 +41,9 @@ namespace cpp_warships::model {
         [[nodiscard]] SaveBehavior& saves() noexcept;
         [[nodiscard]] const SaveBehavior& saves() const noexcept;
 
-    private:
+       private:
         MatchInPlay inPlay_;
         MatchBehavior play_;
         SaveBehavior saves_;
     };
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

@@ -1,13 +1,13 @@
 #pragma once
 
+#include <application/core/errors/ErrorLayer.h>
+
 #include <exception>
 #include <string>
 
-#include <application/core/errors/ErrorLayer.h>
-
 namespace cpp_warships::core {
     /** @brief What every error in the game is. Holding the layer it came from is what lets
-     *  each layer catch its own and let nothing from below pass through unanswered. */
+     * each layer catch its own and let nothing from below pass through unanswered. */
     class WarshipsException : public std::exception {
     public:
         [[nodiscard]] ErrorLayer layer() const noexcept;
@@ -22,4 +22,4 @@ namespace cpp_warships::core {
         ErrorLayer layer_;
         std::string description_;
     };
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

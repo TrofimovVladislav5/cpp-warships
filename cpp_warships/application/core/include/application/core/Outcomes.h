@@ -19,13 +19,11 @@ namespace cpp_warships::core {
         InvalidLength,
     };
 
-    /** @brief Whose knowledge a board query is answered from: own ships, or only attacks.
-     *  Fog of war is a rule, so it lives in the model rather than the view. */
+    /** @brief Whose knowledge a board query is answered from: own ships, or
+     * only attacks. Fog of war is a rule, so it lives in the model rather than the view. */
     enum class Visibility { Owner, Opponent };
 
-    /** @brief What is known to be at a cell. The view maps these to glyphs and colors.
-     *  A segment that still holds is told apart from one with nothing left, so a player
-     *  can see which cells are finished and which are still worth firing on. */
+    /** @brief What is known to be at a cell. */
     enum class CellState {
         Water,
         Ship,
@@ -34,4 +32,4 @@ namespace cpp_warships::core {
         Sunk,
         Miss,
     };
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

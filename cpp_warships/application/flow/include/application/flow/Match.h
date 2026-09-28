@@ -1,8 +1,5 @@
 #pragma once
 
-#include <deque>
-#include <optional>
-
 #include <application/core/Board.h>
 #include <application/core/Coordinate.h>
 #include <application/core/MatchSettings.h>
@@ -19,6 +16,9 @@
 #include <application/flow/SkillManager.h>
 #include <application/flow/TurnOrder.h>
 
+#include <deque>
+#include <optional>
+
 namespace cpp_warships::flow {
     /** @brief Everything a match needs to carry on from where a save left off. */
     struct MatchRestoreState {
@@ -33,15 +33,13 @@ namespace cpp_warships::flow {
     };
 
     /** @brief A game in progress: two boards, whose turn it is and what has happened.
-     *  Decides everything and draws nothing, reporting events for the interface to render. */
+     * Decides everything and draws nothing, reporting events for the interface to render. */
     class Match : private SkillContext {
     public:
         Match(core::MatchSettings settings, RandomEngine& randomEngine);
 
         /** @brief Resumes a match from @p state rather than starting a fresh one. */
-        Match(core::MatchSettings settings,
-              RandomEngine& randomEngine,
-              MatchRestoreState state);
+        Match(core::MatchSettings settings, RandomEngine& randomEngine, MatchRestoreState state);
 
         [[nodiscard]] const core::MatchSettings& settings() const noexcept;
         [[nodiscard]] MatchPhase phase() const noexcept;
@@ -68,8 +66,8 @@ namespace cpp_warships::flow {
         /** @brief What the computer has learned, so a save can carry it. */
         [[nodiscard]] AiMemory opponentMemory() const;
 
-        /** @brief Fires at the computer's board on the player's behalf.
-         *  A hit keeps the turn, a miss passes it, and a rejected shot costs nothing. */
+        /** @brief Fires at the computer's board on the player's behalf. A hit keeps the turn,
+         * a miss passes it, and a rejected shot costs nothing. */
         core::AttackOutcome fireAt(core::Coordinate coordinate);
 
         /** @brief Plays the computer's shots until it misses or the match ends. */
@@ -101,16 +99,14 @@ namespace cpp_warships::flow {
          *  @return whether the computer still holds the turn and should fire again. */
         bool takeComputerShot();
 
-        /** @brief Settles a shot of the player's: records it and banks any skill it earned.
-         *  Says nothing about whose turn it is, because not every shot is a turn.
-         *  The computer settles its own shots inside takeComputerShot. */
+        /** @brief Settles a shot of the player's: records it and banks any skill it earned. */
         void recordPlayerShot(core::AttackOutcome outcome, core::Coordinate coordinate);
 
         /** @brief Hands the turn over, unless @p outcome earned the player another shot. */
         void passTurnUnlessKept(core::AttackOutcome outcome);
 
-        /** @brief Replaces the enemy fleet for a fresh round.
-         *  Our own board carries over, so what the enemy knows of it carries over too. */
+        /** @brief Replaces the enemy fleet for a fresh round. Our own board carries over,
+         * so what the enemy knows of it carries over too. */
         void startNextRound();
         void concludeAsLoss();
 
@@ -126,4 +122,4 @@ namespace cpp_warships::flow {
         MatchPhase phase_;
         int roundNumber_;
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

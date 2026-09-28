@@ -1,28 +1,31 @@
 #pragma once
 
+#include <application/persistence/MatchSnapshot.h>
+#include <application/persistence/SaveStorage.h>
+
 #include <optional>
 #include <string>
 #include <vector>
 
-#include <application/persistence/MatchSnapshot.h>
-#include <application/persistence/SaveStorage.h>
-
 namespace cpp_warships::persistence {
-    /** @brief Saves and loads matches, turning snapshots into stored text and back.
-     *  Where that text lives is the storage's business, not this class's. */
+    /** @brief Saves and loads matches, turning snapshots into stored text and
+     * back. Where that text lives is the storage's business, not this class's.
+     */
     class SaveArchive {
-    public:
+       public:
         explicit SaveArchive(SaveStorage& storage);
 
         [[nodiscard]] std::vector<std::string> listSaves() const;
 
-        /** @brief Writes @p snapshot under @p name. @return false when it could not be stored. */
+        /** @brief Writes @p snapshot under @p name. @return false when it could
+         * not be stored. */
         bool save(const std::string& name, const MatchSnapshot& snapshot);
 
-        /** @brief Reads the save called @p name, or nullopt when it is missing or unreadable. */
+        /** @brief Reads the save called @p name, or nullopt when it is missing
+         * or unreadable. */
         [[nodiscard]] std::optional<MatchSnapshot> load(const std::string& name) const;
 
-    private:
+       private:
         SaveStorage& storage_;
     };
-} // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence

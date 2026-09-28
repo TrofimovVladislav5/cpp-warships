@@ -3,7 +3,7 @@
 namespace cpp_warships::model {
     namespace {
         constexpr std::size_t REMEMBERED_EVENT_COUNT = 200;
-    } // namespace
+    }  // namespace
 
     void BattleJournal::absorb(const flow::MatchEventLog& events) {
         entries_.insert(entries_.end(), events.begin(), events.end());
@@ -24,4 +24,4 @@ namespace cpp_warships::model {
     bool BattleJournal::isEmpty() const noexcept {
         return entries_.empty();
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

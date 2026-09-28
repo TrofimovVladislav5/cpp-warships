@@ -3,7 +3,6 @@
 #include <algorithm>
 
 namespace cpp_warships::core {
-
     Segment::Segment(int maximumHealth) noexcept
         : maximumHealth_(maximumHealth)
         , health_(maximumHealth) {}
@@ -27,4 +26,4 @@ namespace cpp_warships::core {
     bool Segment::isDestroyed() const noexcept {
         return health_ == 0;
     }
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

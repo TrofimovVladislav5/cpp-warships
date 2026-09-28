@@ -3,17 +3,13 @@
 #include <string>
 
 namespace cpp_warships::serialization::helpers::type_converters {
-    /**
-     * @brief StringTypeConverter is a utility class that provides methods to convert from string to various types and vice versa.
-     */
-    class StringTypeConverter
-    {
-    public:
-        /**
-         * @brief Converts a string to an integer value.
-         * @param data The string to convert.
-         * @return Converted integer value or throws an `std::runtime_exception` if conversion fails.
-         */
+    /** @brief StringTypeConverter is a utility class that provides methods to
+     * convert from string to various types and vice versa. */
+    class StringTypeConverter {
+       public:
+        /** @brief Converts a string to an integer value.
+         *  @return Converted integer value or throws an
+         * `std::runtime_exception` if conversion fails. */
         static int stringToInt(const std::string& data) {
             try {
                 return std::stoi(data);
@@ -23,11 +19,9 @@ namespace cpp_warships::serialization::helpers::type_converters {
             }
         }
 
-        /**
-         * @brief Converts a string to a float value.
-         * @param data The string to convert.
-         * @return Converted float value or throws an `std::runtime_exception` if conversion fails.
-         */
+        /** @brief Converts a string to a float value.
+         *  @return Converted float value or throws an `std::runtime_exception`
+         * if conversion fails. */
         static float stringToFloat(const std::string& data) {
             try {
                 return std::stof(data);
@@ -37,4 +31,4 @@ namespace cpp_warships::serialization::helpers::type_converters {
             }
         }
     };
-} // namespace cpp_warships::serialization::helpers
+}  // namespace cpp_warships::serialization::helpers::type_converters

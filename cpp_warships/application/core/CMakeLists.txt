@@ -3,7 +3,6 @@ add_library(warships_core
         # What can go wrong, and the root every other layer hangs its errors from
         include/application/core/errors/ErrorLayer.h src/application/core/errors/ErrorLayer.cpp
         include/application/core/errors/WarshipsException.h src/application/core/errors/WarshipsException.cpp
-        include/application/core/errors/CoreExceptions.h src/application/core/errors/CoreExceptions.cpp
         # Value types
         include/application/core/Coordinate.h
         include/application/core/Direction.h
@@ -30,6 +29,4 @@ target_include_directories(warships_core
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Link dependencies. warships_core is pure rules: it deliberately depends on no
-# project library, so it stays free of I/O and of any UI toolkit.
 target_link_libraries(warships_core PUBLIC cxx_setup)

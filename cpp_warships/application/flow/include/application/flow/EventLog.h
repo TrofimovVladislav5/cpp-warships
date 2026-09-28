@@ -3,8 +3,8 @@
 #include <application/flow/MatchEvent.h>
 
 namespace cpp_warships::flow {
-    /** @brief The running history of a match, written by the model and read by the interface.
-     *  Draining hands the entries over and starts a fresh page. */
+    /** @brief The running history of a match, written by the model and read by
+     * the interface. Draining hands the entries over and starts a fresh page. */
     class EventLog {
     public:
         void record(const MatchEvent& event);
@@ -18,4 +18,4 @@ namespace cpp_warships::flow {
     private:
         MatchEventLog entries_;
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

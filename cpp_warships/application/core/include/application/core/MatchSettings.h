@@ -9,10 +9,10 @@ namespace cpp_warships::core {
     class MatchSettings {
     public:
         MatchSettings(
-                int boardSize,
-                FleetComposition fleet,
-                int baseDamage = 1,
-                int segmentHealth = DEFAULT_SEGMENT_HEALTH
+            int boardSize,
+            FleetComposition fleet,
+            int baseDamage = 1,
+            int segmentHealth = DEFAULT_SEGMENT_HEALTH
         );
 
         /** @brief Settings for @p boardSize with an automatically scaled fleet. */
@@ -29,4 +29,4 @@ namespace cpp_warships::core {
         int baseDamage_;
         int segmentHealth_;
     };
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

@@ -1,7 +1,5 @@
 # Compile files
 add_library(warships_flow
-        # What can go wrong here
-        include/application/flow/errors/FlowExceptions.h src/application/flow/errors/FlowExceptions.cpp
         # Vocabulary
         include/application/flow/Participant.h
         include/application/flow/SkillKind.h

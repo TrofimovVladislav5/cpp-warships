@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <stdexcept>
 
-
 std::vector<std::string> StringHelper::split(const std::string& initial, char delim) {
     std::vector<std::string> elems;
     std::string current;
@@ -42,8 +41,9 @@ std::string StringHelper::patternCoordinate(int fieldSize) {
 
 std::string StringHelper::toLower(const std::string& input) {
     std::string result = input;
-    std::transform(result.begin(), result.end(), result.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+    std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
     return result;
 }
 

@@ -1,12 +1,12 @@
+#include <application/flow/AiOpponent.h>
 #include <application/flow/AttackOutcomeBehaviour.h>
 
 #include <unordered_map>
 
-#include <application/flow/AiOpponent.h>
-
 namespace cpp_warships::flow {
     namespace {
-        /** @brief A shot that found open water: the turn passes to the opponent. */
+        /** @brief A shot that found open water: the turn passes to the
+         * opponent. */
         class MissBehaviour final : public AttackOutcomeBehaviour {
         public:
             [[nodiscard]] bool keepsTurn() const override {
@@ -25,11 +25,7 @@ namespace cpp_warships::flow {
                 return MatchEventKind::ShotMissed;
             }
 
-            void updateHunt(
-                    AiOpponent&,
-                    core::Coordinate,
-                    const core::Board&
-            ) const override {}
+            void updateHunt(AiOpponent&, core::Coordinate, const core::Board&) const override {}
         };
 
         /** @brief A shot that wounded a ship without finishing it: the shooter fires again. */
@@ -52,9 +48,9 @@ namespace cpp_warships::flow {
             }
 
             void updateHunt(
-                    AiOpponent& opponent,
-                    core::Coordinate coordinate,
-                    const core::Board&
+                AiOpponent& opponent,
+                core::Coordinate coordinate,
+                const core::Board&
             ) const override {
                 opponent.registerHit(coordinate);
             }
@@ -80,17 +76,17 @@ namespace cpp_warships::flow {
             }
 
             void updateHunt(
-                    AiOpponent& opponent,
-                    core::Coordinate coordinate,
-                    const core::Board& board
+                AiOpponent& opponent,
+                core::Coordinate coordinate,
+                const core::Board& board
             ) const override {
                 opponent.registerHit(coordinate);
                 opponent.finishHunt(board);
             }
         };
 
-        /** @brief A shot that was never taken, off the board or at a resolved cell.
-         *  It costs nothing: the turn stays and any armed bonus is still waiting. */
+        /** @brief A shot that was never taken, off the board or at a resolved cell. It costs
+         * nothing: the turn stays and any armed bonus is still waiting. */
         class RejectedBehaviour final : public AttackOutcomeBehaviour {
         public:
             [[nodiscard]] bool keepsTurn() const override {
@@ -109,11 +105,8 @@ namespace cpp_warships::flow {
                 return MatchEventKind::ShotRejected;
             }
 
-            void updateHunt(
-                    AiOpponent&,
-                    core::Coordinate,
-                    const core::Board&
-            ) const override {}
+            void updateHunt(AiOpponent&, core::Coordinate, const core::Board&) const override {
+            }
         };
 
         const MissBehaviour MISS_BEHAVIOUR;
@@ -122,16 +115,16 @@ namespace cpp_warships::flow {
         const RejectedBehaviour REJECTED_BEHAVIOUR;
 
         const std::unordered_map<core::AttackOutcome, const AttackOutcomeBehaviour*>
-                BEHAVIOUR_BY_OUTCOME{
-                        {core::AttackOutcome::Miss, &MISS_BEHAVIOUR},
-                        {core::AttackOutcome::Hit, &HIT_BEHAVIOUR},
-                        {core::AttackOutcome::Sunk, &SUNK_BEHAVIOUR},
-                        {core::AttackOutcome::AlreadyAttacked, &REJECTED_BEHAVIOUR},
-                        {core::AttackOutcome::OutOfBounds, &REJECTED_BEHAVIOUR}
-                };
-    } // namespace
+            BEHAVIOUR_BY_OUTCOME{
+                    {core::AttackOutcome::Miss, &MISS_BEHAVIOUR},
+                    {core::AttackOutcome::Hit, &HIT_BEHAVIOUR},
+                    {core::AttackOutcome::Sunk, &SUNK_BEHAVIOUR},
+                    {core::AttackOutcome::AlreadyAttacked, &REJECTED_BEHAVIOUR},
+                    {core::AttackOutcome::OutOfBounds, &REJECTED_BEHAVIOUR}
+            };
+    }  // namespace
 
     const AttackOutcomeBehaviour& behaviourFor(core::AttackOutcome outcome) {
         return *BEHAVIOUR_BY_OUTCOME.at(outcome);
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

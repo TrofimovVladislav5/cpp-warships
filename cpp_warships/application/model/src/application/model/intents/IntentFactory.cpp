@@ -1,28 +1,28 @@
 #include <application/model/intents/IntentFactory.h>
-
-#include <memory>
-
 #include <application/model/intents/MatchIntents.h>
 #include <application/model/intents/SessionIntents.h>
 
+#include <memory>
+
 namespace cpp_warships::model {
     IntentFactory::IntentFactory(ApplicationContext& application) noexcept
-        : application_(application) {}
+        : application_(application) {
+    }
 
     GameIntentPointer IntentFactory::startMatch(const int boardSize) const {
         return std::make_shared<StartMatchIntent>(application_.game().play(), boardSize);
     }
 
     GameIntentPointer IntentFactory::placeShip(
-            const core::Coordinate origin,
-            const core::Direction direction,
-            const int length
+        const core::Coordinate origin,
+        const core::Direction direction,
+        const int length
     ) const {
         return std::make_shared<PlaceShipIntent>(
-                application_.game().play(),
-                origin,
-                direction,
-                length
+            application_.game().play(),
+            origin,
+            direction,
+            length
         );
     }
 
@@ -42,9 +42,7 @@ namespace cpp_warships::model {
         return std::make_shared<FireAtIntent>(application_.game().play(), coordinate);
     }
 
-    GameIntentPointer IntentFactory::useSkill(
-            const std::optional<core::Coordinate> target
-    ) const {
+    GameIntentPointer IntentFactory::useSkill(const std::optional<core::Coordinate> target) const {
         return std::make_shared<UseSkillIntent>(application_.game().play(), target);
     }
 
@@ -59,4 +57,4 @@ namespace cpp_warships::model {
     GameIntentPointer IntentFactory::finishSession() const {
         return std::make_shared<FinishSessionIntent>(application_);
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

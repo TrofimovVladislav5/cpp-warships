@@ -20,4 +20,4 @@ namespace cpp_warships::core {
         int maximumHealth_;
         int health_;
     };
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

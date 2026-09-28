@@ -18,9 +18,10 @@ target_include_directories(cpp_warships
 )
 
 # Link dependencies
+# warships_head_ftxui carries warships_head, and that carries the layers below it,
+# so naming any of them again here only makes the linker warn about duplicates.
 target_link_libraries(cpp_warships
-        PRIVATE warships_head
-        PRIVATE warships_model
+        PRIVATE warships_head_ftxui
         PRIVATE utilities
         PRIVATE cxx_setup
 )

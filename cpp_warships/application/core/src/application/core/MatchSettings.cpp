@@ -3,12 +3,11 @@
 #include <utility>
 
 namespace cpp_warships::core {
-
     MatchSettings::MatchSettings(
-            int boardSize,
-            FleetComposition fleet,
-            int baseDamage,
-            int segmentHealth
+        int boardSize,
+        FleetComposition fleet,
+        int baseDamage,
+        int segmentHealth
     )
         : boardSize_(boardSize)
         , fleet_(std::move(fleet))
@@ -16,7 +15,10 @@ namespace cpp_warships::core {
         , segmentHealth_(segmentHealth) {}
 
     MatchSettings MatchSettings::forBoardSize(int boardSize) {
-        return MatchSettings{boardSize, FleetComposition::forBoardSize(boardSize)};
+        return MatchSettings{
+            boardSize,
+            FleetComposition::forBoardSize(boardSize)
+        };
     }
 
     int MatchSettings::boardSize() const noexcept {
@@ -34,4 +36,4 @@ namespace cpp_warships::core {
     int MatchSettings::segmentHealth() const noexcept {
         return segmentHealth_;
     }
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

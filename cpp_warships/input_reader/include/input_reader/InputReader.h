@@ -5,9 +5,9 @@
 namespace cpp_warships::input_reader {
     template <typename T = std::string>
     class InputReader {
-    public:
+       public:
         virtual ~InputReader() = default;
 
         virtual T readCommand() = 0;
     };
-} // namespace cpp_warships::input_reader
+}  // namespace cpp_warships::input_reader

@@ -11,8 +11,8 @@ namespace cpp_warships::flow {
     };
 
     inline constexpr std::array<SkillKind, 3> ALL_SKILL_KINDS{
-            SkillKind::Scanner,
-            SkillKind::DoubleDamage,
-            SkillKind::RandomStrike,
+        SkillKind::Scanner,
+        SkillKind::DoubleDamage,
+        SkillKind::RandomStrike,
     };
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

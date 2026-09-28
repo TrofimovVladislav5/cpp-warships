@@ -5,13 +5,14 @@
 
 namespace cpp_warships::model {
     namespace {
-        /** @brief How many notices are worth keeping. Older ones have been on screen
-         *  long enough to have been read, or long enough not to matter. */
+        /** @brief How many notices are worth keeping. Older ones have been on
+         * screen long enough to have been read, or long enough not to matter.
+         */
         constexpr std::size_t MOST_NOTICES_KEPT = 8;
-    } // namespace
+    }  // namespace
 
-    ApplicationContext::ApplicationContext(WarshipsGame& game) noexcept
-        : game_(game) {}
+    ApplicationContext::ApplicationContext(WarshipsGame& game) noexcept : game_(game) {
+    }
 
     WarshipsGame& ApplicationContext::game() noexcept {
         return game_;
@@ -44,4 +45,4 @@ namespace cpp_warships::model {
     void ApplicationContext::clearNotices() noexcept {
         notices_.clear();
     }
-} // namespace cpp_warships::model
+}  // namespace cpp_warships::model

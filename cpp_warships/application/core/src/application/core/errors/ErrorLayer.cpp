@@ -17,4 +17,4 @@ namespace cpp_warships::core {
 
         return "unknown";
     }
-} // namespace cpp_warships::core
+}  // namespace cpp_warships::core

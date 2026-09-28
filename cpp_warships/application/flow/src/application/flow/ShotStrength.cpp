@@ -4,7 +4,7 @@ namespace cpp_warships::flow {
     namespace {
         /** @brief What arming double damage multiplies the base damage by. */
         constexpr int DOUBLE_DAMAGE_MULTIPLIER = 2;
-    } // namespace
+    }  // namespace
 
     ShotStrength::ShotStrength(int baseDamage)
         : ShotStrength(baseDamage, false) {}
@@ -18,7 +18,8 @@ namespace cpp_warships::flow {
     }
 
     int ShotStrength::nextShotDamage() const noexcept {
-        return isDoubleDamageArmed_ ? baseDamage_ * DOUBLE_DAMAGE_MULTIPLIER : baseDamage_;
+        return isDoubleDamageArmed_ ? baseDamage_ * DOUBLE_DAMAGE_MULTIPLIER
+                                    : baseDamage_;
     }
 
     bool ShotStrength::isDoubleDamageArmed() const noexcept {
@@ -32,4 +33,4 @@ namespace cpp_warships::flow {
     void ShotStrength::spend() noexcept {
         isDoubleDamageArmed_ = false;
     }
-} // namespace cpp_warships::flow
+}  // namespace cpp_warships::flow

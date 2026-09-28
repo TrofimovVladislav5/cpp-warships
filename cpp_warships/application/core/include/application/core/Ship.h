@@ -1,24 +1,27 @@
 #pragma once
 
-#include <optional>
-#include <vector>
-
 #include <application/core/Coordinate.h>
 #include <application/core/Direction.h>
 #include <application/core/Segment.h>
+
+#include <optional>
+#include <vector>
 
 namespace cpp_warships::core {
     /** @brief A placed ship: its origin, orientation and per-cell segments.
      *  Coordinates derive from origin and direction, so index and cell always agree. */
     class Ship {
     public:
-        /** @brief Rebuilds a ship with segments already part-damaged, as when loading a save. */
+        /** @brief Rebuilds a ship with segments already part-damaged, as when
+         * loading a save. */
         Ship(Coordinate origin, Direction direction, std::vector<Segment> segments);
 
-        Ship(Coordinate origin,
-             Direction direction,
-             int length,
-             int segmentHealth = DEFAULT_SEGMENT_HEALTH);
+        Ship(
+            Coordinate origin,
+            Direction direction,
+            int length,
+            int segmentHealth = DEFAULT_SEGMENT_HEALTH
+        );
 
         [[nodiscard]] Coordinate origin() const noexcept;
         [[nodiscard]] Direction direction() const noexcept;

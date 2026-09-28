@@ -1,17 +1,13 @@
 #include <application/persistence/serializers/BoardJsonSerializer.h>
-
 #include <serialization/exceptions/DeserializationException.h>
 
 #include <unordered_set>
 #include <vector>
 
 namespace cpp_warships::persistence {
-
     bool BoardJsonSerializer::isRelated(nlohmann::json item) {
-        return item.contains("width") &&
-            item.contains("height") &&
-            item.contains("ships") &&
-            item.contains("attackedCells");
+        return item.contains("width") && item.contains("height") && item.contains("ships") &&
+               item.contains("attackedCells");
     }
 
     nlohmann::json BoardJsonSerializer::serialize(core::Board& item) {
@@ -24,25 +20,22 @@ namespace cpp_warships::persistence {
 
         nlohmann::json attackedCells = nlohmann::json::array();
         for (const core::Coordinate& cell : item.attackedCells()) {
-            attackedCells.push_back({
-                {"x", cell.x},
-                {"y", cell.y}
-            });
+            attackedCells.push_back({{"x", cell.x}, {"y", cell.y}});
         }
 
         return nlohmann::json{
-                {"width", item.width()},
-                {"height", item.height()},
-                {"ships", ships},
-                {"attackedCells", attackedCells}
+            {"width", item.width()},
+            {"height", item.height()},
+            {"ships", ships},
+            {"attackedCells", attackedCells}
         };
     }
 
     core::Board BoardJsonSerializer::deserialize(nlohmann::json item) {
         if (!isRelated(item)) {
             throw serialization::exceptions::DeserializationException(
-                    "Board",
-                    "JSON does not describe a board"
+                "Board",
+                "JSON does not describe a board"
             );
         }
 
@@ -58,10 +51,10 @@ namespace cpp_warships::persistence {
         }
 
         return core::Board{
-                item["width"].get<int>(),
-                item["height"].get<int>(),
-                std::move(ships),
-                std::move(attackedCells)
+            item["width"].get<int>(),
+            item["height"].get<int>(),
+            std::move(ships),
+            std::move(attackedCells)
         };
     }
-} // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence

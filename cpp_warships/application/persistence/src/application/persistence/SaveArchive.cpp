@@ -1,14 +1,13 @@
 #include <application/persistence/SaveArchive.h>
+#include <application/persistence/serializers/MatchSnapshotJsonSerializer.h>
 
 #include <exception>
-
 #include <nlohmann/json.hpp>
-
-#include <application/persistence/serializers/MatchSnapshotJsonSerializer.h>
 
 namespace cpp_warships::persistence {
     namespace {
-        /** @brief How many spaces a written save is indented by, to stay readable. */
+        /** @brief How many spaces a written save is indented by, to stay
+         * readable. */
         constexpr int SAVE_INDENTATION = 4;
 
         /** @brief A snapshot serializer with its children wired up. */
@@ -25,10 +24,10 @@ namespace cpp_warships::persistence {
 
             return serializer;
         }
-    } // namespace
+    }  // namespace
 
-    SaveArchive::SaveArchive(SaveStorage& storage)
-        : storage_(storage) {}
+    SaveArchive::SaveArchive(SaveStorage& storage) : storage_(storage) {
+    }
 
     std::vector<std::string> SaveArchive::listSaves() const {
         return storage_.list();
@@ -64,4 +63,4 @@ namespace cpp_warships::persistence {
 
         return snapshot;
     }
-} // namespace cpp_warships::persistence
+}  // namespace cpp_warships::persistence
